@@ -1,8 +1,12 @@
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
-import React, { useState } from "react";
+import { Image, StyleSheet, Text, View } from "react-native";
+import React, { useContext, useState } from "react";
 import AppActiveButton from "../components/Home/AppActiveButton";
+import { Ionicons } from "@expo/vector-icons";
+import { AppColors } from "../contants/Colors";
+import { AuthContext } from "../store/AuthContext";
 
 const HomeScreen = () => {
+  const auth = useContext(AuthContext);
   const [isActive, setIsActive] = useState(false);
   const [isDisabled, setisDisabled] = useState(false);
   function buttonPressHnalder() {
@@ -14,6 +18,14 @@ const HomeScreen = () => {
   }
   return (
     <View style={styles.container}>
+      <View style={{ position: "absolute", top: 40, right: 20 }}>
+        <Ionicons
+          onPress={auth.logout}
+          name="log-out-outline"
+          size={30}
+          color={AppColors.black}
+        />
+      </View>
       <View style={{ position: "absolute", top: 70 }}>
         <View style={{ marginVertical: 40 }}>
           <Text
