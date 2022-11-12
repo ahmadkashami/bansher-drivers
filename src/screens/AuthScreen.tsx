@@ -8,18 +8,28 @@ import {
   TextInput,
   View,
 } from "react-native";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import FilledButton from "../components/FilledButton";
+import { AuthContext } from "../store/AuthContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const AuthScreen = () => {
+  const auth = useContext(AuthContext);
   const [inputs, setInputs] = useState({ phone: "", password: "" });
   function submitHandler() {
     if (!inputs.password || !inputs.phone) {
       Alert.alert("invalid inputs");
       return;
     }
+    if (inputs.phone.length < 8) {
+      Alert.alert("phone must be at least 8 digits");
+      return;
+    }
+    console.log("here");
+    AsyncStorage.setItem("token", "token");
+    auth.authenticate("token");
   }
   function inputsChangeHandler(text: string, name: string) {
     setInputs((prev) => {
@@ -86,6 +96,7 @@ const AuthScreen = () => {
             </View>
             <View style={styles.inputBox}>
               <TextInput
+                secureTextEntry
                 value={inputs.password}
                 placeholder="Enter Password"
                 placeholderTextColor={"#a4a3a8"}
