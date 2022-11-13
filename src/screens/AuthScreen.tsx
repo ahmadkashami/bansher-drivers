@@ -14,11 +14,15 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import FilledButton from "../components/FilledButton";
 import { AuthContext } from "../store/AuthContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { client } from "../api/axios.config";
+import { login } from "../api/Auth.api";
+import { UserDto } from "../Dtos/user.dto";
+import { ErrorHandlerApi } from "../helpers/AppHelpers";
 
 const AuthScreen = () => {
   const auth = useContext(AuthContext);
   const [inputs, setInputs] = useState({ phone: "", password: "" });
-  function submitHandler() {
+  async function submitHandler() {
     if (!inputs.password || !inputs.phone) {
       Alert.alert("invalid inputs");
       return;
@@ -27,9 +31,22 @@ const AuthScreen = () => {
       Alert.alert("phone must be at least 8 digits");
       return;
     }
-    console.log("here");
-    AsyncStorage.setItem("token", "token");
-    auth.authenticate("token");
+    try {
+      const phoneWithCode = "965" + inputs.phone;
+      const { access_token, data } = await login(
+        phoneWithCode,
+        inputs.password
+      );
+      const user = new UserDto(data);
+      console.log({ user });
+
+      AsyncStorage.setItem("token", access_token);
+      AsyncStorage.setItem("user", JSON.stringify(user));
+      auth.authUser(user);
+      auth.authenticate("token");
+    } catch (error) {
+      ErrorHandlerApi(error);
+    }
   }
   function inputsChangeHandler(text: string, name: string) {
     setInputs((prev) => {
@@ -125,6 +142,19 @@ const AuthScreen = () => {
             <View style={{ paddingVertical: 20 }}>
               <FilledButton onPress={submitHandler}>Submit</FilledButton>
             </View>
+          </View>
+
+          <View style={{ justifyContent: "center", alignItems: "center" }}>
+            <Text style={{ fontSize: 16 }}>
+              - if you neeed Help please{" "}
+              <Text
+                onPress={() => Alert.alert("help")}
+                style={{ color: "dodgerblue" }}
+              >
+                Contact Help
+              </Text>
+              -
+            </Text>
           </View>
         </KeyboardAwareScrollView>
       </View>

@@ -19,6 +19,12 @@ const Root = () => {
   useEffect(() => {
     async function prepareApp() {
       const token = await AsyncStorage.getItem("token");
+      const user = await AsyncStorage.getItem("user");
+      console.log({ user });
+
+      if (user) {
+        auth.authUser(JSON.parse(user));
+      }
       if (token) {
         auth.authenticate(token);
       }
