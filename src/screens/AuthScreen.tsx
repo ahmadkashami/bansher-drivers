@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   Alert,
   Button,
   Image,
@@ -22,6 +23,7 @@ import { ErrorHandlerApi } from "../helpers/AppHelpers";
 const AuthScreen = () => {
   const auth = useContext(AuthContext);
   const [inputs, setInputs] = useState({ phone: "", password: "" });
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   async function submitHandler() {
     if (!inputs.password || !inputs.phone) {
       Alert.alert("invalid inputs");
@@ -31,21 +33,23 @@ const AuthScreen = () => {
       Alert.alert("phone must be at least 8 digits");
       return;
     }
+
     try {
+      setIsLoading(true);
       const phoneWithCode = "965" + inputs.phone;
       const { access_token, data } = await login(
         phoneWithCode,
         inputs.password
       );
       const user = new UserDto(data);
-      console.log({ user });
-
       AsyncStorage.setItem("token", access_token);
       AsyncStorage.setItem("user", JSON.stringify(user));
       auth.authUser(user);
       auth.authenticate("token");
     } catch (error) {
       ErrorHandlerApi(error);
+    } finally {
+      setIsLoading(false);
     }
   }
   function inputsChangeHandler(text: string, name: string) {
@@ -55,6 +59,22 @@ const AuthScreen = () => {
   }
   return (
     <SafeAreaProvider style={{ flex: 1 }}>
+      {isLoading && (
+        <ActivityIndicator
+          color={"dodgerblue"}
+          size={100}
+          style={{
+            zIndex: 100,
+            position: "absolute",
+            top: 0,
+            right: 0,
+            left: 0,
+            bottom: 0,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        />
+      )}
       <View style={styles.container}>
         <KeyboardAwareScrollView>
           <View

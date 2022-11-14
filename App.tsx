@@ -2,38 +2,44 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StatusBar } from "expo-status-bar";
 import { useContext, useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
+import { TruckDto } from "./src/Dtos/user.dto";
 import MainStackNavigation from "./src/navigations/MainStack.Navigation";
 import AuthScreen from "./src/screens/AuthScreen";
 import { AuthContext, AuthProvider } from "./src/store/AuthContext";
+import { TruckContext, TruckProvider } from "./src/store/truckContext";
 
 export default function App() {
   return (
     <AuthProvider>
-      <Root />
+      <TruckProvider>
+        <Root />
+      </TruckProvider>
     </AuthProvider>
   );
 }
 const Root = () => {
-  const auth = useContext(AuthContext);
+  const authctx = useContext(AuthContext);
+  const truckCtx = useContext(TruckContext);
 
   useEffect(() => {
     async function prepareApp() {
       const token = await AsyncStorage.getItem("token");
-      const user = await AsyncStorage.getItem("user");
-      console.log({ user });
-
-      if (user) {
-        auth.authUser(JSON.parse(user));
+      //todo change truck to sperate item in localstoreage
+      const cashedUser = await AsyncStorage.getItem("user");
+      if (cashedUser) {
+        const user = JSON.parse(cashedUser);
+        authctx.authUser(user);
+        truckCtx.updateTruck(new TruckDto(user.truck));
       }
       if (token) {
-        auth.authenticate(token);
+        authctx.authenticate(token);
       }
     }
     prepareApp();
   }, []);
-  console.log(auth.isAuthticated);
+  console.log(authctx.isAuthticated);
 
-  return auth.isAuthticated ? <MainStackNavigation /> : <AuthScreen />;
+  return authctx.isAuthticated ? <MainStackNavigation /> : <AuthScreen />;
 };
 
 const styles = StyleSheet.create({

@@ -1,23 +1,44 @@
-import { Image, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Image, StyleSheet, Text, View } from "react-native";
 import React, { useContext, useState } from "react";
 import AppActiveButton from "../components/Home/AppActiveButton";
 import { Ionicons } from "@expo/vector-icons";
 import { AppColors } from "../contants/Colors";
 import { AuthContext } from "../store/AuthContext";
+import { updateTruckStatus } from "../api/Home.Api";
+import { TruckDto } from "../Dtos/user.dto";
+import { TruckContext } from "../store/truckContext";
+import { setStoreageValues } from "../helpers/AppAsyncStoreage";
+import AppLoadingIndicator from "../components/ui/AppLoadingIndicator";
 
 const HomeScreen = () => {
   const auth = useContext(AuthContext);
-  const [isActive, setIsActive] = useState(false);
+  const { truck, updateTruck } = useContext(TruckContext);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isActive, setIsActive] = useState(truck.status);
   const [isDisabled, setisDisabled] = useState(false);
-  function buttonPressHnalder() {
+  async function buttonPressHnalder() {
     setisDisabled(true);
-    setIsActive((prev) => !prev);
-    setTimeout(() => {
-      setisDisabled(false);
-    }, 2000);
+    setIsLoading(true);
+    try {
+      const response = await updateTruckStatus(truck.id);
+      const updatedTruck = new TruckDto(response.data);
+      auth.user.truck = updatedTruck;
+      setStoreageValues("user", JSON.stringify(auth.user));
+      updateTruck(updatedTruck);
+    } catch (error) {
+      console.log(error.response.data);
+    } finally {
+      setIsActive((prev) => !prev);
+      setIsLoading(false);
+
+      setTimeout(() => {
+        setisDisabled(false);
+      }, 2000);
+    }
   }
   return (
     <View style={styles.container}>
+      {isLoading && <AppLoadingIndicator />}
       <View style={{ position: "absolute", top: 40, right: 20 }}>
         <Ionicons
           onPress={auth.logout}
