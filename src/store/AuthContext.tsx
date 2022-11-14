@@ -1,17 +1,36 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, { FC } from "react";
 import { createContext, useState } from "react";
 import { UserDto } from "../Dtos/user.dto";
-// import { IUser } from "../interfaces/User.interface";
+import { IUser } from "../interfaces/User.interface";
 
+const userInitial = new UserDto({
+  id: 0,
+  name: "",
+  company_id: 0,
+  email: "",
+  phone: "",
+  truck: {
+    id: 0,
+    active: false,
+    status: false,
+    company_id: 0,
+    fieldwork: "",
+    lang: 0,
+    lat: 0,
+    user_id: 0,
+  },
+});
 export const AuthContext = createContext({
   authToken: "",
   isAuthticated: false,
   authenticate: (token: string) => {},
   authUser: (user: UserDto) => {},
   logout: () => {},
+  user: userInitial,
 });
 
-export const AuthProvider = ({ children }) => {
+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [authToken, setAuthToken] = useState<string>("");
   const [user, setUser] = useState<UserDto | null>(null);
 
@@ -25,6 +44,7 @@ export const AuthProvider = ({ children }) => {
   function logout() {
     setAuthToken("");
     AsyncStorage.removeItem("token");
+    AsyncStorage.removeItem("user");
   }
   const value = {
     authToken,

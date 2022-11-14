@@ -14,7 +14,7 @@ export interface ITruck {
   id: number;
   lang: number;
   lat: number;
-  status: true;
+  status: boolean;
   user_id: number;
 }
 
