@@ -19,6 +19,7 @@ import { client } from "../api/axios.config";
 import { login } from "../api/Auth.api";
 import { UserDto } from "../Dtos/user.dto";
 import { ErrorHandlerApi } from "../helpers/AppHelpers";
+import LottieFile from "../components/ui/LottieFile";
 
 const AuthScreen = () => {
   const auth = useContext(AuthContext);
@@ -59,22 +60,7 @@ const AuthScreen = () => {
   }
   return (
     <SafeAreaProvider style={{ flex: 1 }}>
-      {isLoading && (
-        <ActivityIndicator
-          color={"dodgerblue"}
-          size={100}
-          style={{
-            zIndex: 100,
-            position: "absolute",
-            top: 0,
-            right: 0,
-            left: 0,
-            bottom: 0,
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        />
-      )}
+      {isLoading && <LottieFile />}
       <View style={styles.container}>
         <KeyboardAwareScrollView>
           <View
