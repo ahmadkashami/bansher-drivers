@@ -1,4 +1,4 @@
-import { ActivityIndicator, Image, StyleSheet, Text, View } from "react-native";
+import { FlatList, Image, StyleSheet, Text, View } from "react-native";
 import React, { useContext, useState } from "react";
 import AppActiveButton from "../components/Home/AppActiveButton";
 import { Ionicons } from "@expo/vector-icons";
@@ -8,7 +8,7 @@ import { updateTruckStatus } from "../api/Home.Api";
 import { TruckDto } from "../Dtos/user.dto";
 import { TruckContext } from "../store/truckContext";
 import { setStoreageValues } from "../helpers/AppAsyncStoreage";
-import AppLoadingIndicator from "../components/ui/AppLoadingIndicator";
+import LottieFile from "../components/ui/LottieFile";
 
 const HomeScreen = () => {
   const auth = useContext(AuthContext);
@@ -38,7 +38,7 @@ const HomeScreen = () => {
   }
   return (
     <View style={styles.container}>
-      {isLoading && <AppLoadingIndicator />}
+      {isLoading && <LottieFile />}
       <View style={{ position: "absolute", top: 40, right: 20 }}>
         <Ionicons
           onPress={auth.logout}
@@ -47,7 +47,7 @@ const HomeScreen = () => {
           color={AppColors.black}
         />
       </View>
-      <View style={{ position: "absolute", top: 70 }}>
+      {/* <View style={{ position: "absolute", top: 70 }}>
         <View style={{ marginVertical: 40 }}>
           <Text
             style={{
@@ -66,19 +66,100 @@ const HomeScreen = () => {
             ></Image>
           </View>
         </View>
-      </View>
+      </View> */}
       <View
         style={{
           flex: 1,
-          paddingVertical: 100,
           justifyContent: "flex-end",
         }}
       >
-        <AppActiveButton
-          disabled={isDisabled}
-          isActive={isActive}
-          onPress={buttonPressHnalder}
-        />
+        <View
+          style={{ flexDirection: "row", alignItems: "center", marginLeft: 20 }}
+        >
+          <Image
+            style={{ width: 100, height: 100 }}
+            source={require("../contants/images/profile.png")}
+          />
+          <View style={{ marginLeft: 20 }}>
+            <Text style={{ fontSize: 20, color: "gray", marginBottom: 10 }}>
+              {auth.user.name}
+            </Text>
+            <Text style={{ fontSize: 20, color: "gray" }}>
+              {auth.user.phone}
+            </Text>
+          </View>
+        </View>
+        <View
+          style={{
+            backgroundColor: AppColors.primary,
+            height: 220,
+            borderTopEndRadius: 50,
+            borderTopStartRadius: 50,
+            bottom: -80,
+            alignItems: "center",
+          }}
+        >
+          <FlatList
+            data={["orders", "requests", "talabats"]}
+            horizontal
+            contentContainerStyle={{}}
+            renderItem={({ item }) => {
+              return (
+                <View
+                  style={{
+                    width: 100,
+                    height: 100,
+                    marginHorizontal: 10,
+                    marginVertical: 30,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    borderRadius: 20,
+                    backgroundColor: "rgba(190, 221, 231,0.3)",
+                  }}
+                >
+                  <Text
+                    style={{ color: "white", fontSize: 16, fontWeight: "600" }}
+                  >
+                    {item}
+                  </Text>
+                  <Text
+                    style={{ color: "white", fontSize: 16, fontWeight: "600" }}
+                  >
+                    100
+                  </Text>
+                </View>
+              );
+            }}
+          />
+        </View>
+        <View
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "white",
+            height: 400,
+            borderTopEndRadius: 50,
+            borderTopStartRadius: 50,
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 25,
+              textAlign: "center",
+              width: 350,
+              textTransform: "capitalize",
+              paddingVertical: 20,
+              top: -20,
+            }}
+          >
+            toggle the button to change your status
+          </Text>
+          <AppActiveButton
+            disabled={isDisabled}
+            isActive={isActive}
+            onPress={buttonPressHnalder}
+          />
+        </View>
       </View>
     </View>
   );
@@ -88,8 +169,6 @@ export default HomeScreen;
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: "center",
-    alignItems: "center",
     flex: 1,
     backgroundColor: "#f4f1f6",
   },

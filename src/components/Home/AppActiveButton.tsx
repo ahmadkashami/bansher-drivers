@@ -18,7 +18,7 @@ const AppActiveButton = ({
       style={({ pressed }) => [
         styles.container,
         pressed && styles.pressed,
-        isActive && { backgroundColor: "green" },
+        isActive && { backgroundColor: AppColors.primary },
       ]}
     >
       <Text style={styles.text}>{isActive ? "online" : "offline"}</Text>
