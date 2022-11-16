@@ -19,5 +19,5 @@ export function ErrorHandlerApi(e: any) {
       Array.isArray(val) ? errors.push(val[0]) : errors.push(val as string);
     });
   }
-  if (errors.length > 0) Alert.alert(errors.join(" "));
+  return errors.join(" ");
 }

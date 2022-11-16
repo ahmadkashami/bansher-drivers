@@ -1,5 +1,5 @@
 import { FlatList, Image, StyleSheet, Text, View } from "react-native";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import AppActiveButton from "../components/Home/AppActiveButton";
 import { Ionicons } from "@expo/vector-icons";
 import { AppColors } from "../contants/Colors";
@@ -9,13 +9,18 @@ import { TruckDto } from "../Dtos/user.dto";
 import { TruckContext } from "../store/truckContext";
 import { setStoreageValues } from "../helpers/AppAsyncStoreage";
 import LottieFile from "../components/ui/LottieFile";
+import { t } from "i18next";
 
 const HomeScreen = () => {
   const auth = useContext(AuthContext);
   const { truck, updateTruck } = useContext(TruckContext);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isActive, setIsActive] = useState(truck.status);
+  const [isActive, setIsActive] = useState(truck?.status);
   const [isDisabled, setisDisabled] = useState(false);
+
+  useEffect(() => {
+    setIsActive(truck?.status);
+  }, [truck]);
   async function buttonPressHnalder() {
     setisDisabled(true);
     setIsLoading(true);
@@ -26,14 +31,12 @@ const HomeScreen = () => {
       setStoreageValues("user", JSON.stringify(auth.user));
       updateTruck(updatedTruck);
     } catch (error) {
-      console.log(error.response.data);
+      console.log(error.message);
     } finally {
-      setIsActive((prev) => !prev);
       setIsLoading(false);
-
       setTimeout(() => {
         setisDisabled(false);
-      }, 2000);
+      }, 1000);
     }
   }
   return (
@@ -102,7 +105,6 @@ const HomeScreen = () => {
           <FlatList
             data={["orders", "requests", "talabats"]}
             horizontal
-            contentContainerStyle={{}}
             renderItem={({ item }) => {
               return (
                 <View
@@ -137,7 +139,7 @@ const HomeScreen = () => {
             justifyContent: "center",
             alignItems: "center",
             backgroundColor: "white",
-            height: 400,
+            height: "45%",
             borderTopEndRadius: 50,
             borderTopStartRadius: 50,
           }}
@@ -148,11 +150,23 @@ const HomeScreen = () => {
               textAlign: "center",
               width: 350,
               textTransform: "capitalize",
-              paddingVertical: 20,
+              paddingVertical: 15,
               top: -20,
             }}
           >
-            toggle the button to change your status
+            {t("ToggleButton")}
+          </Text>
+          <Text
+            style={{
+              fontSize: 16,
+              color: "gray",
+              textAlign: "center",
+              textTransform: "capitalize",
+              paddingVertical: 5,
+              top: -10,
+            }}
+          >
+            {t("IncaseOffline")}
           </Text>
           <AppActiveButton
             disabled={isDisabled}

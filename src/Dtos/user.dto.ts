@@ -24,8 +24,6 @@ export class TruckDto {
   status: boolean;
   user_id: number;
   constructor(truck: ITruck) {
-    console.log(truck);
-
     this.id = truck.id;
     this.user_id = truck.user_id;
     this.active = truck.active;
