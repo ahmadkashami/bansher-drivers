@@ -7,6 +7,7 @@ import MainStackNavigation from "./src/navigations/MainStack.Navigation";
 import AuthScreen from "./src/screens/AuthScreen";
 import { AuthContext, AuthProvider } from "./src/store/AuthContext";
 import { TruckContext, TruckProvider } from "./src/store/truckContext";
+import "./src/translation/Translation.config";
 
 export default function App() {
   return (
@@ -26,6 +27,8 @@ const Root = () => {
       const token = await AsyncStorage.getItem("token");
       //todo change truck to sperate item in localstoreage
       const cashedUser = await AsyncStorage.getItem("user");
+      console.log({ cashedUser });
+
       if (cashedUser) {
         const user = JSON.parse(cashedUser);
         authctx.authUser(user);
@@ -36,9 +39,7 @@ const Root = () => {
       }
     }
     prepareApp();
-  }, []);
-  console.log(authctx.isAuthticated);
-
+  }, [authctx.isAuthticated]);
   return authctx.isAuthticated ? <MainStackNavigation /> : <AuthScreen />;
 };
 

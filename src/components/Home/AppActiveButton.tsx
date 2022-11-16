@@ -1,6 +1,7 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { AppColors } from "../../contants/Colors";
+import { useTranslation } from "react-i18next";
 
 const AppActiveButton = ({
   disabled,
@@ -11,6 +12,8 @@ const AppActiveButton = ({
   isActive: boolean;
   onPress: () => void;
 }) => {
+  const { t } = useTranslation();
+
   return (
     <Pressable
       disabled={disabled}
@@ -21,7 +24,7 @@ const AppActiveButton = ({
         isActive && { backgroundColor: AppColors.primary },
       ]}
     >
-      <Text style={styles.text}>{isActive ? "online" : "offline"}</Text>
+      <Text style={styles.text}>{isActive ? t("Online") : t("Offline")}</Text>
     </Pressable>
   );
 };
@@ -33,9 +36,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "gray",
-    width: 200,
-    height: 200,
-    borderRadius: 100,
+    width: 150,
+    height: 150,
+    borderRadius: 75,
   },
   text: {
     color: AppColors.white,

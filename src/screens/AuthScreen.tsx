@@ -15,19 +15,26 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import FilledButton from "../components/FilledButton";
 import { AuthContext } from "../store/AuthContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { client } from "../api/axios.config";
 import { login } from "../api/Auth.api";
 import { UserDto } from "../Dtos/user.dto";
 import { ErrorHandlerApi } from "../helpers/AppHelpers";
 import LottieFile from "../components/ui/LottieFile";
+import { showMessage, hideMessage } from "react-native-flash-message";
+import FlashMessage from "react-native-flash-message";
 
 const AuthScreen = () => {
   const auth = useContext(AuthContext);
   const [inputs, setInputs] = useState({ phone: "", password: "" });
+  const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   async function submitHandler() {
     if (!inputs.password || !inputs.phone) {
-      Alert.alert("invalid inputs");
+      showMessage({
+        message: "Error Message",
+        description: "invalid inputs",
+        type: "danger",
+      });
+
       return;
     }
     if (inputs.phone.length < 8) {
@@ -38,17 +45,32 @@ const AuthScreen = () => {
     try {
       setIsLoading(true);
       const phoneWithCode = "965" + inputs.phone;
+
       const { access_token, data } = await login(
         phoneWithCode,
         inputs.password
       );
+      if (!data || !data.truck) throw new Error("internal server error");
       const user = new UserDto(data);
       AsyncStorage.setItem("token", access_token);
       AsyncStorage.setItem("user", JSON.stringify(user));
       auth.authUser(user);
       auth.authenticate("token");
     } catch (error) {
-      ErrorHandlerApi(error);
+      if (error?.response?.data) {
+        const errorMessage = ErrorHandlerApi(error);
+        showMessage({
+          message: "Error Message",
+          description: errorMessage,
+          type: "danger",
+        });
+      } else {
+        showMessage({
+          message: "Error Message",
+          description: error.message,
+          type: "danger",
+        });
+      }
     } finally {
       setIsLoading(false);
     }
@@ -152,7 +174,7 @@ const AuthScreen = () => {
 
           <View style={{ justifyContent: "center", alignItems: "center" }}>
             <Text style={{ fontSize: 16 }}>
-              - if you neeed Help please{" "}
+              - if you neeed Help please
               <Text
                 onPress={() => Alert.alert("help")}
                 style={{ color: "dodgerblue" }}
@@ -164,6 +186,7 @@ const AuthScreen = () => {
           </View>
         </KeyboardAwareScrollView>
       </View>
+      <FlashMessage position="top" />
     </SafeAreaProvider>
   );
 };
