@@ -7,4 +7,5 @@ export const AppColors = {
   black: "#000000",
   white: "#fff",
   offGray: "#efefef",
+  Thirdnary: "#f4f1f6",
 };

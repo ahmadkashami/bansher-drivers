@@ -29,5 +29,5 @@
   "Online": "online",
   "Offline": "offline",
   "ToggleButton": "Toggle the button to change your status",
-  "IncaseOffline": "في حال كانت حالتك مغلق لن تتمكن من تلقي الطلبات"
+  "IncaseOffline": "In case your status is offline , you won`t be able to revice messages"
 }
