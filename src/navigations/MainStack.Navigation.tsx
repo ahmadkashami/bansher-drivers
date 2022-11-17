@@ -38,6 +38,7 @@ function BottomTabsNavigator() {
       <Tab.Screen
         name="Profile"
         options={{
+          headerShown: false,
           tabBarIcon: ({ focused, color, size }) => {
             return <Ionicons name="person-outline" size={size} color={color} />;
           },
