@@ -7,7 +7,7 @@ import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 
 import { AuthContext } from "../store/AuthContext";
 import { TrimPhoneExt } from "../helpers/AppHelpers";
-import { use } from "i18next";
+import InfoProfile from "../components/Profile/info.profile";
 
 const ProfileScreen = () => {
   const { user } = useContext(AuthContext);
@@ -33,7 +33,8 @@ const ProfileScreen = () => {
         </View>
 
         <View style={{ flex: 2 }}>
-          <View
+          <InfoProfile user={user} />
+          {/* <View
             style={{
               backgroundColor: "white",
               padding: 10,
@@ -84,7 +85,7 @@ const ProfileScreen = () => {
                 {TrimPhoneExt(user.phone)}
               </Text>
             </View>
-          </View>
+          </View> */}
           <ButtonsProfile title={"Language"} icon={"ios-language"} />
           <View
             style={{

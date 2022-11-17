@@ -50,26 +50,7 @@ const HomeScreen = () => {
           color={AppColors.black}
         />
       </View>
-      {/* <View style={{ position: "absolute", top: 70 }}>
-        <View style={{ marginVertical: 40 }}>
-          <Text
-            style={{
-              fontSize: 25,
-              textAlign: "center",
-              width: 350,
-              textTransform: "capitalize",
-            }}
-          >
-            toggle the button to change your status
-          </Text>
-          <View style={{ alignSelf: "center" }}>
-            <Image
-              style={{ resizeMode: "contain", width: 300, height: 300 }}
-              source={require("../contants/images/togglePic.png")}
-            ></Image>
-          </View>
-        </View>
-      </View> */}
+
       <View
         style={{
           flex: 1,
