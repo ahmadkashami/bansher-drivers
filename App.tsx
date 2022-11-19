@@ -2,6 +2,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StatusBar } from "expo-status-bar";
 import { useContext, useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
+import { useFonts } from "expo-font";
+
 import { TruckDto } from "./src/Dtos/user.dto";
 import MainStackNavigation from "./src/navigations/MainStack.Navigation";
 import AuthScreen from "./src/screens/AuthScreen";
@@ -19,6 +21,9 @@ export default function App() {
   );
 }
 const Root = () => {
+  const [fontsLoaded] = useFonts({
+    "Gotham-black": require("./src/contants/fonts/Gotham-Light.otf"),
+  });
   const authctx = useContext(AuthContext);
   const truckCtx = useContext(TruckContext);
 
