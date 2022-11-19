@@ -1,17 +1,25 @@
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  Alert,
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+  I18nManager,
+} from "react-native";
 import React, { useContext } from "react";
-import ScreenView from "../components/ui/ScreenView";
-import ButtonsProfile from "../components/Profile/Buttons.profile";
-import { AppColors } from "../contants/Colors";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { useTranslation } from "react-i18next";
 
+import ScreenView from "../components/ui/ScreenView";
 import { AuthContext } from "../store/AuthContext";
-import { TrimPhoneExt } from "../helpers/AppHelpers";
 import InfoProfile from "../components/Profile/info.profile";
+import LanguageSection from "../components/Profile/Language.section";
 
 const ProfileScreen = () => {
+  const { t } = useTranslation();
+
   const { user } = useContext(AuthContext);
-  console.log({ user });
 
   return (
     <ScreenView>
@@ -34,59 +42,7 @@ const ProfileScreen = () => {
 
         <View style={{ flex: 2 }}>
           <InfoProfile user={user} />
-          {/* <View
-            style={{
-              backgroundColor: "white",
-              padding: 10,
-              marginVertical: 20,
-              borderRadius: 20,
-            }}
-          >
-            <View
-              style={{
-                height: 50,
-                borderBottomWidth: 1,
-                borderBottomColor: AppColors.Thirdnary,
-                padding: 8,
-                flexDirection: "row",
-                justifyContent: "space-between",
-              }}
-            >
-              <Text style={{ height: 40, fontSize: 20 }}>Name</Text>
-              <Text style={{ height: 40, fontSize: 18, color: "silver" }}>
-                {user.name}
-              </Text>
-            </View>
-            <View
-              style={{
-                height: 50,
-                borderBottomWidth: 1,
-                borderBottomColor: AppColors.Thirdnary,
-                padding: 8,
-                flexDirection: "row",
-                justifyContent: "space-between",
-              }}
-            >
-              <Text style={{ height: 40, fontSize: 20 }}>Field of Work</Text>
-              <Text style={{ height: 40, fontSize: 18, color: "silver" }}>
-                {user.truck.fieldwork}
-              </Text>
-            </View>
-            <View
-              style={{
-                height: 50,
-                padding: 8,
-                flexDirection: "row",
-                justifyContent: "space-between",
-              }}
-            >
-              <Text style={{ height: 40, fontSize: 20 }}>Phone</Text>
-              <Text style={{ height: 40, fontSize: 18, color: "silver" }}>
-                {TrimPhoneExt(user.phone)}
-              </Text>
-            </View>
-          </View> */}
-          <ButtonsProfile title={"Language"} icon={"ios-language"} />
+          <LanguageSection />
           <View
             style={{
               backgroundColor: "white",
@@ -108,31 +64,7 @@ const ProfileScreen = () => {
                 color="black"
               />
               <Text style={{ marginLeft: 10, height: 40, fontSize: 20 }}>
-                Change password
-              </Text>
-            </View>
-            <View
-              style={{
-                height: 50,
-                padding: 8,
-                flexDirection: "row",
-              }}
-            >
-              <MaterialIcons name="local-police" size={24} color="black" />
-              <Text style={{ marginLeft: 10, height: 40, fontSize: 20 }}>
-                privacy and policy
-              </Text>
-            </View>
-            <Pressable
-              style={{
-                height: 50,
-                padding: 8,
-                flexDirection: "row",
-              }}
-            >
-              <Ionicons name="ios-help-outline" size={24} color="black" />
-              <Text style={{ marginLeft: 10, height: 40, fontSize: 20 }}>
-                help
+                {t("ChangePassword")}
               </Text>
               <View
                 style={{
@@ -142,7 +74,59 @@ const ProfileScreen = () => {
                   alignItems: "center",
                 }}
               >
-                <Ionicons name="chevron-forward" size={25} color="black" />
+                <Ionicons
+                  name={I18nManager.isRTL ? "chevron-back" : "chevron-forward"}
+                  size={25}
+                  color="black"
+                />
+              </View>
+            </View>
+            <Pressable style={styles.operations}>
+              <MaterialIcons name="local-police" size={24} color="black" />
+              <Text style={{ marginLeft: 10, height: 40, fontSize: 20 }}>
+                {t("PrivacyAndPolicy")}
+              </Text>
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: "flex-end",
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <Ionicons
+                  name={I18nManager.isRTL ? "chevron-back" : "chevron-forward"}
+                  size={25}
+                  color="black"
+                />
+              </View>
+            </Pressable>
+            <Pressable
+              onPress={() => {
+                Alert.alert("help");
+              }}
+              style={({ pressed }) => [
+                styles.operations,
+                pressed && styles.pressed,
+              ]}
+            >
+              <Ionicons name="ios-help-outline" size={24} color="black" />
+              <Text style={{ marginLeft: 10, height: 40, fontSize: 20 }}>
+                {t("Help")}
+              </Text>
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: "flex-end",
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <Ionicons
+                  name={I18nManager.isRTL ? "chevron-back" : "chevron-forward"}
+                  size={25}
+                  color="black"
+                />
               </View>
             </Pressable>
           </View>
@@ -159,5 +143,13 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     backgroundColor: "#f4f1f6",
+  },
+  operations: {
+    height: 50,
+    padding: 8,
+    flexDirection: "row",
+  },
+  pressed: {
+    opacity: 0.7,
   },
 });

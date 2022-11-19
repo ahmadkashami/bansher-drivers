@@ -10,6 +10,7 @@ import { TruckContext } from "../store/truckContext";
 import { setStoreageValues } from "../helpers/AppAsyncStoreage";
 import LottieFile from "../components/ui/LottieFile";
 import { t } from "i18next";
+import { TrimPhoneExt } from "../helpers/AppHelpers";
 
 const HomeScreen = () => {
   const auth = useContext(AuthContext);
@@ -69,7 +70,7 @@ const HomeScreen = () => {
               {auth.user.name}
             </Text>
             <Text style={{ fontSize: 20, color: "gray" }}>
-              {auth.user.phone}
+              {TrimPhoneExt(auth.user.phone)}
             </Text>
           </View>
         </View>
@@ -84,8 +85,9 @@ const HomeScreen = () => {
           }}
         >
           <FlatList
-            data={["orders", "requests", "talabats"]}
+            data={["orders", "requests", "talabats", "bson"]}
             horizontal
+            contentContainerStyle={{ width: "85%" }}
             renderItem={({ item }) => {
               return (
                 <View
@@ -143,6 +145,7 @@ const HomeScreen = () => {
               color: "gray",
               textAlign: "center",
               textTransform: "capitalize",
+              width: "80%",
               paddingVertical: 5,
               top: -10,
             }}

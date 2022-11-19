@@ -3,9 +3,18 @@ import { Ionicons } from "@expo/vector-icons";
 import { AppColors } from "../../contants/Colors";
 import React from "react";
 
-const ButtonsProfile = ({ title, icon = "home" }) => {
+const ButtonsProfile = ({
+  title,
+  icon = "home",
+  onPress,
+}: {
+  title: string;
+  icons: string;
+  onPress: () => void;
+}) => {
   return (
     <Pressable
+      onPress={onPress}
       style={({ pressed }) => [
         {
           height: 60,
