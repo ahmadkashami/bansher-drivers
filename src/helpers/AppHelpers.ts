@@ -21,3 +21,7 @@ export function ErrorHandlerApi(e: any) {
   }
   return errors.join(" ");
 }
+
+export function TrimPhoneExt(phone: string) {
+  return phone.slice(3);
+}

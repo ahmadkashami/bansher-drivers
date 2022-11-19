@@ -10,6 +10,7 @@ import { TruckContext } from "../store/truckContext";
 import { setStoreageValues } from "../helpers/AppAsyncStoreage";
 import LottieFile from "../components/ui/LottieFile";
 import { t } from "i18next";
+import { TrimPhoneExt } from "../helpers/AppHelpers";
 
 const HomeScreen = () => {
   const auth = useContext(AuthContext);
@@ -50,26 +51,7 @@ const HomeScreen = () => {
           color={AppColors.black}
         />
       </View>
-      {/* <View style={{ position: "absolute", top: 70 }}>
-        <View style={{ marginVertical: 40 }}>
-          <Text
-            style={{
-              fontSize: 25,
-              textAlign: "center",
-              width: 350,
-              textTransform: "capitalize",
-            }}
-          >
-            toggle the button to change your status
-          </Text>
-          <View style={{ alignSelf: "center" }}>
-            <Image
-              style={{ resizeMode: "contain", width: 300, height: 300 }}
-              source={require("../contants/images/togglePic.png")}
-            ></Image>
-          </View>
-        </View>
-      </View> */}
+
       <View
         style={{
           flex: 1,
@@ -88,7 +70,7 @@ const HomeScreen = () => {
               {auth.user.name}
             </Text>
             <Text style={{ fontSize: 20, color: "gray" }}>
-              {auth.user.phone}
+              {TrimPhoneExt(auth.user.phone)}
             </Text>
           </View>
         </View>
@@ -103,8 +85,9 @@ const HomeScreen = () => {
           }}
         >
           <FlatList
-            data={["orders", "requests", "talabats"]}
+            data={["orders", "requests", "talabats", "bson"]}
             horizontal
+            contentContainerStyle={{ width: "85%" }}
             renderItem={({ item }) => {
               return (
                 <View
@@ -162,6 +145,7 @@ const HomeScreen = () => {
               color: "gray",
               textAlign: "center",
               textTransform: "capitalize",
+              width: "80%",
               paddingVertical: 5,
               top: -10,
             }}

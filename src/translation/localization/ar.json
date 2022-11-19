@@ -8,7 +8,7 @@
   "Login": "تسجيل دخول",
   "choseLanguage": "اختر لغة",
   "notifications": "الاشعارات",
-  "language": "اللغة",
+  "Language": "اللغة",
   "MyProfile": "الملف الشخصي",
   "Version": "الاصدار ",
   "Cancel": "الغاء",
@@ -16,6 +16,7 @@
   "Confirm": "تاكيد",
   "Verfiy": "تحقق",
   "Name": "الاسم",
+  "fieldOfWork": "مجال العمل",
   "Email": "ايميل",
   "Location": "الموقع",
   "PhoneNumber": "رقم الهاتف",
@@ -24,5 +25,6 @@
   "Online": "متصل",
   "Offline": "مغلق",
   "ToggleButton": "اضغط على الزر لتغير حالتك",
-  "IncaseOffline": "في حال كانت حالتك مغلق لن تتمكن من تلقي الطلبات"
+  "IncaseOffline": "في حال كانت حالتك مغلق لن تتمكن من تلقي الطلبات",
+  "ChangePassword": "تغير كلمة السر"
 }
