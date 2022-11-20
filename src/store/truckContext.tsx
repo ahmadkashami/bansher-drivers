@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { createContext, ReactNode, useState } from "react";
 import { TruckDto } from "../Dtos/user.dto";
 
@@ -24,10 +25,7 @@ export const TruckProvider = ({ children }: { children: ReactNode }) => {
   function updateTruck(truck: TruckDto) {
     setTruck(truck);
   }
-  const value = {
-    truck,
-    updateTruck,
-  };
+  const value = useMemo(() => ({ truck, updateTruck }), [truck, updateTruck]);
 
   return (
     <TruckContext.Provider value={value}>{children}</TruckContext.Provider>

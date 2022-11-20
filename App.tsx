@@ -10,7 +10,8 @@ import AuthScreen from "./src/screens/AuthScreen";
 import { AuthContext, AuthProvider } from "./src/store/AuthContext";
 import { TruckContext, TruckProvider } from "./src/store/truckContext";
 import "./src/translation/Translation.config";
-
+import "./src/services/LocationTask";
+import { useTruckStore } from "./src/store/truck.zustand";
 export default function App() {
   return (
     <AuthProvider>
@@ -25,19 +26,17 @@ const Root = () => {
     "Gotham-black": require("./src/contants/fonts/Gotham-Light.otf"),
   });
   const authctx = useContext(AuthContext);
-  const truckCtx = useContext(TruckContext);
-
+  const updateTruck = useTruckStore((state) => state.updateTruck);
   useEffect(() => {
     async function prepareApp() {
       const token = await AsyncStorage.getItem("token");
       //todo change truck to sperate item in localstoreage
       const cashedUser = await AsyncStorage.getItem("user");
-      console.log({ cashedUser });
 
       if (cashedUser) {
         const user = JSON.parse(cashedUser);
         authctx.authUser(user);
-        truckCtx.updateTruck(new TruckDto(user.truck));
+        updateTruck(new TruckDto(user.truck));
       }
       if (token) {
         authctx.authenticate(token);

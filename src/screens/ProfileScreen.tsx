@@ -6,6 +6,7 @@ import {
   Text,
   View,
   I18nManager,
+  Button,
 } from "react-native";
 import React, { useContext } from "react";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
@@ -19,7 +20,7 @@ import LanguageSection from "../components/Profile/Language.section";
 const ProfileScreen = () => {
   const { t } = useTranslation();
 
-  const { user } = useContext(AuthContext);
+  const { user, logout } = useContext(AuthContext);
 
   return (
     <ScreenView>
@@ -32,6 +33,13 @@ const ProfileScreen = () => {
             borderRadius: 20,
           }}
         >
+          <Ionicons
+            onPress={logout}
+            style={{ position: "absolute", top: 0, right: 10 }}
+            name="log-out-outline"
+            size={35}
+            color="black"
+          />
           <Image
             style={{ width: 150, height: 150 }}
             source={require("../contants/images/profile.png")}

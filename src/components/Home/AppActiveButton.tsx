@@ -1,31 +1,44 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { AppColors } from "../../contants/Colors";
 import { useTranslation } from "react-i18next";
+import ActiveButton from "./ActiveButton";
 
 const AppActiveButton = ({
-  disabled,
-  isActive,
+  status,
   onPress,
+  disabled,
 }: {
-  disabled: boolean;
-  isActive: boolean;
+  status: boolean;
   onPress: () => void;
+  disabled: boolean;
 }) => {
   const { t } = useTranslation();
+  const [isActive, setIsActive] = useState(false);
+  console.log({ status });
+
+  useEffect(() => {
+    if (status) setIsActive(status);
+  }, [status]);
 
   return (
-    <Pressable
+    <ActiveButton
+      isActive={status}
       disabled={disabled}
       onPress={onPress}
-      style={({ pressed }) => [
-        styles.container,
-        pressed && styles.pressed,
-        isActive && { backgroundColor: AppColors.primary },
-      ]}
-    >
-      <Text style={styles.text}>{isActive ? t("Online") : t("Offline")}</Text>
-    </Pressable>
+      text={isActive ? t("Online") : t("Offline")}
+    />
+    // <Pressable
+    //   disabled={disabled}
+    //   onPress={onPress}
+    //   style={({ pressed }) => [
+    //     styles.container,
+    //     pressed && styles.pressed,
+    //     isActive && { backgroundColor: AppColors.primary },
+    //   ]}
+    // >
+    //   <Text style={styles.text}>{isActive ? t("Online") : t("Offline")}</Text>
+    // </Pressable>
   );
 };
 

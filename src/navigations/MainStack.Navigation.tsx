@@ -6,19 +6,6 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { StyleSheet } from "react-native";
 import HomeScreen from "../screens/HomeScreen";
 import ProfileScreen from "../screens/ProfileScreen";
-const Stack = createStackNavigator();
-
-const HomeStackNavigator = () => {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="HomeScreen"
-        component={HomeScreen}
-      />
-    </Stack.Navigator>
-  );
-};
 
 const Tab = createBottomTabNavigator();
 
@@ -57,5 +44,3 @@ const MainStackNavigation = () => {
 };
 
 export default MainStackNavigation;
-
-const styles = StyleSheet.create({});

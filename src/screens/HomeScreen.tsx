@@ -1,27 +1,68 @@
-import { FlatList, Image, StyleSheet, Text, View } from "react-native";
-import React, { useContext, useEffect, useState } from "react";
+import { Button, FlatList, StyleSheet, Text, View } from "react-native";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import AppActiveButton from "../components/Home/AppActiveButton";
 import { Ionicons } from "@expo/vector-icons";
+import shallow from "zustand/shallow";
+
+import { t } from "i18next";
+import * as Location from "expo-location";
+
 import { AppColors } from "../contants/Colors";
 import { AuthContext } from "../store/AuthContext";
 import { updateTruckStatus } from "../api/Home.Api";
 import { TruckDto } from "../Dtos/user.dto";
-import { TruckContext } from "../store/truckContext";
 import { setStoreageValues } from "../helpers/AppAsyncStoreage";
 import LottieFile from "../components/ui/LottieFile";
-import { t } from "i18next";
-import { TrimPhoneExt } from "../helpers/AppHelpers";
+
+import AppMapView from "../components/Home/AppMapView";
+import { LOCATION_TASK_NAME } from "../services/LocationTask";
+import { useTruckStore } from "../store/truck.zustand";
+import { Region } from "../interfaces/types";
 
 const HomeScreen = () => {
+  const [status, requestPermission] = Location.useBackgroundPermissions();
   const auth = useContext(AuthContext);
-  const { truck, updateTruck } = useContext(TruckContext);
+  // const { truck, updateTruck } = useContext(TruckContext);
+  const { truck, updateTruck } = useTruckStore(
+    (state) => ({
+      truck: state.truck,
+      updateTruck: state.updateTruck,
+    }),
+    shallow
+  );
+  const reagonRef = useRef<Region | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isActive, setIsActive] = useState(truck?.status);
   const [isDisabled, setisDisabled] = useState(false);
+  console.log(truck);
 
   useEffect(() => {
+    if (truck?.location.lat && truck?.location.long) {
+      reagonRef.current = {
+        latitude: truck.location.lat,
+        longitude: truck.location.long,
+        latitudeDelta: 0.09,
+        longitudeDelta: 0.09,
+      };
+    }
     setIsActive(truck?.status);
   }, [truck]);
+
+  const requestPermissions = async () => {
+    const { status } = await requestPermission();
+    console.log({ status });
+    console.log("hello");
+
+    if (status === "granted") {
+      await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
+        accuracy: Location.Accuracy.Balanced,
+        showsBackgroundLocationIndicator: true,
+        deferredUpdatesInterval: 5,
+        timeInterval: 5000,
+      });
+    }
+  };
+
   async function buttonPressHnalder() {
     setisDisabled(true);
     setIsLoading(true);
@@ -58,22 +99,8 @@ const HomeScreen = () => {
           justifyContent: "flex-end",
         }}
       >
-        <View
-          style={{ flexDirection: "row", alignItems: "center", marginLeft: 20 }}
-        >
-          <Image
-            style={{ width: 100, height: 100 }}
-            source={require("../contants/images/profile.png")}
-          />
-          <View style={{ marginLeft: 20 }}>
-            <Text style={{ fontSize: 20, color: "gray", marginBottom: 10 }}>
-              {auth.user.name}
-            </Text>
-            <Text style={{ fontSize: 20, color: "gray" }}>
-              {TrimPhoneExt(auth.user.phone)}
-            </Text>
-          </View>
-        </View>
+        <AppMapView reagon={reagonRef.current} />
+
         <View
           style={{
             backgroundColor: AppColors.primary,
@@ -154,7 +181,7 @@ const HomeScreen = () => {
           </Text>
           <AppActiveButton
             disabled={isDisabled}
-            isActive={isActive}
+            status={truck?.status}
             onPress={buttonPressHnalder}
           />
         </View>

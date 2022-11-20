@@ -26,6 +26,8 @@ const languageDetectorPlugin = {
   cacheUserLanguage: async function (language: string) {
     try {
       //save a user's language choice in Async storage
+      console.log({ language, lengo: Localization.locale });
+
       await AsyncStorage.setItem(STORE_LANGUAGE_KEY, language);
     } catch (error) {}
   },

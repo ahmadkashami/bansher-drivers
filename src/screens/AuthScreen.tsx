@@ -51,6 +51,8 @@ const AuthScreen = () => {
         inputs.password
       );
       if (!data || !data.truck) throw new Error("internal server error");
+      console.log(data);
+
       const user = new UserDto(data);
       AsyncStorage.setItem("token", access_token);
       AsyncStorage.setItem("user", JSON.stringify(user));

@@ -22,8 +22,6 @@ const laguages = [
     lable: "English",
   },
   { name: "ar", lable: "Arabic" },
-  { name: "fr", lable: "france" },
-  { name: "gr", lable: "german" },
 
   //   {
   //     name: "en",
@@ -47,7 +45,7 @@ const LanguagePicker: FC<LanguagePickerProps> = ({
 }) => {
   const { i18n, t } = useTranslation(); //i18n instance
   const currnetLang = i18n.language;
-  console.log(currnetLang);
+  console.log({ currnetLang });
 
   async function selectLanguageHandler(lang: string) {
     i18n.changeLanguage(lang).then((res) => {

@@ -7,6 +7,8 @@ export class UserDto {
   truck: TruckDto;
   phone: string;
   constructor(user: IUser) {
+    console.log({ user });
+
     this.phone = user.phone;
     this.id = user.id;
     this.name = user.name;
@@ -20,16 +22,32 @@ export class TruckDto {
   company_id: number;
   fieldwork: string;
   id: number;
-  location: ILocation;
+  location: Location;
   status: boolean;
   user_id: number;
   constructor(truck: ITruck) {
+    console.log(truck);
+    console.log("sosos");
+
+    // console.log(truck.location, "dto");
+
     this.id = truck.id;
     this.user_id = truck.user_id;
     this.active = truck.active;
-    this.location = { lat: truck.lat, long: truck.lang };
+    this.location = new Location(truck.lat, truck.lang);
     this.company_id = truck.company_id;
     this.fieldwork = truck.fieldwork;
     this.status = truck.status;
+  }
+}
+
+export class Location {
+  lat: number;
+  long: number;
+  constructor(lat: number, long: number) {
+    console.log(lat, long);
+
+    this.lat = lat;
+    this.long = long;
   }
 }
