@@ -26,11 +26,6 @@ export class TruckDto {
   status: boolean;
   user_id: number;
   constructor(truck: ITruck) {
-    console.log(truck);
-    console.log("sosos");
-
-    // console.log(truck.location, "dto");
-
     this.id = truck.id;
     this.user_id = truck.user_id;
     this.active = truck.active;
@@ -45,8 +40,6 @@ export class Location {
   lat: number;
   long: number;
   constructor(lat: number, long: number) {
-    console.log(lat, long);
-
     this.lat = lat;
     this.long = long;
   }

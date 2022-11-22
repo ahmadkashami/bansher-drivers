@@ -1,12 +1,21 @@
-import { Button, FlatList, StyleSheet, Text, View } from "react-native";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import {
+  Button,
+  FlatList,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import AppActiveButton from "../components/Home/AppActiveButton";
-import { Ionicons } from "@expo/vector-icons";
 import shallow from "zustand/shallow";
-
-import { t } from "i18next";
 import * as Location from "expo-location";
-
 import { AppColors } from "../contants/Colors";
 import { AuthContext } from "../store/AuthContext";
 import { updateTruckStatus } from "../api/Home.Api";
@@ -14,13 +23,23 @@ import { TruckDto } from "../Dtos/user.dto";
 import { setStoreageValues } from "../helpers/AppAsyncStoreage";
 import LottieFile from "../components/ui/LottieFile";
 
-import AppMapView from "../components/Home/AppMapView";
-import { LOCATION_TASK_NAME } from "../services/LocationTask";
+import * as TaskManager from "expo-task-manager";
+import {
+  defineTask,
+  LOCATION_TASK_NAME,
+  registerBackgroundFetchAsync,
+  unregisterBAckgroundFetchAsync,
+} from "../services/LocationTask";
 import { useTruckStore } from "../store/truck.zustand";
 import { Region } from "../interfaces/types";
+import ScreenView from "../components/ui/ScreenView";
+import HeaderSection from "../components/Home/HeaderSection";
+import { useTranslation } from "react-i18next";
 
 const HomeScreen = () => {
   const [status, requestPermission] = Location.useBackgroundPermissions();
+  const [statusfg, requestPerssionfk] = Location.useForegroundPermissions();
+  const { t } = useTranslation();
   const auth = useContext(AuthContext);
   // const { truck, updateTruck } = useContext(TruckContext);
   const { truck, updateTruck } = useTruckStore(
@@ -34,7 +53,6 @@ const HomeScreen = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isActive, setIsActive] = useState(truck?.status);
   const [isDisabled, setisDisabled] = useState(false);
-  console.log(truck);
 
   useEffect(() => {
     if (truck?.location.lat && truck?.location.long) {
@@ -45,22 +63,48 @@ const HomeScreen = () => {
         longitudeDelta: 0.09,
       };
     }
+    perpareTask(truck?.status);
     setIsActive(truck?.status);
   }, [truck]);
 
+  const perpareTask = useCallback(
+    async (status: boolean) => {
+      console.log({ status });
+
+      if (status == true) {
+        requestPermissions();
+        const res = await TaskManager.getRegisteredTasksAsync();
+        console.log({ res });
+
+        const isDefiend = TaskManager.isTaskDefined(LOCATION_TASK_NAME);
+        console.log({ isDefiend });
+
+        if (!isDefiend) defineTask();
+        await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
+          timeInterval: 1 * 60,
+          accuracy: Location.Accuracy.High,
+        });
+        // if (!isRegistered && truck && truck.status == true) {
+        //   registerBackgroundFetchAsync(LOCATION_TASK_NAME);
+        // } else if (isRegistered && truck && truck.status == false) {
+        //   unregisterBAckgroundFetchAsync(LOCATION_TASK_NAME);
+        // }
+      } else if (status == false) {
+        console.log("here");
+        const isDefiend = await TaskManager.isTaskDefined(LOCATION_TASK_NAME);
+        if (isDefiend)
+          await TaskManager.unregisterTaskAsync(LOCATION_TASK_NAME);
+        return;
+      }
+    },
+    [truck.status]
+  );
   const requestPermissions = async () => {
     const { status } = await requestPermission();
-    console.log({ status });
-    console.log("hello");
+    const response = await requestPerssionfk();
+    console.log(response);
 
-    if (status === "granted") {
-      await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
-        accuracy: Location.Accuracy.Balanced,
-        showsBackgroundLocationIndicator: true,
-        deferredUpdatesInterval: 5,
-        timeInterval: 5000,
-      });
-    }
+    return status;
   };
 
   async function buttonPressHnalder() {
@@ -84,14 +128,6 @@ const HomeScreen = () => {
   return (
     <View style={styles.container}>
       {isLoading && <LottieFile />}
-      <View style={{ position: "absolute", top: 40, right: 20 }}>
-        <Ionicons
-          onPress={auth.logout}
-          name="log-out-outline"
-          size={30}
-          color={AppColors.black}
-        />
-      </View>
 
       <View
         style={{
@@ -99,8 +135,10 @@ const HomeScreen = () => {
           justifyContent: "flex-end",
         }}
       >
-        <AppMapView reagon={reagonRef.current} />
-
+        {/* <AppMapView reagon={reagonRef.current} /> */}
+        <ScreenView>
+          <HeaderSection user={auth.user} />
+        </ScreenView>
         <View
           style={{
             backgroundColor: AppColors.primary,
@@ -114,7 +152,8 @@ const HomeScreen = () => {
           <FlatList
             data={["orders", "requests", "talabats", "bson"]}
             horizontal
-            contentContainerStyle={{ width: "85%" }}
+            style={{ width: "85%" }}
+            // contentContainerStyle={{ width: "85%" }}
             renderItem={({ item }) => {
               return (
                 <View
@@ -148,7 +187,7 @@ const HomeScreen = () => {
           style={{
             justifyContent: "center",
             alignItems: "center",
-            backgroundColor: "white",
+            backgroundColor: AppColors.Thirdnary,
             height: "45%",
             borderTopEndRadius: 50,
             borderTopStartRadius: 50,

@@ -7,6 +7,7 @@ import {
   View,
   I18nManager,
   Button,
+  ScrollView,
 } from "react-native";
 import React, { useContext } from "react";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
@@ -24,122 +25,130 @@ const ProfileScreen = () => {
 
   return (
     <ScreenView>
-      <View style={styles.container}>
-        <View
-          style={{
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
-            borderRadius: 20,
-          }}
-        >
-          <Ionicons
-            onPress={logout}
-            style={{ position: "absolute", top: 0, right: 10 }}
-            name="log-out-outline"
-            size={35}
-            color="black"
-          />
-          <Image
-            style={{ width: 150, height: 150 }}
-            source={require("../contants/images/profile.png")}
-          />
-          <Text style={{ fontSize: 20 }}>{user.name}</Text>
-          <Text style={{ fontSize: 20 }}>company </Text>
-        </View>
-
-        <View style={{ flex: 2 }}>
-          <InfoProfile user={user} />
-          <LanguageSection />
+      <ScrollView style={{ flex: 1 }}>
+        <View style={styles.container}>
           <View
             style={{
-              backgroundColor: "white",
-              padding: 10,
-              marginVertical: 20,
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
               borderRadius: 20,
             }}
           >
+            <Ionicons
+              onPress={logout}
+              style={{ position: "absolute", top: 0, right: 10 }}
+              name="log-out-outline"
+              size={35}
+              color="black"
+            />
+            <Image
+              style={{ width: 150, height: 150 }}
+              source={require("../contants/images/profile.png")}
+            />
+            <Text style={{ fontSize: 20 }}>{user.name}</Text>
+            <Text style={{ fontSize: 20 }}>company </Text>
+          </View>
+
+          <View style={{ flex: 2 }}>
+            <InfoProfile user={user} />
+            <LanguageSection />
             <View
               style={{
-                height: 50,
-                padding: 8,
-                flexDirection: "row",
+                backgroundColor: "white",
+                padding: 10,
+                marginVertical: 20,
+                borderRadius: 20,
               }}
             >
-              <Ionicons
-                name="ios-lock-closed-outline"
-                size={24}
-                color="black"
-              />
-              <Text style={{ marginLeft: 10, height: 40, fontSize: 20 }}>
-                {t("ChangePassword")}
-              </Text>
               <View
                 style={{
-                  flex: 1,
-                  justifyContent: "flex-end",
+                  height: 50,
+                  padding: 8,
                   flexDirection: "row",
-                  alignItems: "center",
                 }}
               >
                 <Ionicons
-                  name={I18nManager.isRTL ? "chevron-back" : "chevron-forward"}
-                  size={25}
+                  name="ios-lock-closed-outline"
+                  size={24}
                   color="black"
                 />
+                <Text style={{ marginLeft: 10, height: 40, fontSize: 20 }}>
+                  {t("ChangePassword")}
+                </Text>
+                <View
+                  style={{
+                    flex: 1,
+                    justifyContent: "flex-end",
+                    flexDirection: "row",
+                    alignItems: "center",
+                  }}
+                >
+                  <Ionicons
+                    name={
+                      I18nManager.isRTL ? "chevron-back" : "chevron-forward"
+                    }
+                    size={25}
+                    color="black"
+                  />
+                </View>
               </View>
+              <Pressable style={styles.operations}>
+                <MaterialIcons name="local-police" size={24} color="black" />
+                <Text style={{ marginLeft: 10, height: 40, fontSize: 20 }}>
+                  {t("PrivacyAndPolicy")}
+                </Text>
+                <View
+                  style={{
+                    flex: 1,
+                    justifyContent: "flex-end",
+                    flexDirection: "row",
+                    alignItems: "center",
+                  }}
+                >
+                  <Ionicons
+                    name={
+                      I18nManager.isRTL ? "chevron-back" : "chevron-forward"
+                    }
+                    size={25}
+                    color="black"
+                  />
+                </View>
+              </Pressable>
+              <Pressable
+                onPress={() => {
+                  Alert.alert("help");
+                }}
+                style={({ pressed }) => [
+                  styles.operations,
+                  pressed && styles.pressed,
+                ]}
+              >
+                <Ionicons name="ios-help-outline" size={24} color="black" />
+                <Text style={{ marginLeft: 10, height: 40, fontSize: 20 }}>
+                  {t("Help")}
+                </Text>
+                <View
+                  style={{
+                    flex: 1,
+                    justifyContent: "flex-end",
+                    flexDirection: "row",
+                    alignItems: "center",
+                  }}
+                >
+                  <Ionicons
+                    name={
+                      I18nManager.isRTL ? "chevron-back" : "chevron-forward"
+                    }
+                    size={25}
+                    color="black"
+                  />
+                </View>
+              </Pressable>
             </View>
-            <Pressable style={styles.operations}>
-              <MaterialIcons name="local-police" size={24} color="black" />
-              <Text style={{ marginLeft: 10, height: 40, fontSize: 20 }}>
-                {t("PrivacyAndPolicy")}
-              </Text>
-              <View
-                style={{
-                  flex: 1,
-                  justifyContent: "flex-end",
-                  flexDirection: "row",
-                  alignItems: "center",
-                }}
-              >
-                <Ionicons
-                  name={I18nManager.isRTL ? "chevron-back" : "chevron-forward"}
-                  size={25}
-                  color="black"
-                />
-              </View>
-            </Pressable>
-            <Pressable
-              onPress={() => {
-                Alert.alert("help");
-              }}
-              style={({ pressed }) => [
-                styles.operations,
-                pressed && styles.pressed,
-              ]}
-            >
-              <Ionicons name="ios-help-outline" size={24} color="black" />
-              <Text style={{ marginLeft: 10, height: 40, fontSize: 20 }}>
-                {t("Help")}
-              </Text>
-              <View
-                style={{
-                  flex: 1,
-                  justifyContent: "flex-end",
-                  flexDirection: "row",
-                  alignItems: "center",
-                }}
-              >
-                <Ionicons
-                  name={I18nManager.isRTL ? "chevron-back" : "chevron-forward"}
-                  size={25}
-                  color="black"
-                />
-              </View>
-            </Pressable>
           </View>
         </View>
-      </View>
+      </ScrollView>
     </ScreenView>
   );
 };

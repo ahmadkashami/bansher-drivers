@@ -43,7 +43,7 @@ const Root = () => {
       }
     }
     prepareApp();
-  }, [authctx.isAuthticated]);
+  }, []);
   return authctx.isAuthticated ? <MainStackNavigation /> : <AuthScreen />;
 };
 
