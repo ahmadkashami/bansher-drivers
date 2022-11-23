@@ -35,6 +35,7 @@ import { Region } from "../interfaces/types";
 import ScreenView from "../components/ui/ScreenView";
 import HeaderSection from "../components/Home/HeaderSection";
 import { useTranslation } from "react-i18next";
+import UseCurrntLocation from "../Hooks/useCurrntLocation";
 
 const HomeScreen = () => {
   const [status, requestPermission] = Location.useBackgroundPermissions();
@@ -49,6 +50,7 @@ const HomeScreen = () => {
     }),
     shallow
   );
+  const [location, setLocation] = useState();
   const reagonRef = useRef<Region | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isActive, setIsActive] = useState(truck?.status);
@@ -63,21 +65,35 @@ const HomeScreen = () => {
         longitudeDelta: 0.09,
       };
     }
-    perpareTask(truck?.status);
-    setIsActive(truck?.status);
+    // perpareTask(truck?.status);
+    // setIsActive(truck?.status);
+    myiterval();
+    return clearInterval();
   }, [truck]);
+  const myiterval = useCallback(() => {
+    requestPermissions();
 
+    setInterval(async () => {
+      const currnetLcoation = await Location.getCurrentPositionAsync();
+      setLocation({
+        lat: currnetLcoation.coords.latitude,
+        lon: currnetLcoation.coords.longitude,
+      });
+    }, 10000);
+    setInterval;
+  }, []);
+  // const myinterval = useCallback(myiterval, []);
   const perpareTask = useCallback(
     async (status: boolean) => {
-      console.log({ status });
+      // console.log({ status });
 
       if (status == true) {
         requestPermissions();
         const res = await TaskManager.getRegisteredTasksAsync();
-        console.log({ res });
+        // console.log({ res });
 
         const isDefiend = TaskManager.isTaskDefined(LOCATION_TASK_NAME);
-        console.log({ isDefiend });
+        // console.log({ isDefiend });
 
         if (!isDefiend) defineTask();
         await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
@@ -102,7 +118,7 @@ const HomeScreen = () => {
   const requestPermissions = async () => {
     const { status } = await requestPermission();
     const response = await requestPerssionfk();
-    console.log(response);
+    // console.log(response);
 
     return status;
   };
@@ -125,6 +141,8 @@ const HomeScreen = () => {
       }, 1000);
     }
   }
+  console.log(truck.location);
+
   return (
     <View style={styles.container}>
       {isLoading && <LottieFile />}
@@ -137,7 +155,7 @@ const HomeScreen = () => {
       >
         {/* <AppMapView reagon={reagonRef.current} /> */}
         <ScreenView>
-          <HeaderSection user={auth.user} />
+          <HeaderSection lcoation={location} user={auth.user} />
         </ScreenView>
         <View
           style={{
