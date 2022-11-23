@@ -50,11 +50,11 @@ const HomeScreen = () => {
     }),
     shallow
   );
-  const [location, setLocation] = useState();
   const reagonRef = useRef<Region | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isActive, setIsActive] = useState(truck?.status);
   const [isDisabled, setisDisabled] = useState(false);
+  console.log("reder");
 
   useEffect(() => {
     if (truck?.location.lat && truck?.location.long) {
@@ -65,40 +65,48 @@ const HomeScreen = () => {
         longitudeDelta: 0.09,
       };
     }
-    // perpareTask(truck?.status);
+    perpareTask(truck?.status);
     // setIsActive(truck?.status);
-    myiterval();
-    return clearInterval();
+    // myiterval();
+    // return clearInterval();
   }, [truck]);
-  const myiterval = useCallback(() => {
-    requestPermissions();
 
-    setInterval(async () => {
-      const currnetLcoation = await Location.getCurrentPositionAsync();
-      setLocation({
-        lat: currnetLcoation.coords.latitude,
-        lon: currnetLcoation.coords.longitude,
-      });
-    }, 10000);
-    setInterval;
-  }, []);
+  // const myiterval = useCallback(() => {
+  //   requestPermissions();
+
+  //   setInterval(async () => {
+  //     const currnetLcoation = await Location.getCurrentPositionAsync();
+  //     setLocation({
+  //       lat: currnetLcoation.coords.latitude,
+  //       lon: currnetLcoation.coords.longitude,
+  //     });
+  //   }, 10000);
+  //   setInterval;
+  // }, []);
   // const myinterval = useCallback(myiterval, []);
   const perpareTask = useCallback(
     async (status: boolean) => {
-      // console.log({ status });
+      console.log({ status });
 
       if (status == true) {
         requestPermissions();
-        const res = await TaskManager.getRegisteredTasksAsync();
         // console.log({ res });
 
         const isDefiend = TaskManager.isTaskDefined(LOCATION_TASK_NAME);
         // console.log({ isDefiend });
 
         if (!isDefiend) defineTask();
+
         await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
-          timeInterval: 1 * 60,
-          accuracy: Location.Accuracy.High,
+          accuracy: Location.Accuracy.Highest,
+          distanceInterval: 5, // minimum change (in meters) betweens updates
+          deferredUpdatesInterval: 1000, // minimum interval (in milliseconds) between updates
+          // foregroundService is how you get the task to be updated as often as would be if the app was open
+          foregroundService: {
+            notificationTitle: "Using your location",
+            notificationBody:
+              "To turn off, go back to the app and switch buttun off.",
+          },
         });
         // if (!isRegistered && truck && truck.status == true) {
         //   registerBackgroundFetchAsync(LOCATION_TASK_NAME);
@@ -107,7 +115,9 @@ const HomeScreen = () => {
         // }
       } else if (status == false) {
         console.log("here");
-        const isDefiend = await TaskManager.isTaskDefined(LOCATION_TASK_NAME);
+        const isDefiend = TaskManager.isTaskDefined(LOCATION_TASK_NAME);
+        console.log({ isDefiend });
+
         if (isDefiend)
           await TaskManager.unregisterTaskAsync(LOCATION_TASK_NAME);
         return;
@@ -155,7 +165,7 @@ const HomeScreen = () => {
       >
         {/* <AppMapView reagon={reagonRef.current} /> */}
         <ScreenView>
-          <HeaderSection lcoation={location} user={auth.user} />
+          <HeaderSection user={auth.user} />
         </ScreenView>
         <View
           style={{

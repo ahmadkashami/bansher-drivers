@@ -2,17 +2,8 @@ import { Image, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { UserDto } from "../../Dtos/user.dto";
-import { LatLng } from "../../interfaces/types";
 
-const HeaderSection = ({
-  user,
-  lcoation,
-}: {
-  user: UserDto;
-  lcoation: any;
-}) => {
-  console.log({ lcoation });
-
+const HeaderSection = ({ user }: { user: UserDto }) => {
   const { t } = useTranslation();
   return (
     <View
@@ -30,11 +21,7 @@ const HeaderSection = ({
 
         <Text style={{ textAlign: "left", fontSize: 20 }}>{user.name}</Text>
       </View>
-      {lcoation && (
-        <Text style={{ textAlign: "left", fontSize: 20 }}>
-          lat:{lcoation.lat} -- lon:{lcoation.lon}
-        </Text>
-      )}
+
       <Image
         style={{ width: 100, height: 100, resizeMode: "contain" }}
         source={require("../../contants/images/profile.png")}
