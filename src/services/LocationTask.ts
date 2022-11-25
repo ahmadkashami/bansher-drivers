@@ -1,4 +1,5 @@
 // import { registerTaskAsync, unregisterTaskAsync } from "expo-background-fetch";
+import { registerTaskAsync } from "expo-background-fetch";
 import * as TaskManager from "expo-task-manager";
 
 import { updateTruckLocation } from "../api/Home.Api";
@@ -16,8 +17,6 @@ export const LOCATION_TASK_NAME = "current-location-task";
 //   }
 // }
 async function LocationUpdateFun({ data, error }) {
-  console.log("recivig location");
-
   if (error) {
     // Error occurred - check `error.message` for more details.
     return;
@@ -56,6 +55,7 @@ export function defineTask() {
 // export async function registerBackgroundFetchAsync(taskName: string) {
 //   return registerTaskAsync(taskName, {
 //     minimumInterval: 1 * 60,
+
 //   });
 // }
 

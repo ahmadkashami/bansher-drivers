@@ -86,22 +86,22 @@ const HomeScreen = () => {
   // const myinterval = useCallback(myiterval, []);
   const perpareTask = useCallback(
     async (status: boolean) => {
-      console.log({ status });
+      console.log("im here");
 
       if (status == true) {
         requestPermissions();
         // console.log({ res });
 
         const isDefiend = TaskManager.isTaskDefined(LOCATION_TASK_NAME);
-        // console.log({ isDefiend });
+        console.log({ isDefiend });
 
         if (!isDefiend) defineTask();
 
         await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
-          accuracy: Location.Accuracy.Highest,
-          distanceInterval: 5, // minimum change (in meters) betweens updates
-          deferredUpdatesInterval: 1000, // minimum interval (in milliseconds) between updates
-          // foregroundService is how you get the task to be updated as often as would be if the app was open
+          accuracy: Location.Accuracy.BestForNavigation,
+          distanceInterval: 0,
+          deferredUpdatesTimeout: 600000,
+          deferredUpdatesInterval: 600000,
           foregroundService: {
             notificationTitle: "Using your location",
             notificationBody:
@@ -114,10 +114,8 @@ const HomeScreen = () => {
         //   unregisterBAckgroundFetchAsync(LOCATION_TASK_NAME);
         // }
       } else if (status == false) {
-        console.log("here");
         const isDefiend = TaskManager.isTaskDefined(LOCATION_TASK_NAME);
-        console.log({ isDefiend });
-
+        console.log(isDefiend);
         if (isDefiend)
           await TaskManager.unregisterTaskAsync(LOCATION_TASK_NAME);
         return;
@@ -151,7 +149,6 @@ const HomeScreen = () => {
       }, 1000);
     }
   }
-  console.log(truck.location);
 
   return (
     <View style={styles.container}>
