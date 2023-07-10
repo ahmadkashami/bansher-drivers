@@ -23,7 +23,7 @@ const userInitial = new UserDto({
 });
 export const AuthContext = createContext({
   authToken: "",
-  isAuthticated: false,
+  isAuthenticated: false,
   authenticate: (token: string) => {},
   authUser: (user: UserDto) => {},
   logout: () => {},
@@ -48,7 +48,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }
   const value = {
     authToken,
-    isAuthticated: !!authToken,
+    isAuthenticated: !!authToken,
     authenticate,
     logout,
     authUser,
