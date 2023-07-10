@@ -24,8 +24,8 @@ const Root = () => {
   const [fontsLoaded] = useFonts({
     "Gotham-black": require("./src/contants/fonts/Gotham-Light.otf"),
   });
-  const authctx = useContext(AuthContext);
-  const truckCtx = useContext(TruckContext);
+  const authContext = useContext(AuthContext);
+  const truckContext = useContext(TruckContext);
 
   useEffect(() => {
     async function prepareApp() {
@@ -36,16 +36,17 @@ const Root = () => {
 
       if (cashedUser) {
         const user = JSON.parse(cashedUser);
-        authctx.authUser(user);
-        truckCtx.updateTruck(new TruckDto(user.truck));
+        authContext.authUser(user);
+        truckContext.updateTruck(new TruckDto(user.truck));
       }
       if (token) {
-        authctx.authenticate(token);
+        authContext.authenticate(token);
       }
     }
     prepareApp();
-  }, [authctx.isAuthticated]);
-  return authctx.isAuthticated ? <MainStackNavigation /> : <AuthScreen />;
+  }, [authContext.isAuthenticated]);
+
+  return authContext.isAuthenticated ? <MainStackNavigation /> : <AuthScreen />;
 };
 
 const styles = StyleSheet.create({
