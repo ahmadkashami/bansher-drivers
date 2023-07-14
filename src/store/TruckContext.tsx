@@ -30,6 +30,7 @@ export const TruckProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
+      // @ts-ignore
     <TruckContext.Provider value={value}>{children}</TruckContext.Provider>
   );
 };
