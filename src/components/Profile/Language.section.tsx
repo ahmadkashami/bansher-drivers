@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import ButtonsProfile from "./Buttons.profile";
-import LanguagePicker from "../languagePicker";
+import LanguagePicker from "../LanguagePicker";
 
 const LanguageSection = () => {
   const { t } = useTranslation();

@@ -13,7 +13,7 @@ import { useTranslation } from "react-i18next";
 
 import ScreenView from "../components/ui/ScreenView";
 import { AuthContext } from "../store/AuthContext";
-import InfoProfile from "../components/Profile/info.profile";
+import InfoProfile from "../components/Profile/Info.profile";
 import LanguageSection from "../components/Profile/Language.section";
 
 const ProfileScreen = () => {
