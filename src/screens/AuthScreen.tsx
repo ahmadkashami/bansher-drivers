@@ -57,6 +57,7 @@ const AuthScreen = () => {
       auth.authUser(user);
       auth.authenticate("token");
     } catch (error) {
+      // @ts-ignore
       if (error?.response?.data) {
         const errorMessage = ErrorHandlerApi(error);
         showMessage({
@@ -67,6 +68,7 @@ const AuthScreen = () => {
       } else {
         showMessage({
           message: "Error Message",
+          // @ts-ignore
           description: error.message,
           type: "danger",
         });

@@ -54,5 +54,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     authUser,
     user,
   };
+  // @ts-ignore
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
