@@ -1,5 +1,5 @@
 import { createContext, ReactNode, useState } from "react";
-import { TruckDto } from "../Dtos/user.dto";
+import { TruckDto } from "../dtos/UserDto";
 
 const truckInitalState: TruckDto = {
   id: 0,

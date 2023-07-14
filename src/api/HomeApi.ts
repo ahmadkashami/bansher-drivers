@@ -1,4 +1,4 @@
-import { client } from "./axios.config";
+import { client } from "../plugins/AxiosConfig";
 
 export async function updateTruckStatus(truckId: number) {
   const response = await client.put(`trucks/${truckId}`);

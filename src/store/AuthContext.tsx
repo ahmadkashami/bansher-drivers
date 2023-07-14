@@ -1,8 +1,8 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { FC } from "react";
 import { createContext, useState } from "react";
-import { UserDto } from "../Dtos/user.dto";
-import { IUser } from "../interfaces/User.interface";
+import { UserDto } from "../dtos/UserDto";
+import { IUser } from "../interfaces/UserInterface";
 
 const userInitial = new UserDto({
   id: 0,

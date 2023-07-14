@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, ViewStyle } from "react-native";
 import React, { FC } from "react";
 import { AppColors } from "../../contants/Colors";
-import { UserDto } from "../../Dtos/user.dto";
+import { UserDto } from "../../dtos/UserDto";
 import { TrimPhoneExt } from "../../helpers/AppHelpers";
 import { useTranslation } from "react-i18next";
 

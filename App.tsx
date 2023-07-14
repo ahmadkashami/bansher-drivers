@@ -4,7 +4,7 @@ import { useContext, useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { useFonts } from "expo-font";
 
-import { TruckDto } from "./src/Dtos/user.dto";
+import { TruckDto } from "./src/dtos/UserDto";
 import MainStackNavigation from "./src/navigations/MainStack.Navigation";
 import AuthScreen from "./src/screens/AuthScreen";
 import { AuthContext, AuthProvider } from "./src/store/AuthContext";
