@@ -6,7 +6,7 @@ import { AppColors } from "../contants/Colors";
 import { AuthContext } from "../store/AuthContext";
 import { updateTruckStatus } from "../api/Home.Api";
 import { TruckDto } from "../Dtos/user.dto";
-import { TruckContext } from "../store/truckContext";
+import { TruckContext } from "../store/TruckContext";
 import { setStoreageValues } from "../helpers/AppAsyncStoreage";
 import LottieFile from "../components/ui/LottieFile";
 import { t } from "i18next";

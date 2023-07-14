@@ -8,7 +8,7 @@ import { TruckDto } from "./src/Dtos/user.dto";
 import MainStackNavigation from "./src/navigations/MainStack.Navigation";
 import AuthScreen from "./src/screens/AuthScreen";
 import { AuthContext, AuthProvider } from "./src/store/AuthContext";
-import { TruckContext, TruckProvider } from "./src/store/truckContext";
+import { TruckContext, TruckProvider } from "./src/store/TruckContext";
 import "./src/translation/Translation.config";
 
 export default function App() {
