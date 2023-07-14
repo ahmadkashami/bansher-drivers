@@ -1,7 +1,7 @@
 import { createContext, ReactNode, useState } from "react";
-import { TruckDto } from "../dtos/UserDto";
+import {TruckDto} from "../dtos/TruckDto";
 
-const truckInitalState: TruckDto = {
+const truckInitState: TruckDto = {
   id: 0,
   active: false,
   status: false,
@@ -14,7 +14,7 @@ const truckInitalState: TruckDto = {
   user_id: 0,
 };
 export const TruckContext = createContext({
-  truck: truckInitalState,
+  truck: truckInitState,
   updateTruck: (truck: TruckDto) => {},
 });
 
