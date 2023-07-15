@@ -4,29 +4,23 @@ import { useContext, useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { useFonts } from "expo-font";
 
-import { TruckDto } from "./src/dtos/UserDto";
 import MainStackNavigation from "./src/navigations/MainStack.Navigation";
 import AuthScreen from "./src/screens/AuthScreen";
-import { AuthContext, AuthProvider } from "./src/store/AuthContext";
-import { TruckContext, TruckProvider } from "./src/store/TruckContext";
 import "./src/translation/Translation.config";
+import {TruckDto} from "./src/dtos/TruckDto";
+import useAppStore from "./src/store/userStore";
 
 export default function App() {
+
   return (
-    <AuthProvider>
-      <TruckProvider>
-        <Root />
-      </TruckProvider>
-    </AuthProvider>
+        <Root  />
   );
 }
 const Root = () => {
   const [fontsLoaded] = useFonts({
     "Gotham-black": require("./src/contants/fonts/Gotham-Light.otf"),
   });
-  const authContext = useContext(AuthContext);
-  const truckContext = useContext(TruckContext);
-
+  const stateApp=useAppStore()
   useEffect(() => {
     async function prepareApp() {
       const token = await AsyncStorage.getItem("token");
@@ -36,17 +30,17 @@ const Root = () => {
 
       if (cashedUser) {
         const user = JSON.parse(cashedUser);
-        authContext.authUser(user);
-        truckContext.updateTruck(new TruckDto(user.truck));
+        stateApp.setUser(user)
+        stateApp.updateTruck(new TruckDto(user.truck))
       }
       if (token) {
-        authContext.authenticate(token);
+        stateApp.setAuthToken(token)
       }
     }
     prepareApp();
-  }, [authContext.isAuthenticated]);
+  }, [stateApp.isAuthenticated]);
 
-  return authContext.isAuthenticated ? <MainStackNavigation /> : <AuthScreen />;
+  return stateApp.isAuthenticated ? <MainStackNavigation /> : <AuthScreen />;
 };
 
 const styles = StyleSheet.create({

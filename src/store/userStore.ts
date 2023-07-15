@@ -49,8 +49,7 @@ const truckInitState: TruckDto = {
 };
 
 
-
-const store = create<State>((set,get) => ({
+const useAppStore = create<State>((set,get) => ({
     authToken: '',
     isAuthenticated: false,
     user: userInitial,
@@ -67,14 +66,5 @@ const store = create<State>((set,get) => ({
 }))
 
 
-const useStore = create(
-    devtools(
-        persist(store, {
-            name: "user",
-        })
-    )
-)
-
-
-export default useStore;
+export default useAppStore;
 

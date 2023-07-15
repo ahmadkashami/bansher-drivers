@@ -4,10 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7a33c3cf-4d88-4c1c-abad-e40efde3557b" name="Changes" comment="add store zustand">
-      <change afterPath="$PROJECT_DIR$/src/store/userStore.ts" afterDir="false" />
+    <list default="true" id="7a33c3cf-4d88-4c1c-abad-e40efde3557b" name="Changes" comment="add store">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/store/store.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/App.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/store/userStore.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/userStore.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -105,7 +105,7 @@
       <workItem from="1689172650629" duration="1240000" />
       <workItem from="1689340330242" duration="2934000" />
       <workItem from="1689355218336" duration="1265000" />
-      <workItem from="1689357248897" duration="4956000" />
+      <workItem from="1689357248897" duration="7644000" />
     </task>
     <task id="LOCAL-00001" summary="t">
       <created>1688833792481</created>
@@ -156,7 +156,14 @@
       <option name="project" value="LOCAL" />
       <updated>1689357806036</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="add store">
+      <created>1689432789771</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1689432789771</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -167,6 +174,7 @@
     <MESSAGE value="some variables" />
     <MESSAGE value="enhancement" />
     <MESSAGE value="add store zustand" />
-    <option name="LAST_COMMIT_MESSAGE" value="add store zustand" />
+    <MESSAGE value="add store" />
+    <option name="LAST_COMMIT_MESSAGE" value="add store" />
   </component>
 </project>
