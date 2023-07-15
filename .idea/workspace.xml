@@ -4,12 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7a33c3cf-4d88-4c1c-abad-e40efde3557b" name="Changes" comment="enhancement">
-      <change afterPath="$PROJECT_DIR$/src/store/store.ts" afterDir="false" />
+    <list default="true" id="7a33c3cf-4d88-4c1c-abad-e40efde3557b" name="Changes" comment="add store zustand">
+      <change afterPath="$PROJECT_DIR$/src/store/userStore.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/screens/AuthScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/AuthScreen.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/store/store.ts" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -107,7 +105,7 @@
       <workItem from="1689172650629" duration="1240000" />
       <workItem from="1689340330242" duration="2934000" />
       <workItem from="1689355218336" duration="1265000" />
-      <workItem from="1689357248897" duration="474000" />
+      <workItem from="1689357248897" duration="4956000" />
     </task>
     <task id="LOCAL-00001" summary="t">
       <created>1688833792481</created>
@@ -151,7 +149,14 @@
       <option name="project" value="LOCAL" />
       <updated>1689355887435</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="add store zustand">
+      <created>1689357806036</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1689357806036</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -161,6 +166,7 @@
     <MESSAGE value="t" />
     <MESSAGE value="some variables" />
     <MESSAGE value="enhancement" />
-    <option name="LAST_COMMIT_MESSAGE" value="enhancement" />
+    <MESSAGE value="add store zustand" />
+    <option name="LAST_COMMIT_MESSAGE" value="add store zustand" />
   </component>
 </project>
