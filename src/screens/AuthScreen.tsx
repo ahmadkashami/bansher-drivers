@@ -9,11 +9,10 @@ import {
   TextInput,
   View,
 } from "react-native";
-import { useContext, useState } from "react";
+import {  useState } from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import FilledButton from "../components/FilledButton";
-import { AuthContext } from "../store/AuthContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { login } from "../api/AuthApi";
 import { UserDto } from "../dtos/UserDto";
@@ -21,14 +20,16 @@ import { ErrorHandlerApi } from "../helpers/AppHelpers";
 import LottieFile from "../components/ui/LottieFile";
 import { showMessage, hideMessage } from "react-native-flash-message";
 import FlashMessage from "react-native-flash-message";
+import useAppStore from "../store/userStore";
+import {emailValidator} from "../helpers/validation";
 
 const AuthScreen = () => {
-  const auth = useContext(AuthContext);
-  const [inputs, setInputs] = useState({ phone: "", password: "" });
+  const stateApp=useAppStore()
+  const [inputs, setInputs] = useState({ email: "", password: "" });
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   async function submitHandler() {
-    if (!inputs.password || !inputs.phone) {
+    if (!inputs.password || !inputs.email) {
       showMessage({
         message: "Error Message",
         description: "invalid inputs",
@@ -37,25 +38,25 @@ const AuthScreen = () => {
 
       return;
     }
-    if (inputs.phone.length < 8) {
-      Alert.alert("phone must be at least 8 digits");
+    if (!emailValidator(inputs.email)) {
+      Alert.alert("The Email field must be a valid email");
       return;
     }
 
     try {
       setIsLoading(true);
-      const phoneWithCode = "965" + inputs.phone;
 
       const { access_token, data } = await login(
-        phoneWithCode,
-        inputs.password
+          inputs.email,
+          inputs.password
       );
+
       if (!data || !data.truck) throw new Error("internal server error");
       const user = new UserDto(data);
       AsyncStorage.setItem("token", access_token);
       AsyncStorage.setItem("user", JSON.stringify(user));
-      auth.authUser(user);
-      auth.authenticate("token");
+      stateApp.setUser(user);
+      stateApp.setAuthToken("token");
     } catch (error) {
       // @ts-ignore
       if (error?.response?.data) {
@@ -120,7 +121,7 @@ const AuthScreen = () => {
                 style={{
                   width: 300,
                   textAlign: "center",
-                  fontSize: 19,
+                  fontSize: 16,
                   letterSpacing: 4,
                   marginTop: 8,
                   textTransform: "capitalize",
@@ -133,12 +134,11 @@ const AuthScreen = () => {
             {/* <View style={styles.innerContainer}> */}
             <View style={styles.inputBox}>
               <TextInput
-                value={inputs.phone}
-                placeholder="Enter Phone"
-                keyboardType="number-pad"
+                value={inputs.email}
+                placeholder="Enter Email"
                 placeholderTextColor={"#a4a3a8"}
                 style={styles.inputs}
-                onChangeText={(text) => inputsChangeHandler(text, "phone")}
+                onChangeText={(text) => inputsChangeHandler(text, "email")}
               />
             </View>
             <View style={styles.inputBox}>
