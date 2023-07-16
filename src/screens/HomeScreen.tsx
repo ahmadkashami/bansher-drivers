@@ -5,12 +5,12 @@ import { Ionicons } from "@expo/vector-icons";
 import { AppColors } from "../contants/Colors";
 import { AuthContext } from "../store/AuthContext";
 import { updateTruckStatus } from "../api/HomeApi";
-import { TruckDto } from "../dtos/UserDto";
 import { TruckContext } from "../store/TruckContext";
-import { setStoreageValues } from "../helpers/AppAsyncStoreage";
 import LottieFile from "../components/ui/LottieFile";
 import { t } from "i18next";
 import { TrimPhoneExt } from "../helpers/AppHelpers";
+import {TruckDto} from "../dtos/TruckDto";
+import {setStorageValues} from "../helpers/AppAsyncStoreage";
 
 const HomeScreen = () => {
   const auth = useContext(AuthContext);
@@ -29,10 +29,11 @@ const HomeScreen = () => {
       const response = await updateTruckStatus(truck.id);
       const updatedTruck = new TruckDto(response.data);
       auth.user.truck = updatedTruck;
-      setStoreageValues("user", JSON.stringify(auth.user));
+        setStorageValues("user", JSON.stringify(auth.user));
       updateTruck(updatedTruck);
     } catch (error) {
-      console.log(error.message);
+      // @ts-ignore
+        console.log(error.message);
     } finally {
       setIsLoading(false);
       setTimeout(() => {

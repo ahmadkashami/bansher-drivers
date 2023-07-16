@@ -1,7 +1,7 @@
 import { Alert } from "react-native";
 
 export function ErrorHandlerApi(e: any) {
-  console.log("herer");
+  console.log(e);
 
   const errors: string[] = [];
   const errorResponse = e.response.data;

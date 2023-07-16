@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 
 export const client = axios.create({
-  baseURL: "https://bansher.herokuapp.com/api/mobile/truck/v1",
+  baseURL: "http://localhost:5010/api/driverapp/v1/",
   headers: {
     Accept: "application/json",
   },
