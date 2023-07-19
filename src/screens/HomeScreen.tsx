@@ -39,23 +39,14 @@ const HomeScreen = () => {
   return (
     <View style={styles.container}>
       {isLoading && <LottieFile />}
-        <View style={{ position: "absolute", top: 40, right: 20 }}>
-        <Ionicons
-          name="log-out-outline"
-          size={30}
-          color={AppColors.black}
-          onPress={stateApp.logout}
-        />
-      </View>
+
       <View
         style={{
           flex: 1,
           justifyContent: "flex-end",
         }}
       >
-        <View
-          style={{ flexDirection: "row", alignItems: "center", marginLeft: 20 }}
-        >
+        <View style={{ flexDirection: "row", alignItems: "center", marginLeft: 20 }}>
           <Image
             style={{ width: 100, height: 100 }}
             source={require("../contants/images/profile.png")}
@@ -69,6 +60,14 @@ const HomeScreen = () => {
             </Text>
           </View>
         </View>
+          <View style={{ position: "absolute", top: 40, right: 20 }}>
+              <Ionicons
+                  name="log-out-outline"
+                  size={30}
+                  color={AppColors.black}
+                  onPress={stateApp.logout}
+              />
+          </View>
         <View
           style={{
             backgroundColor: AppColors.primary,

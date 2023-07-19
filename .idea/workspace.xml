@@ -6,21 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="7a33c3cf-4d88-4c1c-abad-e40efde3557b" name="Changes" comment="login">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/App.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/AuthApi.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/AuthApi.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/HomeApi.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Profile/Info.profile.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Profile/Info.profile.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dtos/TruckDto.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dtos/UserDto.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/dtos/UserDto.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/interfaces/TruckInterface.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/interfaces/UserInterface.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/interfaces/UserInterface.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/plugins/AxiosConfig.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/plugins/AxiosConfig.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/screens/AuthScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/AuthScreen.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/screens/HomeScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/HomeScreen.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/screens/ProfileScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/ProfileScreen.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/store/AuthContext.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/store/TruckContext.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/store/userStore.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/userStore.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
