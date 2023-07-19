@@ -101,10 +101,10 @@ const AuthScreen = () => {
               alignSelf: "center",
             }}
           >
-            <View style={{ paddingTop: 50, paddingBottom: 10 }}>
+            <View style={{ paddingTop: 60, paddingBottom: 0 }}>
               <Image
                 style={{ width: 250, height: 200, resizeMode: "cover" }}
-                source={require("../contants/images/login.png")}
+                source={require("../contants/images/logo.png")}
               />
             </View>
 
@@ -180,14 +180,13 @@ const AuthScreen = () => {
 
           <View style={{ justifyContent: "center", alignItems: "center" }}>
             <Text style={{ fontSize: 16 }}>
-              - if you neeed Help please
-              <Text
+              if you need Help please
+            </Text>
+            <Text
                 onPress={() => Alert.alert("help")}
-                style={{ color: "dodgerblue" }}
-              >
-                Contact Help
-              </Text>
-              -
+                style={{ color: "dodgerblue",marginTop:10}}
+            >
+              Contact Help
             </Text>
           </View>
         </KeyboardAwareScrollView>
