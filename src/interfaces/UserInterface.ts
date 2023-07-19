@@ -1,11 +1,14 @@
-import {ITruck} from "./TruckInterface";
 
 export interface IUser {
-  id: number;
-  company_id?: number;
-  email: string;
-  name: string;
-  phone: string;
-  truck: ITruck;
+  _id: string;
+  status:boolean;
+  name:string;
+  email:string;
+  licenseExpiredAt:string;
+  createdAt:string;
+  phoneNum:string;
+  branchId:string;
+  companyId:string;
+  vehicleId:string;
 }
 

@@ -1,18 +1,27 @@
-import {TruckDto} from "./TruckDto";
 import {IUser} from "../interfaces/UserInterface";
 
 export class UserDto {
-  id: number;
-  name: string;
-  email: string;
-  truck: TruckDto;
-  phone: string;
+  _id: string;
+  status:boolean;
+  name:string;
+  email:string;
+  licenseExpiredAt:string;
+  createdAt:string;
+  phoneNum:string;
+  branchId:string;
+  companyId:string;
+  vehicleId:string;
   constructor(user: IUser) {
-    this.phone = user.phone;
-    this.id = user.id;
-    this.name = user.name;
-    this.email = user.email;
-    this.truck = new TruckDto(user.truck);
+    this._id= user._id,
+        this.status=user.status ,
+        this.name= user.name,
+        this.email= user.email,
+        this.licenseExpiredAt=user.licenseExpiredAt ,
+        this.createdAt=user.createdAt ,
+        this.phoneNum= user.phoneNum,
+        this.branchId= user.branchId,
+        this.companyId=user.companyId,
+        this.vehicleId=user.vehicleId
   }
 }
 

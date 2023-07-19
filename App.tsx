@@ -7,7 +7,6 @@ import { useFonts } from "expo-font";
 import MainStackNavigation from "./src/navigations/MainStack.Navigation";
 import AuthScreen from "./src/screens/AuthScreen";
 import "./src/translation/Translation.config";
-import {TruckDto} from "./src/dtos/TruckDto";
 import useAppStore from "./src/store/userStore";
 
 export default function App() {
@@ -31,7 +30,6 @@ const Root = () => {
       if (cashedUser) {
         const user = JSON.parse(cashedUser);
         stateApp.setUser(user)
-        stateApp.updateTruck(new TruckDto(user.truck))
       }
       if (token) {
         stateApp.setAuthToken(token)
