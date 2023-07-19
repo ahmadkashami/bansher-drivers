@@ -12,14 +12,14 @@ import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 
 import ScreenView from "../components/ui/ScreenView";
-import { AuthContext } from "../store/AuthContext";
 import InfoProfile from "../components/Profile/Info.profile";
 import LanguageSection from "../components/Profile/Language.section";
+import useAppStore from "../store/userStore";
 
 const ProfileScreen = () => {
-  const { t } = useTranslation();
-
-  const { user } = useContext(AuthContext);
+    const stateApp=useAppStore()
+    const { t } = useTranslation();
+    const  user = stateApp.user;
 
   return (
     <ScreenView>

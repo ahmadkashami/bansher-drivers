@@ -10,10 +10,9 @@ const InfoProfile: FC<{ user: UserDto }> = ({ user }) => {
   return (
     <View style={styles.container}>
       <InfoItem myKey={t("Name")} value={user.name} />
-      <InfoItem myKey={t("fieldOfWork")} value={user.truck.fieldwork} />
       <InfoItem
         myKey={t("Phone")}
-        value={TrimPhoneExt(user.phone)}
+        value={TrimPhoneExt(user.phoneNum)}
         style={{ borderBottomWidth: 0 }}
       />
     </View>

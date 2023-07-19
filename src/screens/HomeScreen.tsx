@@ -1,58 +1,52 @@
-import { FlatList, Image, StyleSheet, Text, View } from "react-native";
+import {FlatList, Image, StyleSheet, Text, View} from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import AppActiveButton from "../components/Home/AppActiveButton";
 import { Ionicons } from "@expo/vector-icons";
 import { AppColors } from "../contants/Colors";
-import { AuthContext } from "../store/AuthContext";
-import { updateTruckStatus } from "../api/HomeApi";
-import { TruckContext } from "../store/TruckContext";
 import LottieFile from "../components/ui/LottieFile";
 import { t } from "i18next";
-import { TrimPhoneExt } from "../helpers/AppHelpers";
-import {TruckDto} from "../dtos/TruckDto";
-import {setStorageValues} from "../helpers/AppAsyncStoreage";
+import useAppStore from "../store/userStore";
+import {updateUserStatus} from "../api/AuthApi";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import {UserDto} from "../dtos/UserDto";
 
 const HomeScreen = () => {
-  const auth = useContext(AuthContext);
-  const { truck, updateTruck } = useContext(TruckContext);
+    const stateApp=useAppStore()
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isActive, setIsActive] = useState(truck?.status);
-  const [isDisabled, setisDisabled] = useState(false);
+  const [isActive, setIsActive] = useState(stateApp.user?.status);
+  const [isDisabled, setIsDisabled] = useState(false);
 
   useEffect(() => {
-    setIsActive(truck?.status);
-  }, [truck]);
-  async function buttonPressHnalder() {
-    setisDisabled(true);
+    setIsActive(stateApp.user?.status);
+  }, [stateApp.user]);
+  async function buttonPressHandler() {
+      setIsDisabled(true);
     setIsLoading(true);
     try {
-      const response = await updateTruckStatus(truck.id);
-      const updatedTruck = new TruckDto(response.data);
-      auth.user.truck = updatedTruck;
-        setStorageValues("user", JSON.stringify(auth.user));
-      updateTruck(updatedTruck);
+      const response = await updateUserStatus({status:!stateApp.user.status});
+      const user = new UserDto(response.data);
+      AsyncStorage.setItem("user", JSON.stringify(user));
     } catch (error) {
       // @ts-ignore
         console.log(error.message);
     } finally {
       setIsLoading(false);
       setTimeout(() => {
-        setisDisabled(false);
+          setIsDisabled(false);
       }, 1000);
     }
   }
   return (
     <View style={styles.container}>
       {isLoading && <LottieFile />}
-      <View style={{ position: "absolute", top: 40, right: 20 }}>
+        <View style={{ position: "absolute", top: 40, right: 20 }}>
         <Ionicons
-          onPress={auth.logout}
           name="log-out-outline"
           size={30}
           color={AppColors.black}
+          onPress={stateApp.logout}
         />
       </View>
-
       <View
         style={{
           flex: 1,
@@ -68,10 +62,10 @@ const HomeScreen = () => {
           />
           <View style={{ marginLeft: 20 }}>
             <Text style={{ fontSize: 20, color: "gray", marginBottom: 10 }}>
-              {auth.user.name}
+              {stateApp.user.name}
             </Text>
             <Text style={{ fontSize: 20, color: "gray" }}>
-              {TrimPhoneExt(auth.user.phone)}
+              {stateApp.user.phoneNum}
             </Text>
           </View>
         </View>
@@ -155,8 +149,8 @@ const HomeScreen = () => {
           </Text>
           <AppActiveButton
             disabled={isDisabled}
-            isActive={isActive}
-            onPress={buttonPressHnalder}
+            isActive={!!isActive}
+            onPress={buttonPressHandler}
           />
         </View>
       </View>

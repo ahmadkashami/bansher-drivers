@@ -46,17 +46,21 @@ const AuthScreen = () => {
     try {
       setIsLoading(true);
 
-      const { access_token, data } = await login(
+      const response= await login(
           inputs.email,
           inputs.password
       );
+      const driver=response.data.driver;
+      const accessToken=response.data.accessToken;
 
-      if (!data || !data.truck) throw new Error("internal server error");
-      const user = new UserDto(data);
-      AsyncStorage.setItem("token", access_token);
+      if (!driver) throw new Error("Authenticated error");
+
+      const user = new UserDto(driver);
+      AsyncStorage.setItem("token", accessToken);
       AsyncStorage.setItem("user", JSON.stringify(user));
       stateApp.setUser(user);
       stateApp.setAuthToken("token");
+
     } catch (error) {
       // @ts-ignore
       if (error?.response?.data) {
