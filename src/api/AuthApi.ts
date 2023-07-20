@@ -6,7 +6,7 @@ export async function login(email: string, password: string) {
   return response.data;
 }
 
-export async function updateUserStatus(payload) {
-  const response = await client.put(`drivers/status`,payload);
+export async function updateUserStatus(status:string,location?:object) {
+  const response = await client.post(`drivers/status`,{status:status});
   return response.data;
 }

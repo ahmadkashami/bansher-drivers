@@ -23,9 +23,9 @@ const HomeScreen = () => {
       setIsDisabled(true);
     setIsLoading(true);
     try {
-      const response = await updateUserStatus({status:!stateApp.user.status});
-      const user = new UserDto(response.data);
-      AsyncStorage.setItem("user", JSON.stringify(user));
+       const response = await updateUserStatus('offline');
+       console.log(response)
+        setIsActive(!isActive)
     } catch (error) {
       // @ts-ignore
         console.log(error.message);
