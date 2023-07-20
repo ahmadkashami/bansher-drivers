@@ -7,6 +7,7 @@ export async function login(email: string, password: string) {
 }
 
 export async function updateUserStatus(status:string,location?:object) {
-  const response = await client.post(`drivers/status`,{status:status});
+  const payload = { status,location };
+  const response = await client.post(`drivers/status`,payload);
   return response.data;
 }
