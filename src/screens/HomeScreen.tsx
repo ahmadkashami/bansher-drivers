@@ -23,7 +23,7 @@ const HomeScreen = () => {
       setIsDisabled(true);
     setIsLoading(true);
     try {
-       const response = await updateUserStatus('offline');
+       const response = await updateUserStatus("offline",{});
        console.log(response)
         setIsActive(!isActive)
     } catch (error) {
