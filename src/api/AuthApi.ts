@@ -11,3 +11,13 @@ export async function updateUserStatus(status:string,location?:object) {
   const response = await client.post(`drivers/status`,payload);
   return response.data;
 }
+
+
+
+export function getVehicle() {
+  return new Promise((resolve, reject) => {
+    client.get(`vehicles/owner`)
+        .then(response => resolve(response))
+        .catch(error => reject(error))
+  })
+}
