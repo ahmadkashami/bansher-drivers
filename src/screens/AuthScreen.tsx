@@ -9,12 +9,12 @@ import {
   TextInput,
   View,
 } from "react-native";
-import {  useState } from "react";
+import {useEffect, useState} from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import FilledButton from "../components/FilledButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { login } from "../api/AuthApi";
+import {getVehicle, login} from "../api/AuthApi";
 import { UserDto } from "../dtos/UserDto";
 import { ErrorHandlerApi } from "../helpers/AppHelpers";
 import LottieFile from "../components/ui/LottieFile";
@@ -54,7 +54,7 @@ const AuthScreen = () => {
       const accessToken=response.data.accessToken;
 
       if (!driver) throw new Error("Authenticated error");
-
+      getVehicleData()
       const user = new UserDto(driver);
       AsyncStorage.setItem("token", accessToken);
       AsyncStorage.setItem("user", JSON.stringify(user));
@@ -87,6 +87,34 @@ const AuthScreen = () => {
       return { ...prev, [name]: text };
     });
   }
+
+
+function getVehicleData(){
+  getVehicle().then((response)=>{
+    // @ts-ignore
+    stateApp.setVehicle(response.data.data)
+  }).catch(error=>{
+    // @ts-ignore
+    if (error?.response?.data) {
+      const errorMessage = ErrorHandlerApi(error);
+      showMessage({
+        message: "Error Message",
+        description: errorMessage,
+        type: "danger",
+      });
+    } else {
+      showMessage({
+        message: "Error Message",
+        // @ts-ignore
+        description: error.message,
+        type: "danger",
+      });
+    }
+  })
+}
+
+
+
   return (
     <SafeAreaProvider style={{ flex: 1 }}>
       {isLoading && <LottieFile />}
