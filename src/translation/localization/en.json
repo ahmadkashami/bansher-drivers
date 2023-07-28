@@ -1,6 +1,6 @@
 {
   "Map": "Map",
-  "Favorties": "Favorties",
+  "Favorites": "Favorites",
   "Help": "Help",
   "PrivacyAndPolicy": "Privacy And Policy",
   "Logout": "Logout",
@@ -16,7 +16,7 @@
   "LooksLikeYouDon'tHaveAnyFavoritesYet": "Looks Like you don't have any favorites yet!",
   "BrowseOurMap": "Browse our map to find your favorite ones",
   "Confirm": "Confirm",
-  "Verfiy": "Verfiy",
+  "Verify": "Verify",
   "Name": "Name",
   "Email": "Email",
   "Code": "Code 965",
@@ -29,6 +29,6 @@
   "Online": "online",
   "Offline": "offline",
   "ToggleButton": "Toggle the button to change your status",
-  "IncaseOffline": "In case your status is offline , you won`t be able to revice messages",
+  "InCaseOffline": "In case your status is offline , you won`t be able to revice messages",
   "fieldOfWork": "Field of Work"
 }
