@@ -25,7 +25,7 @@ import {emailValidator} from "../helpers/validation";
 
 const AuthScreen = () => {
   const stateApp=useAppStore()
-  const [inputs, setInputs] = useState({ email: "", password: "" });
+  const [inputs, setInputs] = useState({ email: "sky-blu2@driver.com", password: "" });
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   async function submitHandler() {

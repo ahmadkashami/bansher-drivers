@@ -39,14 +39,12 @@ const HomeScreen = () => {
     return (
     <View style={styles.container}>
       {isLoading && <LottieFile />}
-
-      <View
-        style={{
+        {/*user profile  */}
+      <View  style={{
           flex: 1,
           justifyContent: "flex-end",
-        }}
-      >
-        <View style={{ flexDirection: "row", alignItems: "center", marginLeft: 20 }}>
+        }}>
+      <View style={{ flexDirection: "row", alignItems: "center", marginLeft: 20 }}>
           <Image
             style={{ width: 100, height: 100 }}
             source={require("../contants/images/profile.png")}
@@ -60,7 +58,7 @@ const HomeScreen = () => {
             </Text>
           </View>
         </View>
-          <View style={{ position: "absolute", top: 40, right: 20 }}>
+      <View style={{ position: "absolute", top: 40, right: 20 }}>
               <Ionicons
                   name="log-out-outline"
                   size={30}
@@ -68,8 +66,10 @@ const HomeScreen = () => {
                   onPress={stateApp.logout}
               />
           </View>
-        <View
-          style={{
+
+
+
+        <View style={{
             backgroundColor: AppColors.primary,
             height: 220,
             borderTopEndRadius: 50,
@@ -79,7 +79,7 @@ const HomeScreen = () => {
           }}
         >
           <FlatList
-            data={["orders", "requests", "talabats", "bson"]}
+            data={["orders", "requests"]}
             horizontal
             contentContainerStyle={{ width: "85%" }}
             renderItem={({ item }) => {
@@ -133,24 +133,24 @@ const HomeScreen = () => {
           >
             {t("ToggleButton")}
           </Text>
-          <Text
-            style={{
-              fontSize: 16,
-              color: "gray",
-              textAlign: "center",
-              textTransform: "capitalize",
-              width: "80%",
-              paddingVertical: 5,
-              top: -10,
-            }}
-          >
-            {t("IncaseOffline")}
-          </Text>
-          <AppActiveButton
-            disabled={isDisabled}
-            isActive={!!isActive}
-            onPress={buttonPressHandler}
-          />
+          {/*<Text*/}
+          {/*  style={{*/}
+          {/*    fontSize: 16,*/}
+          {/*    color: "gray",*/}
+          {/*    textAlign: "center",*/}
+          {/*    textTransform: "capitalize",*/}
+          {/*    width: "80%",*/}
+          {/*    paddingVertical: 5,*/}
+          {/*    top: -10,*/}
+          {/*  }}*/}
+          {/*>*/}
+          {/*  {t("InCaseOffline")}*/}
+          {/*</Text>*/}
+          {/*<AppActiveButton*/}
+          {/*  disabled={isDisabled}*/}
+          {/*  isActive={!!isActive}*/}
+          {/*  onPress={buttonPressHandler}*/}
+          {/*/>*/}
         </View>
       </View>
     </View>

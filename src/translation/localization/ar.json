@@ -1,7 +1,7 @@
 {
   "HELLO": "مرحبا",
   "Map": "الخريطه",
-  "Favorties": "المفضلات",
+  "Favorites": "المفضلات",
   "Help": "المساعده",
   "PrivacyAndPolicy": "السياسة و الخصوصية",
   "Logout": "تسجيل خروج",
@@ -14,7 +14,7 @@
   "Cancel": "الغاء",
   "DoYouWantToLogout": "هل تريد تسجيل خروج ؟ ",
   "Confirm": "تاكيد",
-  "Verfiy": "تحقق",
+  "Verify": "تحقق",
   "Name": "الاسم",
   "fieldOfWork": "مجال العمل",
   "Email": "ايميل",
@@ -25,6 +25,6 @@
   "Online": "متصل",
   "Offline": "مغلق",
   "ToggleButton": "اضغط على الزر لتغير حالتك",
-  "IncaseOffline": "في حال كانت حالتك مغلق لن تتمكن من تلقي الطلبات",
+  "InCaseOffline": "في حال كانت حالتك مغلق لن تتمكن من تلقي الطلبات",
   "ChangePassword": "تغير كلمة السر"
 }
