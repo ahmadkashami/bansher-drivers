@@ -60,6 +60,7 @@ const useAppStore = create<State>((set,get) => ({
     logout: () => {
         AsyncStorage.removeItem("token");
         AsyncStorage.removeItem("user");
+        AsyncStorage.removeItem("vehicle");
         set(()=>({authToken:'',isAuthenticated:false}))
     },
 }))
