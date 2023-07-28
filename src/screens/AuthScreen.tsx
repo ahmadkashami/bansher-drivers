@@ -92,7 +92,9 @@ const AuthScreen = () => {
 function getVehicleData(){
   getVehicle().then((response)=>{
     // @ts-ignore
-    stateApp.setVehicle(response.data.data)
+    let vehicle=response.data.data
+    stateApp.setVehicle(vehicle)
+    AsyncStorage.setItem("vehicle", JSON.stringify(vehicle));
   }).catch(error=>{
     // @ts-ignore
     if (error?.response?.data) {

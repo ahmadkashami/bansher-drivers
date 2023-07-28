@@ -23,13 +23,16 @@ const Root = () => {
   useEffect(() => {
     async function prepareApp() {
       const token = await AsyncStorage.getItem("token");
-      //todo change truck to sperate item in localstoreage
       const cashedUser = await AsyncStorage.getItem("user");
-      console.log({ cashedUser });
+      const cashedVehicle = await AsyncStorage.getItem("vehicle");
 
       if (cashedUser) {
         const user = JSON.parse(cashedUser);
         stateApp.setUser(user)
+        if (cashedVehicle) {
+          const vehicle = JSON.parse(cashedVehicle);
+          stateApp.setVehicle(vehicle)
+        }
       }
       if (token) {
         stateApp.setAuthToken(token)

@@ -36,7 +36,7 @@ const HomeScreen = () => {
       }, 1000);
     }
   }
-  return (
+    return (
     <View style={styles.container}>
       {isLoading && <LottieFile />}
 
