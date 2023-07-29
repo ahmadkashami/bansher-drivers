@@ -16,6 +16,7 @@ const userInitial = new UserDto({
     branchId:'',
     companyId:'',
     vehicleId:'',
+    photo:require("../contants/images/profile.png"),
 });
 
 
