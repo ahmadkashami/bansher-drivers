@@ -20,4 +20,10 @@ export function getVehicle() {
         .then(response => resolve(response))
         .catch(error => reject(error))
   })
+}export function putVehicleUnlink() {
+  return new Promise((resolve, reject) => {
+    client.put(`vehicles/unlink`)
+        .then(response => resolve(response))
+        .catch(error => reject(error))
+  })
 }

@@ -1,4 +1,5 @@
 
+
 export interface IUser {
   _id: string;
   status:boolean;
@@ -10,5 +11,6 @@ export interface IUser {
   branchId:string;
   companyId:string;
   vehicleId:string;
+  photo:string;
 }
 

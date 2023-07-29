@@ -11,6 +11,7 @@ export class UserDto {
   branchId:string;
   companyId:string;
   vehicleId:string;
+  photo:string;
   constructor(user: IUser) {
     this._id= user._id,
         this.status=user.status ,
@@ -21,7 +22,8 @@ export class UserDto {
         this.phoneNum= user.phoneNum,
         this.branchId= user.branchId,
         this.companyId=user.companyId,
-        this.vehicleId=user.vehicleId
+        this.vehicleId=user.vehicleId,
+        this.photo=user.photo
   }
 }
 

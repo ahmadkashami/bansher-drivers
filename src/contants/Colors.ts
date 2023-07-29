@@ -8,4 +8,5 @@ export const AppColors = {
   white: "#fff",
   offGray: "#efefef",
   Thirdnary: "#f4f1f6",
+  success: "#06e506",
 };
