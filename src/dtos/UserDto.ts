@@ -2,7 +2,7 @@ import {IUser} from "../interfaces/UserInterface";
 
 export class UserDto {
   _id: string;
-  status:boolean;
+  status:string;
   name:string;
   email:string;
   licenseExpiredAt:string;

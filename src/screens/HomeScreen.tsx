@@ -1,31 +1,42 @@
 import {FlatList, Image, StyleSheet, Switch, Text, View} from "react-native";
-import React, {useContext, useEffect, useState} from "react";
+import React, {useState} from "react";
 import {Ionicons} from "@expo/vector-icons";
 import {AppColors} from "../contants/Colors";
 import LottieFile from "../components/ui/LottieFile";
 import {t} from "i18next";
 import useAppStore from "../store/userStore";
-import {putVehicleUnlink} from "../api/AuthApi";
+import {putVehicleUnlink, updateDriverStatus} from "../api/AuthApi";
 import {ErrorHandlerApi} from "../helpers/AppHelpers";
 import FlashMessage, {showMessage} from "react-native-flash-message";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import {UserDto} from "../dtos/UserDto";
 
 const HomeScreen = () => {
     const stateApp = useAppStore()
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [isWorkStatus, setIsWorkStatus] = useState(false);
+    const [isWorkStatus, setIsWorkStatus] = useState(stateApp.user.status);
     const [isLinked, setIsLinked] = useState(false);
 
     const updateWorkStatus = () => {
         setIsLoading(true);
-        putVehicleUnlink().then((er)=>{
-            setIsWorkStatus(!isWorkStatus)
+
+        const newStatus = stateApp.user.status == 'active' ? 'inactive' : 'active'
+        updateDriverStatus(newStatus).then((response: any) => {
+            setIsWorkStatus(newStatus)
+            const driver = response.data.data;
+            const user = new UserDto(driver);
+            AsyncStorage.setItem('user', JSON.stringify(user))
+            stateApp.setUser(user)
+
             showMessage({
                 message: "Success Message",
                 description: "Update Successfully",
                 type: "success",
             });
             setIsLoading(false);
-        }).catch((error:any)=>{
+
+
+        }).catch((error: any) => {
             setIsLoading(false);
             if (error?.response?.data) {
                 const errorMessage = ErrorHandlerApi(error);
@@ -95,16 +106,7 @@ const HomeScreen = () => {
                         contentContainerStyle={{width: "100%", flex: 1, justifyContent: "center"}}
                         renderItem={({item}) => {
                             return (
-                                <View style={{
-                                        width: 100,
-                                        height: 100,
-                                        marginHorizontal: 10,
-                                        marginVertical: 30,
-                                        justifyContent: "center",
-                                        alignItems: "center",
-                                        borderRadius: 20,
-                                        backgroundColor: "rgba(190, 221, 231,0.3)",
-                                    }}>
+                                <View style={styles.itemFlatList}>
                                     <Text style={{color: "white", fontSize: 16, fontWeight: "600"}}>
                                         {item}
                                     </Text>
@@ -144,10 +146,10 @@ const HomeScreen = () => {
                                 thumbColor={isWorkStatus ? '#ffffff' : '#f4f3f4'}
                                 ios_backgroundColor="#3e3e3e"
                                 onValueChange={updateWorkStatus}
-                                value={isWorkStatus}
+                                value={isWorkStatus === 'active'}
                             />
                             <Text style={styles.switchText}>
-                                Work Status
+                                Work Status {isWorkStatus}
                             </Text>
                         </View>
                         <View style={[styles.containerSwitch, {top: -70}]}>
@@ -197,6 +199,16 @@ const styles = StyleSheet.create({
         height: 120,
         borderWidth: 1,
         borderRadius: 60,
-        borderColor:AppColors.secondary
+        borderColor: AppColors.secondary
+    },
+    itemFlatList: {
+        width: 100,
+        height: 100,
+        marginHorizontal: 10,
+        marginVertical: 30,
+        justifyContent: "center",
+        alignItems: "center",
+        borderRadius: 20,
+        backgroundColor: "rgba(190, 221, 231,0.3)",
     }
 });

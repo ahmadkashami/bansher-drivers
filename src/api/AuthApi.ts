@@ -6,12 +6,16 @@ export async function login(email: string, password: string) {
   return response.data;
 }
 
-export async function updateUserStatus(status:string,location?:object) {
-  const payload = { status,location };
-  const response = await client.post(`drivers/status`,payload);
-  return response.data;
-}
 
+
+
+export function updateDriverStatus(status:string) {
+  return new Promise((resolve, reject) => {
+    client.put(`drivers/profile`,{status:status})
+        .then(response => resolve(response))
+        .catch(error => reject(error))
+  })
+}
 
 
 export function getVehicle() {
@@ -20,9 +24,10 @@ export function getVehicle() {
         .then(response => resolve(response))
         .catch(error => reject(error))
   })
-}export function putVehicleUnlink() {
+}
+export function putVehicleUnlink() {
   return new Promise((resolve, reject) => {
-    client.put(`vehicles/unlink`)
+    client.post(`vehicles/unlink`)
         .then(response => resolve(response))
         .catch(error => reject(error))
   })
