@@ -21,10 +21,10 @@ const AppActiveButton = ({
       style={({ pressed }) => [
         styles.container,
         pressed && styles.pressed,
-        isActive && { backgroundColor: AppColors.primary },
+        isActive && { backgroundColor: AppColors.success },
       ]}
     >
-      <Text style={styles.text}>{isActive ? t("Online") : t("Offline")}</Text>
+      <Text style={styles.text}>{isActive ? t("On") : t("Off")}</Text>
     </Pressable>
   );
 };
@@ -35,10 +35,10 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "gray",
-    width: 150,
-    height: 150,
-    borderRadius: 75,
+    backgroundColor: AppColors.warning,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
   },
   text: {
     color: AppColors.white,
