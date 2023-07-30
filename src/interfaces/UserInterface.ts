@@ -2,7 +2,7 @@
 
 export interface IUser {
   _id: string;
-  status:boolean;
+  status:string;
   name:string;
   email:string;
   licenseExpiredAt:string;
