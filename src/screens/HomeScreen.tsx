@@ -10,19 +10,19 @@ import {ErrorHandlerApi} from "../helpers/AppHelpers";
 import FlashMessage, {showMessage} from "react-native-flash-message";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {UserDto} from "../dtos/UserDto";
+import AppActiveButton from "../components/Home/AppActiveButton";
 
 const HomeScreen = () => {
     const stateApp = useAppStore()
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [isWorkStatus, setIsWorkStatus] = useState(stateApp.user.status);
-    const [isLinked, setIsLinked] = useState(false);
-
+    const [isWorkStatus, setIsWorkStatus] = useState(stateApp.user.status == 'active');
+    const [isLinked, setIsLinked] = useState(stateApp.vehicle.status == 'active');
     const updateWorkStatus = () => {
         setIsLoading(true);
 
-        const newStatus = stateApp.user.status == 'active' ? 'inactive' : 'active'
+        const newStatus = isWorkStatus ? 'inactive' : 'active'
         updateDriverStatus(newStatus).then((response: any) => {
-            setIsWorkStatus(newStatus)
+            setIsWorkStatus(newStatus == "active")
             const driver = response.data.data;
             const user = new UserDto(driver);
             AsyncStorage.setItem('user', JSON.stringify(user))
@@ -30,7 +30,7 @@ const HomeScreen = () => {
 
             showMessage({
                 message: "Success Message",
-                description: "Update Successfully",
+                description: "Update Successfully to "+user.status,
                 type: "success",
             });
             setIsLoading(false);
@@ -60,6 +60,8 @@ const HomeScreen = () => {
         setIsLoading(false);
     }
 
+
+    // @ts-ignore
     return (
         <View style={styles.container}>
             {isLoading && <LottieFile/>}
@@ -141,24 +143,21 @@ const HomeScreen = () => {
                     </Text>
                     <View style={{flex: 1, justifyContent: "center"}}>
                         <View style={styles.containerSwitch}>
-                            <Switch
-                                trackColor={{false: '#767577', true: AppColors.success}}
-                                thumbColor={isWorkStatus ? '#ffffff' : '#f4f3f4'}
-                                ios_backgroundColor="#3e3e3e"
-                                onValueChange={updateWorkStatus}
-                                value={isWorkStatus === 'active'}
+                            <AppActiveButton
+                                disabled={isLoading}
+                                isActive={isWorkStatus}
+                                onPress={updateWorkStatus}
                             />
                             <Text style={styles.switchText}>
-                                Work Status {isWorkStatus}
+                                Work Status
                             </Text>
+
                         </View>
-                        <View style={[styles.containerSwitch, {top: -70}]}>
-                            <Switch
-                                trackColor={{false: '#767577', true: AppColors.success}}
-                                thumbColor={isLinked ? '#ffffff' : '#f4f3f4'}
-                                ios_backgroundColor="#3e3e3e"
-                                onValueChange={updateVehicleLink}
-                                value={isLinked}
+                        <View style={[styles.containerSwitch]}>
+                            <AppActiveButton
+                                disabled={isLoading}
+                                isActive={isLinked}
+                                onPress={updateVehicleLink}
                             />
                             <Text style={styles.switchText}>
                                 Vehicle Link

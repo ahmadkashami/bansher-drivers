@@ -6,9 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="7a33c3cf-4d88-4c1c-abad-e40efde3557b" name="Changes" comment="logic">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/AuthApi.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/AuthApi.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dtos/UserDto.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/dtos/UserDto.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/interfaces/UserInterface.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/interfaces/UserInterface.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Home/AppActiveButton.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Home/AppActiveButton.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/contants/Colors.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/contants/Colors.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/screens/HomeScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/HomeScreen.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
