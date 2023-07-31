@@ -17,6 +17,14 @@ export function updateDriverStatus(status:string) {
   })
 }
 
+export function updateVehiclesLocation(location:object) {
+  return new Promise((resolve, reject) => {
+    client.put(`vehicles/location`,location)
+        .then(response => resolve(response))
+        .catch(error => reject(error))
+  })
+}
+
 
 export function getVehicle() {
   return new Promise((resolve, reject) => {
