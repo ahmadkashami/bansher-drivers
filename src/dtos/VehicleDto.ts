@@ -11,8 +11,8 @@ export class VehicleDto {
   status: string;
   workStatus: string;
   lastActiveDate: string;
-  geoLocation: geolocation;
-  geoMetry:geoMetryLocation;
+  geoLocation: undefined;
+  geoMetry:undefined;
   appCode: string;
   createdAt: string;
   updatedAt: string;

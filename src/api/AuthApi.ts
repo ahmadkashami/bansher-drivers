@@ -25,9 +25,16 @@ export function getVehicle() {
         .catch(error => reject(error))
   })
 }
-export function putVehicleUnlink() {
+export function updateVehicleUnlink() {
   return new Promise((resolve, reject) => {
     client.post(`vehicles/unlink`)
+        .then(response => resolve(response))
+        .catch(error => reject(error))
+  })
+}
+export function updateVehicleLink() {
+  return new Promise((resolve, reject) => {
+    client.post(`vehicles/link`)
         .then(response => resolve(response))
         .catch(error => reject(error))
   })
