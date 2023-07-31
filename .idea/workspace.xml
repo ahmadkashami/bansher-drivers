@@ -6,11 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="7a33c3cf-4d88-4c1c-abad-e40efde3557b" name="Changes" comment="work status">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/api/AuthApi.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/AuthApi.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/contants/Colors.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/contants/Colors.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dtos/VehicleDto.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/dtos/VehicleDto.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/interfaces/VehicleInterface.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/interfaces/VehicleInterface.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/screens/HomeScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/HomeScreen.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -127,6 +126,7 @@
       <workItem from="1690630279521" duration="7393000" />
       <workItem from="1690700340375" duration="2111000" />
       <workItem from="1690784663050" duration="1286000" />
+      <workItem from="1690786761842" duration="1514000" />
     </task>
     <task id="LOCAL-00001" summary="t">
       <created>1688833792481</created>
@@ -266,6 +266,17 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ID_ORDER">
+      <list>
+        <option value="Default.Root" />
+        <option value="Default.Author" />
+        <option value="Default.Date" />
+        <option value="Default.Subject" />
+        <option value="Space.CommitStatus" />
+      </list>
+    </option>
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">

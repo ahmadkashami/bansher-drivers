@@ -1,23 +1,72 @@
 import {FlatList, Image, StyleSheet, Switch, Text, View} from "react-native";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Ionicons} from "@expo/vector-icons";
 import {AppColors} from "../contants/Colors";
 import LottieFile from "../components/ui/LottieFile";
 import {t} from "i18next";
 import useAppStore from "../store/userStore";
-import {updateDriverStatus, updateVehicleLink} from "../api/AuthApi";
+import {updateDriverStatus, updateVehicleLink, updateVehiclesLocation} from "../api/AuthApi";
 import {ErrorHandlerApi} from "../helpers/AppHelpers";
 import FlashMessage, {showMessage} from "react-native-flash-message";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {UserDto} from "../dtos/UserDto";
 import AppActiveButton from "../components/Home/AppActiveButton";
 import {VehicleDto} from "../dtos/VehicleDto";
+import * as Location from 'expo-location';
+import * as TaskManager from 'expo-task-manager';
 
+const YOUR_TASK_NAME = 'background-location-task';
+const YOUR_TIME_INTERVAL = 5000; // 5 seconds (adjust as needed)
+const YOUR_DISTANCE_INTERVAL = 1000; // 10 meters (adjust as needed)
+TaskManager.defineTask(YOUR_TASK_NAME, async ({data, error}) => {
+    if (error) {
+        console.error(error)
+        return
+    }
+    if (data) {
+        // @ts-ignore
+        const {locations} = data
+        const location = locations[0]
+        if (location) {
+
+            const latitude = location.coords.latitude
+            const longitude = location.coords.longitude
+            updateVehiclesLocation({latitude: latitude, longitude: longitude}).then(() => {
+                console.log("Location in background", location.coords)
+            }).catch(error => {
+                console.log(error)
+            })
+        }
+    }
+})
 const HomeScreen = () => {
     const stateApp = useAppStore()
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isWorkStatus, setIsWorkStatus] = useState(stateApp.user.status == 'active');
     const [isLinked, setIsLinked] = useState(stateApp.vehicle.status == 'active');
+
+    const requestBackgroundLocationPermission = async () => {
+        const {status} = await Location.requestBackgroundPermissionsAsync();
+        if (status !== 'granted') {
+            console.log('Background location permission not granted!');
+        }
+    };
+    const startBackgroundLocationUpdates = async () => {
+        await Location.startLocationUpdatesAsync(YOUR_TASK_NAME, {
+            accuracy: Location.Accuracy.Balanced,
+            timeInterval: YOUR_TIME_INTERVAL,
+            distanceInterval: YOUR_DISTANCE_INTERVAL,
+        });
+    };
+
+    useEffect(() => {
+        // Request background location permissions when the component mounts
+        requestBackgroundLocationPermission();
+
+        // Start background location updates when the component mounts
+        startBackgroundLocationUpdates();
+
+    }, []);
     const updateWorkStatus = () => {
         setIsLoading(true);
         const newStatus = isWorkStatus ? 'inactive' : 'active'
@@ -30,7 +79,7 @@ const HomeScreen = () => {
             stateApp.setUser(user)
             showMessage({
                 message: "Success Message",
-                description: "Update Successfully to "+user.status,
+                description: "Update Successfully to " + user.status,
                 type: "success",
             });
             setIsLoading(false);
@@ -64,7 +113,7 @@ const HomeScreen = () => {
             stateApp.setVehicle(vehicle)
             showMessage({
                 message: "Success Message",
-                description: "Update Successfully to "+vehicle.status,
+                description: "Update Successfully to " + vehicle.status,
                 type: "success",
             });
             setIsLoading(false);
@@ -86,7 +135,6 @@ const HomeScreen = () => {
             }
         })
     }
-
 
 
     // @ts-ignore
