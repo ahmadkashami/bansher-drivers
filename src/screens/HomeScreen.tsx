@@ -5,12 +5,13 @@ import {AppColors} from "../contants/Colors";
 import LottieFile from "../components/ui/LottieFile";
 import {t} from "i18next";
 import useAppStore from "../store/userStore";
-import {putVehicleUnlink, updateDriverStatus} from "../api/AuthApi";
+import {updateDriverStatus, updateVehicleLink} from "../api/AuthApi";
 import {ErrorHandlerApi} from "../helpers/AppHelpers";
 import FlashMessage, {showMessage} from "react-native-flash-message";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {UserDto} from "../dtos/UserDto";
 import AppActiveButton from "../components/Home/AppActiveButton";
+import {VehicleDto} from "../dtos/VehicleDto";
 
 const HomeScreen = () => {
     const stateApp = useAppStore()
@@ -19,23 +20,20 @@ const HomeScreen = () => {
     const [isLinked, setIsLinked] = useState(stateApp.vehicle.status == 'active');
     const updateWorkStatus = () => {
         setIsLoading(true);
-
         const newStatus = isWorkStatus ? 'inactive' : 'active'
         updateDriverStatus(newStatus).then((response: any) => {
             setIsWorkStatus(newStatus == "active")
             const driver = response.data.data;
             const user = new UserDto(driver);
+            setIsLinked(user.status == 'active')
             AsyncStorage.setItem('user', JSON.stringify(user))
             stateApp.setUser(user)
-
             showMessage({
                 message: "Success Message",
                 description: "Update Successfully to "+user.status,
                 type: "success",
             });
             setIsLoading(false);
-
-
         }).catch((error: any) => {
             setIsLoading(false);
             if (error?.response?.data) {
@@ -54,11 +52,41 @@ const HomeScreen = () => {
             }
         })
     }
-    const updateVehicleLink = () => {
+    const updateLink = () => {
         setIsLoading(true);
-        setIsLinked(!isLinked);
-        setIsLoading(false);
+        const newStatus = isLinked ? 'inactive' : 'active'
+        updateVehicleLink().then((response: any) => {
+
+            const data = response.data.data;
+            const vehicle = new VehicleDto(data);
+            setIsLinked(vehicle.status == 'active')
+            AsyncStorage.setItem('vehicle', JSON.stringify(vehicle))
+            stateApp.setVehicle(vehicle)
+            showMessage({
+                message: "Success Message",
+                description: "Update Successfully to "+vehicle.status,
+                type: "success",
+            });
+            setIsLoading(false);
+        }).catch((error: any) => {
+            setIsLoading(false);
+            if (error?.response?.data) {
+                const errorMessage = ErrorHandlerApi(error);
+                showMessage({
+                    message: "Error Message",
+                    description: errorMessage,
+                    type: "danger",
+                });
+            } else {
+                showMessage({
+                    message: "Error Message",
+                    description: error.message,
+                    type: "danger",
+                });
+            }
+        })
     }
+
 
 
     // @ts-ignore
@@ -157,7 +185,7 @@ const HomeScreen = () => {
                             <AppActiveButton
                                 disabled={isLoading}
                                 isActive={isLinked}
-                                onPress={updateVehicleLink}
+                                onPress={updateLink}
                             />
                             <Text style={styles.switchText}>
                                 Vehicle Link

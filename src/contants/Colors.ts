@@ -2,7 +2,7 @@ export const AppColors = {
   primary200: "#bedde7",
   primary: "#F7B123",
   warning: "#cc3300",
-  secondary: "#4196b2",
+  secondary: "#132F70",
   offWhite: "#fafafa",
   gray: "#e5e5e5",
   black: "#231F20",
