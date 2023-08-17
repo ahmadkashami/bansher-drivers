@@ -8,7 +8,6 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/api/AuthApi.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/AuthApi.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/screens/HomeScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/HomeScreen.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -127,6 +126,10 @@
       <workItem from="1690700340375" duration="2111000" />
       <workItem from="1690784663050" duration="1286000" />
       <workItem from="1690786761842" duration="1514000" />
+      <workItem from="1690896630766" duration="1359000" />
+      <workItem from="1691564624769" duration="2861000" />
+      <workItem from="1691601110857" duration="13000" />
+      <workItem from="1692110276418" duration="541000" />
     </task>
     <task id="LOCAL-00001" summary="t">
       <created>1688833792481</created>
