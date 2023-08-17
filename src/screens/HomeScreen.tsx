@@ -225,7 +225,7 @@ const HomeScreen = () => {
                                 onPress={updateWorkStatus}
                             />
                             <Text style={styles.switchText}>
-                                Work Status
+                               User Work
                             </Text>
 
                         </View>
