@@ -7,7 +7,7 @@ import {VehicleDto} from "../dtos/VehicleDto";
 
 const userInitial = new UserDto({
     _id: '',
-    status:false,
+    status:'',
     name:'',
     email:'',
     licenseExpiredAt:'',

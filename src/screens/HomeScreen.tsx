@@ -43,7 +43,7 @@ const HomeScreen = () => {
     const stateApp = useAppStore()
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isWorkStatus, setIsWorkStatus] = useState(stateApp.user.status == 'active');
-    const [isLinked, setIsLinked] = useState(stateApp.vehicle.status == 'active');
+    const [isLinked, setIsLinked] = useState(stateApp.vehicle.workStatus == 'online');
 
     const requestBackgroundLocationPermission = async () => {
         const {status} = await Location.requestBackgroundPermissionsAsync();
@@ -74,7 +74,7 @@ const HomeScreen = () => {
             setIsWorkStatus(newStatus == "active")
             const driver = response.data.data;
             const user = new UserDto(driver);
-            setIsLinked(user.status == 'active')
+            setIsWorkStatus(user.status == 'active')
             AsyncStorage.setItem('user', JSON.stringify(user))
             stateApp.setUser(user)
             showMessage({
@@ -103,17 +103,17 @@ const HomeScreen = () => {
     }
     const updateLink = () => {
         setIsLoading(true);
-        const newStatus = isLinked ? 'inactive' : 'active'
+        const newStatus = isLinked ? 'offline' : 'online'
         updateVehicleLink().then((response: any) => {
 
             const data = response.data.data;
             const vehicle = new VehicleDto(data);
-            setIsLinked(vehicle.status == 'active')
+            setIsLinked(vehicle.workStatus == 'online')
             AsyncStorage.setItem('vehicle', JSON.stringify(vehicle))
             stateApp.setVehicle(vehicle)
             showMessage({
                 message: "Success Message",
-                description: "Update Successfully to " + vehicle.status,
+                description: "Update Successfully to " + vehicle.workStatus,
                 type: "success",
             });
             setIsLoading(false);
