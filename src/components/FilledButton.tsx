@@ -2,9 +2,16 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { AppColors } from "../contants/Colors";
 
-const FilledButton = ({ children }: { children: string }) => {
+const FilledButton = ({
+  children,
+  onPress,
+}: {
+  children: string;
+  onPress?: () => void;
+}) => {
   return (
     <Pressable
+      onPress={onPress}
       style={({ pressed }) => [styles.container, pressed && styles.pressed]}
     >
       <Text style={styles.text}>{children}</Text>
@@ -17,7 +24,7 @@ export default FilledButton;
 const styles = StyleSheet.create({
   container: {
     minWidth: "90%",
-    minHeight: 70,
+    minHeight: 60,
     backgroundColor: AppColors.primary,
     justifyContent: "center",
     alignItems: "center",
