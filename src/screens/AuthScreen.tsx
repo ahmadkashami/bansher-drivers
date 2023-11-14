@@ -50,6 +50,7 @@ const AuthScreen = () => {
                 inputs.email,
                 inputs.password
             );
+
             const driver = response.data.driver;
             const accessToken = response.data.accessToken;
             if (!driver) throw new Error("Authenticated error");
@@ -61,6 +62,8 @@ const AuthScreen = () => {
             stateApp.setAuthToken("token");
         } catch (error: any) {
             if (error?.response?.data) {
+                console.log(error.response.data);
+
                 const errorMessage = ErrorHandlerApi(error);
 
                 showMessage({

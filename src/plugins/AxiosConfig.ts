@@ -1,10 +1,11 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
-const baseURL = "http://192.168.1.111:5004/api/driver-app/v1/"
+const baseURL = "https://yamak-kw.com/api/driver-app/v1/"
+
 export const client = axios.create({
   baseURL,
   headers: {
-    Accept: "application/json",
+    "Content-type": "application/json",
   },
 });
 

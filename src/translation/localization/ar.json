@@ -26,5 +26,10 @@
   "Offline": "مغلق",
   "ToggleButton": "اضغط على الزر لتغير حالتك",
   "InCaseOffline": "في حال كانت حالتك مغلق لن تتمكن من تلقي الطلبات",
-  "ChangePassword": "تغير كلمة السر"
+  "ChangePassword": "تغير كلمة السر",
+  "TermOfService": "شروط الخدمة",
+  "Orders": "الطلبات",
+  "Completed": "المكتملة",
+  "MapStatus": "حالة الخريطة",
+  "VehicleLink": "ربط المركبة"
 }

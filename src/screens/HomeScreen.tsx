@@ -45,6 +45,13 @@ const HomeScreen = () => {
     const [isWorkStatus, setIsWorkStatus] = useState(stateApp.user.status == 'active');
     const [isLinked, setIsLinked] = useState(stateApp.vehicle.workStatus == 'online');
 
+    const requestForegroundPermission = async () => {
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== "granted") {
+            console.log("Permission to access location was denied");
+            return;
+        }
+    }
     const requestBackgroundLocationPermission = async () => {
         const { status } = await Location.requestBackgroundPermissionsAsync();
         if (status !== 'granted') {
@@ -61,6 +68,7 @@ const HomeScreen = () => {
 
     useEffect(() => {
         // Request background location permissions when the component mounts
+        requestForegroundPermission()
         requestBackgroundLocationPermission();
 
         // Start background location updates when the component mounts
@@ -68,6 +76,14 @@ const HomeScreen = () => {
 
     }, []);
     const updateWorkStatus = () => {
+        if (!isLinked && !isWorkStatus) {
+            showMessage({
+                message: "Error Message",
+                description: "driver should be linked to vehicle first",
+                type: "danger",
+            });
+            return
+        }
         setIsLoading(true);
         const newStatus = isWorkStatus ? 'inactive' : 'active'
         updateDriverStatus(newStatus).then((response: any) => {
@@ -186,7 +202,7 @@ const HomeScreen = () => {
                 }}
                 >
                     <FlatList
-                        data={[{ name: "Orders", qty: 0 }, { name: "Requests", qty: 0 }]}
+                        data={[{ name: t("Orders"), qty: 0 }, { name: t("Completed"), qty: 0 }]}
                         horizontal
                         contentContainerStyle={{ width: "100%", flex: 1, justifyContent: "center" }}
                         renderItem={({ item }) => {
@@ -232,7 +248,7 @@ const HomeScreen = () => {
                                 onPress={updateWorkStatus}
                             />
                             <Text style={styles.switchText}>
-                                User Work
+                                {t("MapStatus")}
                             </Text>
 
                         </View>
@@ -243,7 +259,7 @@ const HomeScreen = () => {
                                 onPress={updateLink}
                             />
                             <Text style={styles.switchText}>
-                                Vehicle Link
+                                {t("VehicleLink")}
                             </Text>
                         </View>
 
@@ -265,7 +281,7 @@ const styles = StyleSheet.create({
     containerSwitch: {
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: "flex-start",
         flexDirection: "row",
         paddingHorizontal: 0,
         top: -50,
@@ -275,6 +291,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
         marginHorizontal: 10,
         fontWeight: "bold"
+        , textAlign: "center"
     },
     img: {
         width: 80,

@@ -15,6 +15,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { AppColors } from "../contants/Colors";
 import AppModel from "./AppModal";
+import AppAlertEmpty from "./ui/AppAlertEmpty";
 
 const laguages = [
   {
@@ -54,7 +55,9 @@ const LanguagePicker: FC<LanguagePickerProps> = ({
     pickingLanguageHandler(false);
   }
   return (
-    <AppModel isModelOpen={isPickingLanguage}>
+    <AppAlertEmpty visible={isPickingLanguage} >
+
+      {/* <AppModel isModelOpen={isPickingLanguage}> */}
       <View style={styles.container}>
         <View style={{ justifyContent: "flex-end", alignItems: "flex-end" }}>
           <Ionicons
@@ -88,7 +91,10 @@ const LanguagePicker: FC<LanguagePickerProps> = ({
           />
         </View>
       </View>
-    </AppModel>
+      {/* </AppModel> */}
+    </AppAlertEmpty>
+
+
   );
 };
 
