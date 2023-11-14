@@ -22,19 +22,6 @@ const laguages = [
     lable: "English",
   },
   { name: "ar", lable: "Arabic" },
-  { name: "fr", lable: "france" },
-  { name: "gr", lable: "german" },
-
-  //   {
-  //     name: "en",
-  //     lable: "English",
-  //   },
-  //   { name: "ar", lable: "Arabic" },
-  //   {
-  //     name: "en",
-  //     lable: "English",
-  //   },
-  //   { name: "ar", lable: "Arabic" },
 ];
 
 export interface LanguagePickerProps {

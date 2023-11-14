@@ -1,37 +1,37 @@
-import {FlatList, Image, StyleSheet, Switch, Text, View} from "react-native";
-import React, {useEffect, useState} from "react";
-import {Ionicons} from "@expo/vector-icons";
-import {AppColors} from "../contants/Colors";
+import { FlatList, Image, StyleSheet, Switch, Text, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Ionicons } from "@expo/vector-icons";
+import { AppColors } from "../contants/Colors";
 import LottieFile from "../components/ui/LottieFile";
-import {t} from "i18next";
+import { t } from "i18next";
 import useAppStore from "../store/userStore";
-import {updateDriverStatus, updateVehicleLink, updateVehiclesLocation} from "../api/AuthApi";
-import {ErrorHandlerApi} from "../helpers/AppHelpers";
-import FlashMessage, {showMessage} from "react-native-flash-message";
+import { updateDriverStatus, updateVehicleLink, updateVehiclesLocation } from "../api/AuthApi";
+import { ErrorHandlerApi } from "../helpers/AppHelpers";
+import FlashMessage, { showMessage } from "react-native-flash-message";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {UserDto} from "../dtos/UserDto";
+import { UserDto } from "../dtos/UserDto";
 import AppActiveButton from "../components/Home/AppActiveButton";
-import {VehicleDto} from "../dtos/VehicleDto";
+import { VehicleDto } from "../dtos/VehicleDto";
 import * as Location from 'expo-location';
 import * as TaskManager from 'expo-task-manager';
 
 const YOUR_TASK_NAME = 'background-location-task';
 const YOUR_TIME_INTERVAL = 5000; // 5 seconds (adjust as needed)
 const YOUR_DISTANCE_INTERVAL = 1000; // 10 meters (adjust as needed)
-TaskManager.defineTask(YOUR_TASK_NAME, async ({data, error}) => {
+TaskManager.defineTask(YOUR_TASK_NAME, async ({ data, error }) => {
     if (error) {
         console.error(error)
         return
     }
     if (data) {
         // @ts-ignore
-        const {locations} = data
+        const { locations } = data
         const location = locations[0]
         if (location) {
 
             const latitude = location.coords.latitude
             const longitude = location.coords.longitude
-            updateVehiclesLocation({latitude: latitude, longitude: longitude}).then(() => {
+            updateVehiclesLocation({ latitude: latitude, longitude: longitude }).then(() => {
                 console.log("Location in background", location.coords)
             }).catch(error => {
                 console.log(error)
@@ -46,7 +46,7 @@ const HomeScreen = () => {
     const [isLinked, setIsLinked] = useState(stateApp.vehicle.workStatus == 'online');
 
     const requestBackgroundLocationPermission = async () => {
-        const {status} = await Location.requestBackgroundPermissionsAsync();
+        const { status } = await Location.requestBackgroundPermissionsAsync();
         if (status !== 'granted') {
             console.log('Background location permission not granted!');
         }
@@ -140,26 +140,33 @@ const HomeScreen = () => {
     // @ts-ignore
     return (
         <View style={styles.container}>
-            {isLoading && <LottieFile/>}
+            {isLoading && <LottieFile />}
             {/*user profile  */}
             <View style={{
                 flex: 1,
                 justifyContent: "flex-end",
             }}>
-                <View style={{flexDirection: "row", alignItems: "center", marginLeft: 20}}>
-                    <Image
-                        style={styles.img}
-                        source={{uri: stateApp.user.photo}}></Image>
-                    <View style={{marginLeft: 20}}>
-                        <Text style={{fontSize: 20, color: "gray", marginBottom: 10, textTransform: "capitalize"}}>
+                <View style={{ flexDirection: "row", alignItems: "center", marginLeft: 20 }}>
+                    <View style={{
+                        borderWidth: 1,
+                        borderColor: AppColors.primary,
+                        width: 100, height: 100, borderRadius: 50, justifyContent: "center", alignItems: "center"
+                    }}>
+                        <Image
+                            style={styles.img}
+                            source={{ uri: stateApp.user.photo }} />
+                    </View>
+
+                    <View style={{ marginLeft: 20 }}>
+                        <Text style={{ fontSize: 20, color: "gray", marginBottom: 10, textTransform: "capitalize" }}>
                             {stateApp.user.name}
                         </Text>
-                        <Text style={{fontSize: 20, color: "gray"}}>
+                        <Text style={{ fontSize: 20, color: "gray" }}>
                             {stateApp.user.phoneNum}
                         </Text>
                     </View>
                 </View>
-                <View style={{position: "absolute", top: 40, right: 20}}>
+                <View style={{ position: "absolute", top: 40, right: 20 }}>
                     <Ionicons
                         name="log-out-outline"
                         size={30}
@@ -179,17 +186,17 @@ const HomeScreen = () => {
                 }}
                 >
                     <FlatList
-                        data={["Orders", "Requests"]}
+                        data={[{ name: "Orders", qty: 0 }, { name: "Requests", qty: 0 }]}
                         horizontal
-                        contentContainerStyle={{width: "100%", flex: 1, justifyContent: "center"}}
-                        renderItem={({item}) => {
+                        contentContainerStyle={{ width: "100%", flex: 1, justifyContent: "center" }}
+                        renderItem={({ item }) => {
                             return (
                                 <View style={styles.itemFlatList}>
-                                    <Text style={{color: "white", fontSize: 16, fontWeight: "600"}}>
-                                        {item}
+                                    <Text style={{ color: "white", fontSize: 16, fontWeight: "600" }}>
+                                        {item.name}
                                     </Text>
-                                    <Text style={{color: "white", fontSize: 16, fontWeight: "600"}}>
-                                        100
+                                    <Text style={{ color: "white", fontSize: 16, fontWeight: "600" }}>
+                                        {item.qty}
                                     </Text>
                                 </View>
                             );
@@ -217,7 +224,7 @@ const HomeScreen = () => {
                     >
                         {t("ToggleButton")}
                     </Text>
-                    <View style={{flex: 1, justifyContent: "center"}}>
+                    <View style={{ flex: 1, justifyContent: "center" }}>
                         <View style={styles.containerSwitch}>
                             <AppActiveButton
                                 disabled={isLoading}
@@ -225,7 +232,7 @@ const HomeScreen = () => {
                                 onPress={updateWorkStatus}
                             />
                             <Text style={styles.switchText}>
-                               User Work
+                                User Work
                             </Text>
 
                         </View>
@@ -243,7 +250,7 @@ const HomeScreen = () => {
                     </View>
                 </View>
             </View>
-            <FlashMessage position="bottom"/>
+            <FlashMessage position="bottom" />
         </View>
     );
 };
@@ -270,10 +277,9 @@ const styles = StyleSheet.create({
         fontWeight: "bold"
     },
     img: {
-        width: 120,
-        height: 120,
-        borderWidth: 1,
-        borderRadius: 60,
+        width: 80,
+        height: 80,
+        borderRadius: 40,
         borderColor: AppColors.secondary
     },
     itemFlatList: {

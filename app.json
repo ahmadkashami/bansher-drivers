@@ -1,14 +1,14 @@
 {
   "expo": {
-    "name": "driver",
-    "slug": "driver",
+    "name": "Yamak Driver",
+    "slug": "Yamak_Driver",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
-      "resizeMode": "contain",
+      "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
     "updates": {
@@ -28,6 +28,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "4e67b928-e443-4230-8f28-b938e670808e"
+      }
     }
   }
 }

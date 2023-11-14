@@ -6,6 +6,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { StyleSheet } from "react-native";
 import HomeScreen from "../screens/HomeScreen";
 import ProfileScreen from "../screens/ProfileScreen";
+import { AppColorsTheme2 } from "../contants/Colors";
 const Stack = createStackNavigator();
 
 const HomeStackNavigator = () => {
@@ -24,7 +25,15 @@ const Tab = createBottomTabNavigator();
 
 function BottomTabsNavigator() {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator screenOptions={{
+      headerShown: false,
+      tabBarShowLabel: false,
+      tabBarInactiveTintColor: AppColorsTheme2.white,
+      tabBarActiveTintColor: AppColorsTheme2.secondary,
+      tabBarStyle: {
+        backgroundColor: AppColorsTheme2.primary
+      },
+    }}>
       <Tab.Screen
         options={{
           headerShown: false,
