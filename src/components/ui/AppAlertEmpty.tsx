@@ -1,8 +1,8 @@
 import { Image, Modal, Pressable, StyleSheet, Text, View } from 'react-native'
 import React, { ReactNode } from 'react'
 import { AppColorsTheme2 } from '../../contants/Colors'
-import { AppFonts } from '../../contants/fonts'
 import { AppSizes } from '../../contants/Sizes'
+import { AppFonts } from '../../contants/Fonts'
 
 
 
