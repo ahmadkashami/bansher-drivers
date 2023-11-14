@@ -1,3 +1,4 @@
 export const AppFonts = {
-  Gotham: "Gotham-light",
-};
+    Roboto_Med: "Roboto-Med",
+    ROBOTO_Med_Itl: "Roboto-MedItalic"
+}

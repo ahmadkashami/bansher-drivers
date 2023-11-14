@@ -30,5 +30,10 @@
   "Offline": "offline",
   "ToggleButton": "Toggle the button to change your status",
   "InCaseOffline": "In case your status is offline , you won`t be able to revice messages",
-  "fieldOfWork": "Field of Work"
+  "fieldOfWork": "Field of Work",
+  "TermOfService": "Terms of Services",
+  "Orders": "Orders",
+  "Completed": "Completed",
+  "MapStatus": "Map Status",
+  "VehicleLink": "Vehicle Link"
 }

@@ -6,6 +6,8 @@ import {
   Text,
   View,
   I18nManager,
+  Linking,
+  ScrollView
 } from "react-native";
 import React, { useContext } from "react";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
@@ -17,13 +19,13 @@ import LanguageSection from "../components/Profile/Language.section";
 import useAppStore from "../store/userStore";
 
 const ProfileScreen = () => {
-    const stateApp=useAppStore()
-    const { t } = useTranslation();
-    const  user = stateApp.user;
+  const stateApp = useAppStore()
+  const { t } = useTranslation();
+  const user = stateApp.user;
 
   return (
     <ScreenView>
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <View
           style={{
             flex: 1,
@@ -51,7 +53,39 @@ const ProfileScreen = () => {
               borderRadius: 20,
             }}
           >
-            <View
+            <Pressable
+              style={{
+                height: 50,
+                padding: 8,
+                flexDirection: "row",
+              }}
+              onPress={() => Linking.openURL("https://yamak-kw.com/terms")}
+
+            >
+              <Ionicons
+                name="ios-lock-closed-outline"
+                size={24}
+                color="black"
+              />
+              <Text style={{ marginLeft: 10, height: 40, fontSize: 20 }}>
+                {t("TermOfService")}
+              </Text>
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: "flex-end",
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <Ionicons
+                  name={I18nManager.isRTL ? "chevron-back" : "chevron-forward"}
+                  size={25}
+                  color="black"
+                />
+              </View>
+            </Pressable>
+            {/* <View
               style={{
                 height: 50,
                 padding: 8,
@@ -80,8 +114,10 @@ const ProfileScreen = () => {
                   color="black"
                 />
               </View>
-            </View>
-            <Pressable style={styles.operations}>
+            </View> */}
+            <Pressable
+              onPress={() => Linking.openURL("https://yamak-kw.com/privacy")}
+              style={({ pressed }) => [styles.operations, pressed && { opacity: 0.7 }]}>
               <MaterialIcons name="local-police" size={24} color="black" />
               <Text style={{ marginLeft: 10, height: 40, fontSize: 20 }}>
                 {t("PrivacyAndPolicy")}
@@ -102,9 +138,7 @@ const ProfileScreen = () => {
               </View>
             </Pressable>
             <Pressable
-              onPress={() => {
-                Alert.alert("help");
-              }}
+              onPress={() => Linking.openURL("https://yamak-kw.com")}
               style={({ pressed }) => [
                 styles.operations,
                 pressed && styles.pressed,
@@ -131,7 +165,7 @@ const ProfileScreen = () => {
             </Pressable>
           </View>
         </View>
-      </View>
+      </ScrollView>
     </ScreenView>
   );
 };

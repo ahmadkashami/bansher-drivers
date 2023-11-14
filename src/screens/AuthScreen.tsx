@@ -9,23 +9,23 @@ import {
     TextInput,
     View,
 } from "react-native";
-import {useEffect, useState} from "react";
-import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
-import {SafeAreaProvider} from "react-native-safe-area-context";
+import { useEffect, useState } from "react";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import FilledButton from "../components/FilledButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {getVehicle, login} from "../api/AuthApi";
-import {UserDto} from "../dtos/UserDto";
-import {ErrorHandlerApi} from "../helpers/AppHelpers";
+import { getVehicle, login } from "../api/AuthApi";
+import { UserDto } from "../dtos/UserDto";
+import { ErrorHandlerApi } from "../helpers/AppHelpers";
 import LottieFile from "../components/ui/LottieFile";
-import {showMessage, hideMessage} from "react-native-flash-message";
+import { showMessage, hideMessage } from "react-native-flash-message";
 import FlashMessage from "react-native-flash-message";
 import useAppStore from "../store/userStore";
-import {emailValidator} from "../helpers/validation";
+import { emailValidator } from "../helpers/validation";
 
 const AuthScreen = () => {
     const stateApp = useAppStore()
-    const [inputs, setInputs] = useState({email: "sky-blu2@driver.com", password: ""});
+    const [inputs, setInputs] = useState({ email: "", password: "" });
     const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -50,6 +50,7 @@ const AuthScreen = () => {
                 inputs.email,
                 inputs.password
             );
+
             const driver = response.data.driver;
             const accessToken = response.data.accessToken;
             if (!driver) throw new Error("Authenticated error");
@@ -61,7 +62,10 @@ const AuthScreen = () => {
             stateApp.setAuthToken("token");
         } catch (error: any) {
             if (error?.response?.data) {
+                console.log(error.response.data);
+
                 const errorMessage = ErrorHandlerApi(error);
+
                 showMessage({
                     message: "Error Message",
                     description: errorMessage,
@@ -82,7 +86,7 @@ const AuthScreen = () => {
 
     function inputsChangeHandler(text: string, name: string) {
         setInputs((prev) => {
-            return {...prev, [name]: text};
+            return { ...prev, [name]: text };
         });
     }
     function getVehicleData() {
@@ -110,8 +114,8 @@ const AuthScreen = () => {
 
 
     return (
-        <SafeAreaProvider style={{flex: 1}}>
-            {isLoading && <LottieFile/>}
+        <SafeAreaProvider style={{ flex: 1 }}>
+            {isLoading && <LottieFile />}
             <View style={styles.container}>
                 <KeyboardAwareScrollView>
                     <View
@@ -123,14 +127,14 @@ const AuthScreen = () => {
                             alignSelf: "center",
                         }}
                     >
-                        <View style={{paddingTop: 60, paddingBottom: 0}}>
+                        <View style={{ paddingTop: 60, paddingBottom: 0 }}>
                             <Image
-                                style={{width: 250, height: 200, resizeMode: "cover"}}
+                                style={{ width: 250, height: 200, resizeMode: "cover" }}
                                 source={require("../contants/images/logo.png")}
                             />
                         </View>
 
-                        <View style={{marginVertical: 10}}>
+                        <View style={{ marginVertical: 10 }}>
                             <Text
                                 style={{
                                     marginTop: 20,
@@ -162,6 +166,7 @@ const AuthScreen = () => {
                             <TextInput
                                 value={inputs.email}
                                 placeholder="Enter Email"
+                                autoCapitalize="none"
                                 placeholderTextColor={"#a4a3a8"}
                                 style={styles.inputs}
                                 onChangeText={(text) => inputsChangeHandler(text, "email")}
@@ -172,18 +177,19 @@ const AuthScreen = () => {
                                 secureTextEntry
                                 value={inputs.password}
                                 placeholder="Enter Password"
+                                autoCapitalize="none"
                                 placeholderTextColor={"#a4a3a8"}
                                 style={styles.inputs}
                                 onChangeText={(text) => inputsChangeHandler(text, "password")}
                             />
                         </View>
                         <Pressable
-                            style={({pressed}) => [
+                            style={({ pressed }) => [
                                 {
                                     alignSelf: "flex-end",
                                     flex: 1,
                                 },
-                                pressed && {opacity: 0.3},
+                                pressed && { opacity: 0.3 },
                             ]}
                         >
                             <Text
@@ -195,25 +201,25 @@ const AuthScreen = () => {
                                 Recovery Password
                             </Text>
                         </Pressable>
-                        <View style={{paddingVertical: 20}}>
+                        <View style={{ paddingVertical: 20 }}>
                             <FilledButton onPress={submitHandler}>Submit</FilledButton>
                         </View>
                     </View>
 
-                    <View style={{justifyContent: "center", alignItems: "center"}}>
-                        <Text style={{fontSize: 16}}>
+                    <View style={{ justifyContent: "center", alignItems: "center" }}>
+                        <Text style={{ fontSize: 16 }}>
                             if you need Help please
                         </Text>
                         <Text
                             onPress={() => Alert.alert("help")}
-                            style={{color: "dodgerblue", marginTop: 10}}
+                            style={{ color: "dodgerblue", marginTop: 10 }}
                         >
                             Contact Help
                         </Text>
                     </View>
                 </KeyboardAwareScrollView>
             </View>
-            <FlashMessage position="top"/>
+            <FlashMessage position="top" />
         </SafeAreaProvider>
     );
 };
@@ -221,7 +227,7 @@ const AuthScreen = () => {
 export default AuthScreen;
 
 const styles = StyleSheet.create({
-    container: {flex: 1, backgroundColor: "#f4f1f6"},
+    container: { flex: 1, backgroundColor: "#f4f1f6" },
     innerContainer: {
         width: "100%",
         height: 300,
@@ -236,5 +242,5 @@ const styles = StyleSheet.create({
         marginVertical: 10,
         borderRadius: 10,
     },
-    inputs: {flex: 1, fontSize: 16, fontWeight: "600"},
+    inputs: { flex: 1, fontSize: 16, fontWeight: "600" },
 });

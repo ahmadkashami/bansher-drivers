@@ -3,23 +3,30 @@ import { StatusBar } from "expo-status-bar";
 import { useContext, useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
 
 import MainStackNavigation from "./src/navigations/MainStack.Navigation";
 import AuthScreen from "./src/screens/AuthScreen";
 import "./src/translation/Translation.config";
 import useAppStore from "./src/store/userStore";
 
+
+SplashScreen.preventAutoHideAsync();
+
 export default function App() {
 
   return (
-        <Root  />
+    <Root />
   );
 }
 const Root = () => {
   const [fontsLoaded] = useFonts({
-    "Gotham-black": require("./src/contants/fonts/Gotham-Light.otf"),
+    "Roboto-MedItalic": require("./src/contants/fonts/Roboto-MediumItalic.ttf"),
+    "Roboto-Med": require("./src/contants/fonts/Roboto-Medium.ttf"),
   });
-  const stateApp=useAppStore()
+  const [appIsReady, setAppIsReady] = useState(false);
+
+  const stateApp = useAppStore()
   useEffect(() => {
     async function prepareApp() {
       const token = await AsyncStorage.getItem("token");
@@ -38,8 +45,19 @@ const Root = () => {
         stateApp.setAuthToken(token)
       }
     }
+    if (fontsLoaded) {
+      setAppIsReady(true);
+      setTimeout(async () => {
+        await SplashScreen.hideAsync()
+      }, 2000);;
+    }
+
     prepareApp();
-  }, [stateApp.isAuthenticated]);
+  }, [stateApp.isAuthenticated, fontsLoaded]);
+
+  if (!appIsReady) {
+    return null;
+  }
 
   return stateApp.isAuthenticated ? <MainStackNavigation /> : <AuthScreen />;
 };
