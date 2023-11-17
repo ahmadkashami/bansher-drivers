@@ -3,6 +3,7 @@ import {
     Alert,
     Button,
     Image,
+    Linking,
     Pressable,
     StyleSheet,
     Text,
@@ -22,6 +23,7 @@ import { showMessage, hideMessage } from "react-native-flash-message";
 import FlashMessage from "react-native-flash-message";
 import useAppStore from "../store/userStore";
 import { emailValidator } from "../helpers/validation";
+import AppPressable from "../components/ui/AppPressable";
 
 const AuthScreen = () => {
     const stateApp = useAppStore()
@@ -210,12 +212,15 @@ const AuthScreen = () => {
                         <Text style={{ fontSize: 16 }}>
                             if you need Help please
                         </Text>
-                        <Text
-                            onPress={() => Alert.alert("help")}
-                            style={{ color: "dodgerblue", marginTop: 10 }}
-                        >
-                            Contact Help
-                        </Text>
+                        <AppPressable onPress={() => { Linking.openURL("https://yamak-kw.com") }}>
+                            <Text
+                                onPress={() => Alert.alert("help")}
+                                style={{ color: "dodgerblue", marginTop: 10 }}
+                            >
+                                Contact Help
+                            </Text>
+                        </AppPressable>
+
                     </View>
                 </KeyboardAwareScrollView>
             </View>
