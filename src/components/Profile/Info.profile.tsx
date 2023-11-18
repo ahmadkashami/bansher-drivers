@@ -1,9 +1,10 @@
-import { StyleSheet, Text, View, ViewStyle } from "react-native";
+import { StyleSheet, View, ViewStyle } from "react-native";
 import React, { FC } from "react";
 import { AppColors } from "../../contants/Colors";
 import { UserDto } from "../../dtos/UserDto";
 import { TrimPhoneExt } from "../../helpers/AppHelpers";
 import { useTranslation } from "react-i18next";
+import AppText from "../ui/AppText";
 
 const InfoProfile: FC<{ user: UserDto }> = ({ user }) => {
   const { t } = useTranslation();
@@ -32,8 +33,8 @@ export const InfoItem = ({
 }) => {
   return (
     <View style={[styles.itemContainer, style]}>
-      <Text style={{ height: 40, fontSize: 20 }}>{myKey}</Text>
-      <Text style={{ height: 40, fontSize: 18, color: "silver" }}>{value}</Text>
+      <AppText>{myKey}</AppText>
+      <AppText textStyle={{ fontSize: 18, color: "silver" }} style={{ height: 40, }}>{value}</AppText>
     </View>
   );
 };
@@ -51,6 +52,7 @@ const styles = StyleSheet.create({
     borderBottomColor: AppColors.Thirdnary,
     padding: 10,
     flexDirection: "row",
+    alignItems: 'center',
     justifyContent: "space-between",
   },
 });

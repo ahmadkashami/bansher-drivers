@@ -3,13 +3,12 @@ import {
   Image,
   Pressable,
   StyleSheet,
-  Text,
   View,
   I18nManager,
   Linking,
   ScrollView
 } from "react-native";
-import React, { useContext } from "react";
+import React from "react";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 
@@ -17,6 +16,8 @@ import ScreenView from "../components/ui/ScreenView";
 import InfoProfile from "../components/Profile/Info.profile";
 import LanguageSection from "../components/Profile/Language.section";
 import useAppStore from "../store/userStore";
+import AppText from "../components/ui/AppText";
+import { AppColors } from "../contants/Colors";
 
 const ProfileScreen = () => {
   const stateApp = useAppStore()
@@ -32,14 +33,20 @@ const ProfileScreen = () => {
             justifyContent: "center",
             alignItems: "center",
             borderRadius: 20,
+            marginTop: "20%"
           }}
         >
-          <Image
-            style={{ width: 150, height: 150 }}
-            source={require("../contants/images/profile.png")}
-          />
-          <Text style={{ fontSize: 20 }}>{user.name}</Text>
-          <Text style={{ fontSize: 20 }}>company </Text>
+          <View style={{
+            borderWidth: 1,
+            borderColor: AppColors.primary,
+            width: 100, height: 100, borderRadius: 50, justifyContent: "center", alignItems: "center"
+          }}>
+            <Image
+              style={styles.img}
+              source={{ uri: stateApp.user.photo }} />
+          </View>
+          <AppText size={20} >{user.name}</AppText>
+          {/* <AppText size={18} >company </AppText> */}
         </View>
 
         <View style={{ flex: 2 }}>
@@ -67,9 +74,9 @@ const ProfileScreen = () => {
                 size={24}
                 color="black"
               />
-              <Text style={{ marginLeft: 10, height: 40, fontSize: 20 }}>
+              <AppText style={{ marginLeft: 10, height: 40 }}>
                 {t("TermOfService")}
-              </Text>
+              </AppText>
               <View
                 style={{
                   flex: 1,
@@ -97,9 +104,9 @@ const ProfileScreen = () => {
                 size={24}
                 color="black"
               />
-              <Text style={{ marginLeft: 10, height: 40, fontSize: 20 }}>
+              <AppText style={{ marginLeft: 10, height: 40, fontSize: 20 }}>
                 {t("ChangePassword")}
-              </Text>
+              </AppText>
               <View
                 style={{
                   flex: 1,
@@ -119,9 +126,9 @@ const ProfileScreen = () => {
               onPress={() => Linking.openURL("https://yamak-kw.com/privacy")}
               style={({ pressed }) => [styles.operations, pressed && { opacity: 0.7 }]}>
               <MaterialIcons name="local-police" size={24} color="black" />
-              <Text style={{ marginLeft: 10, height: 40, fontSize: 20 }}>
+              <AppText style={{ marginLeft: 10, height: 40 }}>
                 {t("PrivacyAndPolicy")}
-              </Text>
+              </AppText>
               <View
                 style={{
                   flex: 1,
@@ -145,9 +152,9 @@ const ProfileScreen = () => {
               ]}
             >
               <Ionicons name="ios-help-outline" size={24} color="black" />
-              <Text style={{ marginLeft: 10, height: 40, fontSize: 20 }}>
+              <AppText style={{ marginLeft: 10, height: 40, }}>
                 {t("Help")}
-              </Text>
+              </AppText>
               <View
                 style={{
                   flex: 1,
@@ -185,5 +192,11 @@ const styles = StyleSheet.create({
   },
   pressed: {
     opacity: 0.7,
+  },
+  img: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    borderColor: AppColors.secondary
   },
 });

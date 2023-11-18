@@ -16,7 +16,7 @@ import * as Location from 'expo-location';
 import * as TaskManager from 'expo-task-manager';
 
 const YOUR_TASK_NAME = 'background-location-task';
-const YOUR_TIME_INTERVAL = 5000; // 5 seconds (adjust as needed)
+const YOUR_TIME_INTERVAL = 20000; // 2 min (adjust as needed)
 const YOUR_DISTANCE_INTERVAL = 1000; // 10 meters (adjust as needed)
 TaskManager.defineTask(YOUR_TASK_NAME, async ({ data, error }) => {
     if (error) {

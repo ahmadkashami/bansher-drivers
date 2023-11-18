@@ -2,6 +2,7 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { AppColors } from "../../contants/Colors";
 import React from "react";
+import AppText from "../ui/AppText";
 
 const ButtonsProfile = ({
   title,
@@ -36,7 +37,9 @@ const ButtonsProfile = ({
         size={30}
         color="black"
       />
-      <Text style={{ fontSize: 20, textAlign: "center" }}>{title}</Text>
+      <AppText >
+        {title}
+      </AppText>
     </Pressable>
   );
 };

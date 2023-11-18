@@ -16,6 +16,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AppColors } from "../contants/Colors";
 import AppModel from "./AppModal";
 import AppAlertEmpty from "./ui/AppAlertEmpty";
+import AppText from "./ui/AppText";
 
 const laguages = [
   {
@@ -121,7 +122,7 @@ const LanguageItem = ({
         currnetLang === name && { borderColor: AppColors.secondary },
       ]}
     >
-      <Text>{lable}</Text>
+      <AppText>{lable}</AppText>
     </Pressable>
   );
 };
