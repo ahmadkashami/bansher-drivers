@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Yamak Driver",
+    "name": "Yamak Driver | سائق يمك",
     "slug": "driver",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -19,7 +19,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.yamak.driver"
     },
     "android": {
       "versionCode": 2,
