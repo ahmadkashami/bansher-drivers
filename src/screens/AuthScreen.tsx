@@ -24,6 +24,7 @@ import FlashMessage from "react-native-flash-message";
 import useAppStore from "../store/userStore";
 import { emailValidator } from "../helpers/validation";
 import AppPressable from "../components/ui/AppPressable";
+import AppText from "../components/ui/AppText";
 
 const AuthScreen = () => {
     const stateApp = useAppStore()
@@ -137,8 +138,8 @@ const AuthScreen = () => {
                         </View>
 
                         <View style={{ marginVertical: 10 }}>
-                            <Text
-                                style={{
+                            <AppText
+                                textStyle={{
                                     marginTop: 20,
                                     fontSize: 25,
                                     fontWeight: "600",
@@ -147,7 +148,7 @@ const AuthScreen = () => {
                                 }}
                             >
                                 Hello Again !
-                            </Text>
+                            </AppText>
                             <Text
                                 numberOfLines={2}
                                 style={{
@@ -194,14 +195,14 @@ const AuthScreen = () => {
                                 pressed && { opacity: 0.3 },
                             ]}
                         >
-                            <Text
-                                style={{
+                            <AppText
+                                textStyle={{
                                     marginRight: 20,
                                     marginVertical: 15,
                                 }}
                             >
                                 Recovery Password
-                            </Text>
+                            </AppText>
                         </Pressable>
                         <View style={{ paddingVertical: 20 }}>
                             <FilledButton onPress={submitHandler}>Submit</FilledButton>
@@ -209,16 +210,16 @@ const AuthScreen = () => {
                     </View>
 
                     <View style={{ justifyContent: "center", alignItems: "center" }}>
-                        <Text style={{ fontSize: 16 }}>
+                        <AppText textStyle={{ fontSize: 16 }}>
                             if you need Help please
-                        </Text>
+                        </AppText>
                         <AppPressable onPress={() => { Linking.openURL("https://yamak-kw.com") }}>
-                            <Text
+                            <AppText
                                 onPress={() => Alert.alert("help")}
-                                style={{ color: "dodgerblue", marginTop: 10 }}
+                                textStyle={{ color: "dodgerblue", marginTop: 10 }}
                             >
                                 Contact Help
-                            </Text>
+                            </AppText>
                         </AppPressable>
 
                     </View>

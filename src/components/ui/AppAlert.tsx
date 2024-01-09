@@ -1,9 +1,9 @@
 import { Image, Modal, Pressable, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { AppFonts } from '../../contants/fonts'
 import { AppSizes } from '../../contants/Sizes'
 import { AppColorsTheme2 } from '../../contants/Colors'
+import { AppFonts } from '../../contants/Fonts'
 
 
 interface props {
@@ -37,7 +37,7 @@ const AppAlert = ({
                 <View style={styles.innerContainer}>
                     <View style={{ flex: 0.3, backgroundColor: AppColorsTheme2.primary }}>
                         <View style={{ width: 100, height: 100, borderWidth: 6, borderColor: "white", position: "absolute", alignSelf: "center", top: -50, backgroundColor: AppColorsTheme2.primary, borderRadius: 50, justifyContent: "center", alignItems: "center" }}>
-                            <Image style={{ width: 70, height: 70 }} source={require("../../assets/images/exclamation.png")} />
+                            <Image style={{ width: 70, height: 70 }} source={require("../../contants/images/exclamation.png")} />
                         </View>
                     </View>
                     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -45,13 +45,14 @@ const AppAlert = ({
                         <Text style={styles.messageText}>{message}</Text>
                     </View>
 
-                    <View style={{ flexDirection: "column" }}>
+                    <View style={{ flexDirection: "column", marginBottom: 10 }}>
                         <Pressable style={({ pressed }) => [styles.confirmButton, pressed && styles.pressed]} onPress={onConfirm}>
                             <Text style={styles.confirmButtonText}>{confirmMessage ? confirmMessage : t("Confirm")}</Text>
                         </Pressable>
-                        <Pressable style={({ pressed }) => [styles.cancelButton, pressed && styles.pressed]} onPress={onCancel}>
+                        {onCancel && (<Pressable style={({ pressed }) => [styles.cancelButton, pressed && styles.pressed]} onPress={onCancel}>
                             <Text style={styles.cancelButtonText}>{cancelMessage ? cancelMessage : t("Cancel")}</Text>
-                        </Pressable>
+                        </Pressable>)}
+
                     </View>
 
                 </View>

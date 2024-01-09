@@ -14,9 +14,10 @@ import AppActiveButton from "../components/Home/AppActiveButton";
 import { VehicleDto } from "../dtos/VehicleDto";
 import * as Location from 'expo-location';
 import * as TaskManager from 'expo-task-manager';
+import AppAlert from "../components/ui/AppAlert";
 
 const YOUR_TASK_NAME = 'background-location-task';
-const YOUR_TIME_INTERVAL = 20000; // 2 min (adjust as needed)
+const YOUR_TIME_INTERVAL = 30000; // 2 min (adjust as needed)
 const YOUR_DISTANCE_INTERVAL = 1000; // 10 meters (adjust as needed)
 TaskManager.defineTask(YOUR_TASK_NAME, async ({ data, error }) => {
     if (error) {
@@ -40,7 +41,9 @@ TaskManager.defineTask(YOUR_TASK_NAME, async ({ data, error }) => {
     }
 })
 const HomeScreen = () => {
+    const [isDeniedPermissions, setIsDeniedPermissions] = useState(false)
     const stateApp = useAppStore()
+    const [userCurrentLocation, setUserCurrentLocation] = useState({ lat: 0, lng: 0 });
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isWorkStatus, setIsWorkStatus] = useState(stateApp.user.status == 'active');
     const [isLinked, setIsLinked] = useState(stateApp.vehicle.workStatus == 'online');
@@ -48,14 +51,22 @@ const HomeScreen = () => {
     const requestForegroundPermission = async () => {
         let { status } = await Location.requestForegroundPermissionsAsync();
         if (status !== "granted") {
+            setIsDeniedPermissions(true)
             console.log("Permission to access location was denied");
-            return;
+            return false
+        } else {
+            setIsDeniedPermissions(false)
+
         }
+        return true
     }
     const requestBackgroundLocationPermission = async () => {
         const { status } = await Location.requestBackgroundPermissionsAsync();
         if (status !== 'granted') {
+            setIsDeniedPermissions(true)
             console.log('Background location permission not granted!');
+        } else {
+            setIsDeniedPermissions(false)
         }
     };
     const startBackgroundLocationUpdates = async () => {
@@ -67,14 +78,50 @@ const HomeScreen = () => {
     };
 
     useEffect(() => {
-        // Request background location permissions when the component mounts
-        requestForegroundPermission()
-        requestBackgroundLocationPermission();
+        async function getAppLocationsPermissions() {
+            try {
+                await requestForegroundPermission()
+                await requestBackgroundLocationPermission();
+                await startBackgroundLocationUpdates();
+            } catch (error) {
+                console.log("app location permissions errors ==>", error);
 
-        // Start background location updates when the component mounts
-        startBackgroundLocationUpdates();
-
+            }
+        }
+        getAppLocationsPermissions()
     }, []);
+    useEffect(() => {
+
+        let interval = setInterval(async () => {
+            console.log("fetching location forground");
+
+            let location = await Location.getCurrentPositionAsync({});
+
+            const latitude = location?.coords?.latitude
+            const longitude = location?.coords?.longitude
+            setUserCurrentLocation({ lat: latitude, lng: longitude });
+
+            updateVehiclesLocation({ latitude: latitude, longitude: longitude }).then(() => {
+                console.log("Location in forgorund")
+            }).catch(error => {
+                console.log("error Location in forgorund ==>", error)
+            })
+
+        }, 20000);
+        return () => {
+            clearInterval(interval);
+        };
+    }, [])
+    console.log("render");
+
+    const getLocation = async () => {
+        try {
+
+
+        } catch (error) {
+            console.error("Error requesting location permission:", error);
+        }
+    };
     const updateWorkStatus = () => {
         if (!isLinked && !isWorkStatus) {
             showMessage({
@@ -162,26 +209,41 @@ const HomeScreen = () => {
                 flex: 1,
                 justifyContent: "flex-end",
             }}>
-                <View style={{ flexDirection: "row", alignItems: "center", marginLeft: 20 }}>
-                    <View style={{
-                        borderWidth: 1,
-                        borderColor: AppColors.primary,
-                        width: 100, height: 100, borderRadius: 50, justifyContent: "center", alignItems: "center"
-                    }}>
-                        <Image
-                            style={styles.img}
-                            source={{ uri: stateApp.user.photo }} />
-                    </View>
+                <View style={{ bottom: -60 }}>
+                    <View style={{ flexDirection: "row", alignItems: "center", marginLeft: 20, marginBottom: 40 }}>
+                        <View style={{
+                            borderWidth: 1,
+                            borderColor: AppColors.primary,
+                            width: 100, height: 100, borderRadius: 50, justifyContent: "center", alignItems: "center"
+                        }}>
+                            <Image
+                                style={styles.img}
+                                source={{ uri: stateApp.user.photo }} />
+                        </View>
 
-                    <View style={{ marginLeft: 20 }}>
-                        <Text style={{ fontSize: 20, color: "gray", marginBottom: 10, textTransform: "capitalize" }}>
-                            {stateApp.user.name}
+                        <View style={{ marginLeft: 20, }}>
+                            <Text style={{ fontSize: 20, color: "gray", marginBottom: 10, textTransform: "capitalize" }}>
+                                {stateApp.user.name}
+                            </Text>
+                            <Text style={{ fontSize: 20, color: "gray" }}>
+                                {stateApp.user.phoneNum}
+                            </Text>
+
+                        </View>
+
+                    </View>
+                    <View style={{ alignItems: "center", justifyContent: "space-around", flexDirection: "row" }}>
+                        <Text style={{ fontSize: 20, color: "gray" }}>
+                            lat:{userCurrentLocation.lat}
                         </Text>
                         <Text style={{ fontSize: 20, color: "gray" }}>
-                            {stateApp.user.phoneNum}
+                            lng:{userCurrentLocation.lng}
                         </Text>
                     </View>
                 </View>
+
+
+
                 <View style={{ position: "absolute", top: 40, right: 20 }}>
                     <Ionicons
                         name="log-out-outline"
@@ -190,6 +252,7 @@ const HomeScreen = () => {
                         onPress={stateApp.logout}
                     />
                 </View>
+
 
 
                 <View style={{
@@ -267,6 +330,7 @@ const HomeScreen = () => {
                 </View>
             </View>
             <FlashMessage position="bottom" />
+            <AppAlert visible={isDeniedPermissions} confirmMessage="go to setting" title="Permissions required " message="permissions should be granted" />
         </View>
     );
 };
