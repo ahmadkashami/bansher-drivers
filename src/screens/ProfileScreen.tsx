@@ -26,7 +26,16 @@ const ProfileScreen = () => {
 
   return (
     <ScreenView>
+
       <ScrollView style={styles.container}>
+        <View style={{ position: "absolute", right: 20 }}>
+          <Ionicons
+            name="log-out-outline"
+            size={30}
+            color={AppColors.black}
+            onPress={stateApp.logout}
+          />
+        </View>
         <View
           style={{
             flex: 1,
@@ -36,6 +45,8 @@ const ProfileScreen = () => {
             marginTop: "20%"
           }}
         >
+
+
           <View style={{
             borderWidth: 1,
             borderColor: AppColors.primary,

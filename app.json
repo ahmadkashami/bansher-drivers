@@ -20,7 +20,11 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.yamak.driver"
+      "bundleIdentifier": "com.yamak.driver",
+      "infoPlist": {
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "Yamak Driver use your location to update it on the main app map to get nerest more convenient and efficient service",
+        "NSLocationWhenInUseUsageDescription": "Yamak Driver use your location to update it on the main app map to get nerest more convenient and efficient service"
+      }
     },
     "android": {
       "versionCode": 2,
@@ -40,7 +44,7 @@
       [
         "expo-location",
         {
-          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
+          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your okk location."
         }
       ]
     ],
