@@ -9,19 +9,19 @@ export async function login(email: string, password: string) {
 
 
 
-export function updateDriverStatus(status:string) {
+export function updateDriverStatus(status: string) {
   return new Promise((resolve, reject) => {
-    client.put(`drivers/profile`,{status:status})
-        .then(response => resolve(response))
-        .catch(error => reject(error))
+    client.put(`drivers/profile`, { status: status })
+      .then(response => resolve(response))
+      .catch(error => reject(error))
   })
 }
 
-export function updateVehiclesLocation(location:object) {
+export function updateVehiclesLocation(location: object) {
   return new Promise((resolve, reject) => {
-    client.put(`vehicles/location`,location)
-        .then(response => resolve(response))
-        .catch(error => reject(error))
+    client.put(`vehicles/location`, location)
+      .then(response => resolve(response?.data))
+      .catch(error => reject(error))
   })
 }
 
@@ -29,21 +29,21 @@ export function updateVehiclesLocation(location:object) {
 export function getVehicle() {
   return new Promise((resolve, reject) => {
     client.get(`vehicles/owner`)
-        .then(response => resolve(response))
-        .catch(error => reject(error))
+      .then(response => resolve(response))
+      .catch(error => reject(error))
   })
 }
 export function updateVehicleUnlink() {
   return new Promise((resolve, reject) => {
     client.post(`vehicles/unlink`)
-        .then(response => resolve(response))
-        .catch(error => reject(error))
+      .then(response => resolve(response))
+      .catch(error => reject(error))
   })
 }
 export function updateVehicleLink() {
   return new Promise((resolve, reject) => {
     client.post(`vehicles/link`)
-        .then(response => resolve(response))
-        .catch(error => reject(error))
+      .then(response => resolve(response))
+      .catch(error => reject(error))
   })
 }

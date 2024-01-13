@@ -1,5 +1,7 @@
-import { Image, Modal, Pressable, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
+import React, { useRef } from 'react'
+import Modal from "react-native-modal";
+
 import { useTranslation } from 'react-i18next'
 import { AppSizes } from '../../contants/Sizes'
 import { AppColorsTheme2 } from '../../contants/Colors'
@@ -13,25 +15,29 @@ interface props {
     onCancel?: () => void
     onConfirm?: () => void,
     cancelMessage?: string
-    confirmMessage?: string
+    confirmMessage?: string,
+    setVisble?: (el: boolean) => void,
 }
 const AppAlert = ({
     message = "",
     title = "",
     visible,
+    setVisble,
     onCancel,
     onConfirm,
     cancelMessage,
     confirmMessage
 
 }: props) => {
+
     const { t } = useTranslation()
+
 
     return (
         <Modal
-            animationType="slide"
-            visible={visible}
-            transparent
+            style={{ flex: 1, }}
+            isVisible={visible}
+            backdropColor='white'
         >
             <Pressable style={styles.outerContainer}>
                 <View style={styles.innerContainer}>
@@ -45,7 +51,7 @@ const AppAlert = ({
                         <Text style={styles.messageText}>{message}</Text>
                     </View>
 
-                    <View style={{ flexDirection: "column", marginBottom: 10 }}>
+                    <View style={{ flexDirection: "column", marginBottom: 20 }}>
                         <Pressable style={({ pressed }) => [styles.confirmButton, pressed && styles.pressed]} onPress={onConfirm}>
                             <Text style={styles.confirmButtonText}>{confirmMessage ? confirmMessage : t("Confirm")}</Text>
                         </Pressable>
@@ -68,7 +74,6 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         flex: 1,
-        backgroundColor: 'rgba(0, 0, 0, 0.8)'
 
     },
     innerContainer: {
@@ -76,8 +81,13 @@ const styles = StyleSheet.create({
         height: 300,
         margin: 48,
         elevation: 24,
+        shadowColor: '#171717',
+        shadowOffset: { width: -2, height: 4 },
+        shadowOpacity: 0.2,
+        shadowRadius: 3,
         borderRadius: 20,
         backgroundColor: "white",
+
 
     },
 

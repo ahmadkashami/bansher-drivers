@@ -31,5 +31,7 @@
   "Orders": "الطلبات",
   "Completed": "المكتملة",
   "MapStatus": "حالة الخريطة",
-  "VehicleLink": "ربط المركبة"
+  "VehicleLink": "ربط المركبة",
+  "PermissionsRequired": "صلاحيات الموقع مطلوبه",
+  "LocationPermissionShouldGranted": "صلاحيات الموقع يجب ان تكون مفعله للاستفاده من التطبيق "
 }

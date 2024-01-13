@@ -24,3 +24,6 @@ export function ErrorHandlerApi(e: any) {
 export function TrimPhoneExt(phone: string) {
   return phone.slice(3);
 }
+export function fixNumber(number: number, numOfFix: number = 3) {
+  return number.toFixed(numOfFix)
+}

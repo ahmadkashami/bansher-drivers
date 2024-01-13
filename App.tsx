@@ -45,6 +45,8 @@ const Root = () => {
         stateApp.setAuthToken(token)
       }
     }
+    console.log({ fontsLoaded });
+
     if (fontsLoaded) {
       setAppIsReady(true);
       setTimeout(async () => {

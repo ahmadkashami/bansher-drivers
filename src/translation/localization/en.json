@@ -35,5 +35,7 @@
   "Orders": "Orders",
   "Completed": "Completed",
   "MapStatus": "Map Status",
-  "VehicleLink": "Vehicle Link"
+  "VehicleLink": "Vehicle Link",
+  "PermissionsRequired": "Permissions required",
+  "LocationPermissionShouldGranted": "Location Permissions Should be Granted in order to use Yamak Driver"
 }

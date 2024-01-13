@@ -6,7 +6,7 @@ import LottieFile from "../components/ui/LottieFile";
 import { t } from "i18next";
 import useAppStore from "../store/userStore";
 import { updateDriverStatus, updateVehicleLink, updateVehiclesLocation } from "../api/AuthApi";
-import { ErrorHandlerApi } from "../helpers/AppHelpers";
+import { ErrorHandlerApi, fixNumber } from "../helpers/AppHelpers";
 import FlashMessage, { showMessage } from "react-native-flash-message";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { UserDto } from "../dtos/UserDto";
@@ -14,11 +14,11 @@ import AppActiveButton from "../components/Home/AppActiveButton";
 import { VehicleDto } from "../dtos/VehicleDto";
 import * as Location from 'expo-location';
 import * as TaskManager from 'expo-task-manager';
-import AppAlert from "../components/ui/AppAlert";
+import AppSettingModal from "../components/Home/AppSettingModal";
 
 const YOUR_TASK_NAME = 'background-location-task';
-const YOUR_TIME_INTERVAL = 30000; // 2 min (adjust as needed)
-const YOUR_DISTANCE_INTERVAL = 1000; // 10 meters (adjust as needed)
+const YOUR_TIME_INTERVAL = 30000
+const YOUR_DISTANCE_INTERVAL = 300; // 10 meters (adjust as needed)
 TaskManager.defineTask(YOUR_TASK_NAME, async ({ data, error }) => {
     if (error) {
         console.error(error)
@@ -29,11 +29,10 @@ TaskManager.defineTask(YOUR_TASK_NAME, async ({ data, error }) => {
         const { locations } = data
         const location = locations[0]
         if (location) {
-
             const latitude = location.coords.latitude
             const longitude = location.coords.longitude
-            updateVehiclesLocation({ latitude: latitude, longitude: longitude }).then(() => {
-                console.log("Location in background", location.coords)
+            updateVehiclesLocation({ latitude: latitude, longitude: longitude }).then((res) => {
+                console.log("update vehicle in background ===>", { res })
             }).catch(error => {
                 console.log(error)
             })
@@ -45,7 +44,7 @@ const HomeScreen = () => {
     const stateApp = useAppStore()
     const [userCurrentLocation, setUserCurrentLocation] = useState({ lat: 0, lng: 0 });
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [isWorkStatus, setIsWorkStatus] = useState(stateApp.user.status == 'active');
+    const [driverStatus, setDriverStatus] = useState(stateApp.user.status);
     const [isLinked, setIsLinked] = useState(stateApp.vehicle.workStatus == 'online');
 
     const requestForegroundPermission = async () => {
@@ -74,56 +73,57 @@ const HomeScreen = () => {
             accuracy: Location.Accuracy.Balanced,
             timeInterval: YOUR_TIME_INTERVAL,
             distanceInterval: YOUR_DISTANCE_INTERVAL,
+            deferredUpdatesDistance: YOUR_DISTANCE_INTERVAL,
+            deferredUpdatesInterval: YOUR_TIME_INTERVAL,
+            pausesUpdatesAutomatically: true,
+
         });
     };
 
     useEffect(() => {
-        async function getAppLocationsPermissions() {
-            try {
-                await requestForegroundPermission()
-                await requestBackgroundLocationPermission();
-                await startBackgroundLocationUpdates();
-            } catch (error) {
-                console.log("app location permissions errors ==>", error);
-
-            }
+        if (driverStatus === "active") {
+            getAppLocationsPermissions()
         }
-        getAppLocationsPermissions()
-    }, []);
-    useEffect(() => {
 
-        let interval = setInterval(async () => {
-            console.log("fetching location forground");
+    }, [driverStatus]);
 
-            let location = await Location.getCurrentPositionAsync({});
-
-            const latitude = location?.coords?.latitude
-            const longitude = location?.coords?.longitude
-            setUserCurrentLocation({ lat: latitude, lng: longitude });
-
-            updateVehiclesLocation({ latitude: latitude, longitude: longitude }).then(() => {
-                console.log("Location in forgorund")
-            }).catch(error => {
-                console.log("error Location in forgorund ==>", error)
-            })
-
-        }, 20000);
-        return () => {
-            clearInterval(interval);
-        };
-    }, [])
-    console.log("render");
-
-    const getLocation = async () => {
+    async function getAppLocationsPermissions() {
         try {
-
-
+            await requestForegroundPermission()
+            await requestBackgroundLocationPermission();
+            await startBackgroundLocationUpdates();
         } catch (error) {
-            console.error("Error requesting location permission:", error);
+            console.log("app location permissions errors ==>", error);
         }
-    };
+    }
+
+    useEffect(() => {
+        if (driverStatus === "active") {
+            let interval = setInterval(async () => {
+                console.log("fetching location forground");
+
+                let location = await Location.getCurrentPositionAsync({});
+
+                const latitude = location?.coords?.latitude
+                const longitude = location?.coords?.longitude
+                setUserCurrentLocation({ lat: latitude, lng: longitude });
+                updateVehiclesLocation({ latitude: latitude, longitude: longitude }).then((res) => {
+                    console.log("updateViecle in forgrounded", { res })
+                }).catch(error => {
+                    console.log("error Location in forgorund ==>", JSON.stringify(error?.message))
+                })
+
+            }, 20000);
+            return () => {
+                clearInterval(interval);
+            };
+        }
+
+    }, [])
+
+
     const updateWorkStatus = () => {
-        if (!isLinked && !isWorkStatus) {
+        if (!isLinked && !driverStatus) {
             showMessage({
                 message: "Error Message",
                 description: "driver should be linked to vehicle first",
@@ -132,12 +132,11 @@ const HomeScreen = () => {
             return
         }
         setIsLoading(true);
-        const newStatus = isWorkStatus ? 'inactive' : 'active'
+        const newStatus = driverStatus == "inactive" ? 'active' : 'inactive'
         updateDriverStatus(newStatus).then((response: any) => {
-            setIsWorkStatus(newStatus == "active")
             const driver = response.data.data;
             const user = new UserDto(driver);
-            setIsWorkStatus(user.status == 'active')
+            setDriverStatus(user.status)
             AsyncStorage.setItem('user', JSON.stringify(user))
             stateApp.setUser(user)
             showMessage({
@@ -200,6 +199,7 @@ const HomeScreen = () => {
     }
 
 
+
     // @ts-ignore
     return (
         <View style={styles.container}>
@@ -234,10 +234,10 @@ const HomeScreen = () => {
                     </View>
                     <View style={{ alignItems: "center", justifyContent: "space-around", flexDirection: "row" }}>
                         <Text style={{ fontSize: 20, color: "gray" }}>
-                            lat:{userCurrentLocation.lat}
+                            lat:{fixNumber(userCurrentLocation.lat)}
                         </Text>
                         <Text style={{ fontSize: 20, color: "gray" }}>
-                            lng:{userCurrentLocation.lng}
+                            lng:{fixNumber(userCurrentLocation.lng)}
                         </Text>
                     </View>
                 </View>
@@ -307,7 +307,7 @@ const HomeScreen = () => {
                         <View style={styles.containerSwitch}>
                             <AppActiveButton
                                 disabled={isLoading}
-                                isActive={isWorkStatus}
+                                isActive={driverStatus == "active"}
                                 onPress={updateWorkStatus}
                             />
                             <Text style={styles.switchText}>
@@ -330,7 +330,7 @@ const HomeScreen = () => {
                 </View>
             </View>
             <FlashMessage position="bottom" />
-            <AppAlert visible={isDeniedPermissions} confirmMessage="go to setting" title="Permissions required " message="permissions should be granted" />
+            <AppSettingModal setIsVisble={setIsDeniedPermissions} isVisible={isDeniedPermissions} />
         </View>
     );
 };
