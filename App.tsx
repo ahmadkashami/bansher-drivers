@@ -31,27 +31,21 @@ const Root = () => {
     async function prepareApp() {
       const token = await AsyncStorage.getItem("token");
       const cashedUser = await AsyncStorage.getItem("user");
-      const cashedVehicle = await AsyncStorage.getItem("vehicle");
 
       if (cashedUser) {
         const user = JSON.parse(cashedUser);
         stateApp.setUser(user)
-        if (cashedVehicle) {
-          const vehicle = JSON.parse(cashedVehicle);
-          stateApp.setVehicle(vehicle)
-        }
       }
       if (token) {
         stateApp.setAuthToken(token)
       }
     }
-    console.log({ fontsLoaded });
 
     if (fontsLoaded) {
       setAppIsReady(true);
       setTimeout(async () => {
         await SplashScreen.hideAsync()
-      }, 2000);;
+      }, 3000);;
     }
 
     prepareApp();

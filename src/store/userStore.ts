@@ -1,22 +1,23 @@
 import { create } from 'zustand'
-import { devtools, persist} from "zustand/middleware";
-import {UserDto} from "../dtos/UserDto";
+import { devtools, persist } from "zustand/middleware";
+import { UserDto } from "../dtos/UserDto";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {VehicleDto} from "../dtos/VehicleDto";
+import { VehicleDto } from "../dtos/VehicleDto";
+import { updateVehicleLink } from '../api/AuthApi';
 
 
 const userInitial = new UserDto({
     _id: '',
-    status:'',
-    name:'',
-    email:'',
-    licenseExpiredAt:'',
-    createdAt:'',
-    phoneNum:'',
-    branchId:'',
-    companyId:'',
-    vehicleId:'',
-    photo:require("../contants/images/profile.png"),
+    status: '',
+    name: '',
+    email: '',
+    licenseExpiredAt: '',
+    createdAt: '',
+    phoneNum: '',
+    branchId: '',
+    companyId: '',
+    vehicleId: '',
+    photo: require("../contants/images/profile.png"),
 });
 
 
@@ -25,7 +26,7 @@ const vehicleInitial = new VehicleDto({
     drivers: [],
     services: [],
     currentDriver: '',
-    branchId:'',
+    branchId: '',
     companyId: '',
     status: '',
     workStatus: '',
@@ -42,27 +43,28 @@ interface State {
     authToken: string,
     isAuthenticated: boolean,
     user: UserDto,
-    setAuthToken:(token:string)=>void
-    setUser:(user:UserDto)=>void
-    logout:()=>void,
+    setAuthToken: (token: string) => void
+    setUser: (user: UserDto) => void
+    logout: () => void,
     vehicle: VehicleDto,
-    setVehicle:(vehicle:VehicleDto)=>void
+    setVehicle: (vehicle: VehicleDto) => void
 }
 
 
-const useAppStore = create<State>((set,get) => ({
+const useAppStore = create<State>((set, get) => ({
     authToken: '',
     isAuthenticated: false,
     user: userInitial,
     vehicle: vehicleInitial,
-    setAuthToken: (value:string)=>set(()=>({authToken:value,isAuthenticated:true})),
-    setUser: (user: UserDto) =>set(()=>({user:user})) ,
-    setVehicle: (vehicle: VehicleDto) =>set(()=>({vehicle:vehicle})) ,
-    logout: () => {
-        AsyncStorage.removeItem("token");
-        AsyncStorage.removeItem("user");
-        AsyncStorage.removeItem("vehicle");
-        set(()=>({authToken:'',isAuthenticated:false}))
+    setAuthToken: (value: string) => set(() => ({ authToken: value, isAuthenticated: true })),
+    setUser: (user: UserDto) => set(() => ({ user: user })),
+    setVehicle: (vehicle: VehicleDto) => set(() => ({ vehicle: vehicle })),
+    logout: async () => {
+        await updateVehicleLink()
+        await AsyncStorage.removeItem("token");
+        await AsyncStorage.removeItem("user");
+        await AsyncStorage.removeItem("vehicle");
+        set(() => ({ authToken: '', isAuthenticated: false }))
     },
 }))
 

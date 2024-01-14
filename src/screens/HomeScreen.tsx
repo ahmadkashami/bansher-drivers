@@ -47,26 +47,75 @@ const HomeScreen = () => {
     const [driverStatus, setDriverStatus] = useState(stateApp.user.status);
     const [isLinked, setIsLinked] = useState(stateApp.vehicle.workStatus == 'online');
 
+    useEffect(() => {
+        setIsLinked(stateApp.vehicle.workStatus == 'online')
+        console.log("redner");
+
+    }, [stateApp.vehicle])
+
+    useEffect(() => {
+        try {
+            if (driverStatus === "active" && isLinked) {
+
+                getAppLocationsPermissions().then(res => {
+                    if (res) {
+                        let interval = setInterval(async () => {
+                            console.log("fetching location forground");
+
+                            let location = await Location.getCurrentPositionAsync({});
+
+                            const latitude = location?.coords?.latitude
+                            const longitude = location?.coords?.longitude
+                            setUserCurrentLocation({ lat: latitude, lng: longitude });
+                            updateVehiclesLocation({ latitude: latitude, longitude: longitude }).then((res) => {
+                                console.log("updateViecle in forgrounded", { res })
+                            }).catch(error => {
+                                console.log("error Location in forgorund ==>", JSON.stringify(error?.message))
+                            })
+                            if (driverStatus !== "active") {
+                                clearInterval(interval)
+                            }
+
+                        }, 20000);
+                        return () => {
+                            clearInterval(interval);
+                        };
+                    }
+                })
+
+            }
+        } catch (error) {
+
+        }
+
+
+
+
+
+    }, [driverStatus, isLinked])
+
+
     const requestForegroundPermission = async () => {
         let { status } = await Location.requestForegroundPermissionsAsync();
         if (status !== "granted") {
             setIsDeniedPermissions(true)
             console.log("Permission to access location was denied");
             return false
-        } else {
-            setIsDeniedPermissions(false)
-
         }
+        setIsDeniedPermissions(false)
         return true
+
+
     }
     const requestBackgroundLocationPermission = async () => {
         const { status } = await Location.requestBackgroundPermissionsAsync();
-        if (status !== 'granted') {
+        if (status !== "granted") {
             setIsDeniedPermissions(true)
-            console.log('Background location permission not granted!');
-        } else {
-            setIsDeniedPermissions(false)
+            console.log("Permission to access location was denied");
+            return false
         }
+        setIsDeniedPermissions(false)
+        return true
     };
     const startBackgroundLocationUpdates = async () => {
         await Location.startLocationUpdatesAsync(YOUR_TASK_NAME, {
@@ -80,46 +129,22 @@ const HomeScreen = () => {
         });
     };
 
-    useEffect(() => {
-        if (driverStatus === "active") {
-            getAppLocationsPermissions()
-        }
 
-    }, [driverStatus]);
 
     async function getAppLocationsPermissions() {
         try {
-            await requestForegroundPermission()
-            await requestBackgroundLocationPermission();
+            const fgRes = await requestForegroundPermission()
+            if (!fgRes) return false
+            const bgRes = await requestBackgroundLocationPermission();
+            if (!bgRes) return false
             await startBackgroundLocationUpdates();
+            return true
         } catch (error) {
             console.log("app location permissions errors ==>", error);
+            return false
         }
     }
 
-    useEffect(() => {
-        if (driverStatus === "active") {
-            let interval = setInterval(async () => {
-                console.log("fetching location forground");
-
-                let location = await Location.getCurrentPositionAsync({});
-
-                const latitude = location?.coords?.latitude
-                const longitude = location?.coords?.longitude
-                setUserCurrentLocation({ lat: latitude, lng: longitude });
-                updateVehiclesLocation({ latitude: latitude, longitude: longitude }).then((res) => {
-                    console.log("updateViecle in forgrounded", { res })
-                }).catch(error => {
-                    console.log("error Location in forgorund ==>", JSON.stringify(error?.message))
-                })
-
-            }, 20000);
-            return () => {
-                clearInterval(interval);
-            };
-        }
-
-    }, [])
 
 
     const updateWorkStatus = () => {
@@ -163,15 +188,13 @@ const HomeScreen = () => {
             }
         })
     }
-    const updateLink = () => {
+    async function updateLink() {
         setIsLoading(true);
-        const newStatus = isLinked ? 'offline' : 'online'
-        updateVehicleLink().then((response: any) => {
-
+        try {
+            const response = await updateVehicleLink()
             const data = response.data.data;
             const vehicle = new VehicleDto(data);
             setIsLinked(vehicle.workStatus == 'online')
-            AsyncStorage.setItem('vehicle', JSON.stringify(vehicle))
             stateApp.setVehicle(vehicle)
             showMessage({
                 message: "Success Message",
@@ -179,7 +202,7 @@ const HomeScreen = () => {
                 type: "success",
             });
             setIsLoading(false);
-        }).catch((error: any) => {
+        } catch (error) {
             setIsLoading(false);
             if (error?.response?.data) {
                 const errorMessage = ErrorHandlerApi(error);
@@ -195,7 +218,8 @@ const HomeScreen = () => {
                     type: "danger",
                 });
             }
-        })
+        }
+
     }
 
 
