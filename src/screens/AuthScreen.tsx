@@ -10,21 +10,22 @@ import {
     TextInput,
     View,
 } from "react-native";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import FilledButton from "../components/FilledButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { getVehicle, login } from "../api/AuthApi";
+import { login } from "../api/AuthApi";
 import { UserDto } from "../dtos/UserDto";
 import { ErrorHandlerApi } from "../helpers/AppHelpers";
 import LottieFile from "../components/ui/LottieFile";
-import { showMessage, hideMessage } from "react-native-flash-message";
+import { showMessage, } from "react-native-flash-message";
 import FlashMessage from "react-native-flash-message";
 import useAppStore from "../store/userStore";
 import { emailValidator } from "../helpers/validation";
 import AppPressable from "../components/ui/AppPressable";
 import AppText from "../components/ui/AppText";
+import { getVehicle } from "../api/vehiclesApi";
 
 const AuthScreen = () => {
     const stateApp = useAppStore()

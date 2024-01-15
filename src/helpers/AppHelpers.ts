@@ -27,3 +27,7 @@ export function TrimPhoneExt(phone: string) {
 export function fixNumber(number: number, numOfFix: number = 3) {
   return number.toFixed(numOfFix)
 }
+
+export function wait(timeout: number) {
+  return new Promise(resolve => setTimeout(resolve, timeout));
+};

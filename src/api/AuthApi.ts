@@ -17,33 +17,5 @@ export function updateDriverStatus(status: string) {
   })
 }
 
-export function updateVehiclesLocation(location: object) {
-  return new Promise((resolve, reject) => {
-    client.put(`vehicles/location`, location)
-      .then(response => resolve(response?.data))
-      .catch(error => reject(error))
-  })
-}
 
 
-export function getVehicle() {
-  return new Promise((resolve, reject) => {
-    client.get(`vehicles/owner`)
-      .then(response => resolve(response))
-      .catch(error => reject(error))
-  })
-}
-export function updateVehicleUnlink() {
-  return new Promise((resolve, reject) => {
-    client.post(`vehicles/unlink`)
-      .then(response => resolve(response))
-      .catch(error => reject(error))
-  })
-}
-export function updateVehicleLink() {
-  return new Promise((resolve, reject) => {
-    client.post(`vehicles/link`)
-      .then(response => resolve(response))
-      .catch(error => reject(error))
-  })
-}

@@ -1,12 +1,12 @@
-import { FlatList, Image, StyleSheet, Switch, Text, View } from "react-native";
-import React, { useEffect, useState } from "react";
+import { FlatList, Image, RefreshControl, ScrollView, StyleSheet, Switch, Text, View } from "react-native";
+import React, { useCallback, useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { AppColors } from "../contants/Colors";
 import LottieFile from "../components/ui/LottieFile";
 import { t } from "i18next";
 import useAppStore from "../store/userStore";
-import { updateDriverStatus, updateVehicleLink, updateVehiclesLocation } from "../api/AuthApi";
-import { ErrorHandlerApi, fixNumber } from "../helpers/AppHelpers";
+import { updateDriverStatus } from "../api/AuthApi";
+import { ErrorHandlerApi, fixNumber, wait } from "../helpers/AppHelpers";
 import FlashMessage, { showMessage } from "react-native-flash-message";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { UserDto } from "../dtos/UserDto";
@@ -15,6 +15,8 @@ import { VehicleDto } from "../dtos/VehicleDto";
 import * as Location from 'expo-location';
 import * as TaskManager from 'expo-task-manager';
 import AppSettingModal from "../components/Home/AppSettingModal";
+import { updateVehicleLink, updateVehiclesLocation } from "../api/vehiclesApi";
+import { CallDriverVehicle } from "../actions/commonActions";
 
 const YOUR_TASK_NAME = 'background-location-task';
 const YOUR_TIME_INTERVAL = 30000
@@ -40,6 +42,7 @@ TaskManager.defineTask(YOUR_TASK_NAME, async ({ data, error }) => {
     }
 })
 const HomeScreen = () => {
+    const [refreshing, setRefreshing] = useState(false);
     const [isDeniedPermissions, setIsDeniedPermissions] = useState(false)
     const stateApp = useAppStore()
     const [userCurrentLocation, setUserCurrentLocation] = useState({ lat: 0, lng: 0 });
@@ -54,47 +57,53 @@ const HomeScreen = () => {
     }, [stateApp.vehicle])
 
     useEffect(() => {
-        try {
-            if (driverStatus === "active" && isLinked) {
+        CallHomeApis()
+    }, [])
 
-                getAppLocationsPermissions().then(res => {
-                    if (res) {
-                        let interval = setInterval(async () => {
-                            console.log("fetching location forground");
+    useEffect(() => {
+        let interval;
+        const fetchData = async () => {
+            try {
+                if (driverStatus !== "active" || !isLinked) return;
+                console.log("permissions cond==>");
 
-                            let location = await Location.getCurrentPositionAsync({});
+                const res = await getAppLocationsPermissions()
+                if (!res) return;
 
-                            const latitude = location?.coords?.latitude
-                            const longitude = location?.coords?.longitude
-                            setUserCurrentLocation({ lat: latitude, lng: longitude });
-                            updateVehiclesLocation({ latitude: latitude, longitude: longitude }).then((res) => {
-                                console.log("updateViecle in forgrounded", { res })
-                            }).catch(error => {
-                                console.log("error Location in forgorund ==>", JSON.stringify(error?.message))
-                            })
-                            if (driverStatus !== "active") {
-                                clearInterval(interval)
-                            }
+                interval = setInterval(async () => {
+                    try {
+                        console.log("fetching location forground");
+                        let location = await Location.getCurrentPositionAsync({});
+                        const { latitude, longitude } = location?.coords || {};
+                        setUserCurrentLocation({ lat: latitude, lng: longitude });
+                        const updateRes = await updateVehiclesLocation({ latitude, longitude });
+                        console.log("updateViecle in forgrounded", { updateRes });
 
-                        }, 20000);
-                        return () => {
-                            clearInterval(interval);
-                        };
+                        if (driverStatus !== "active") {
+                            clearInterval(interval)
+                        }
+
+                    } catch (error) {
+                        console.log("error Location in forgorund ==>", JSON.stringify(error?.message));
                     }
-                })
+                }, 20000);
 
+            } catch (error) {
+                console.error("An error occurred:", error);
             }
-        } catch (error) {
-
         }
 
+        fetchData()
 
-
+        return () => clearInterval(interval);
 
 
     }, [driverStatus, isLinked])
 
 
+    async function CallHomeApis() {
+        return CallDriverVehicle(stateApp)
+    }
     const requestForegroundPermission = async () => {
         let { status } = await Location.requestForegroundPermissionsAsync();
         if (status !== "granted") {
@@ -119,12 +128,17 @@ const HomeScreen = () => {
     };
     const startBackgroundLocationUpdates = async () => {
         await Location.startLocationUpdatesAsync(YOUR_TASK_NAME, {
-            accuracy: Location.Accuracy.Balanced,
+            accuracy: Location.Accuracy.Highest,
             timeInterval: YOUR_TIME_INTERVAL,
             distanceInterval: YOUR_DISTANCE_INTERVAL,
             deferredUpdatesDistance: YOUR_DISTANCE_INTERVAL,
             deferredUpdatesInterval: YOUR_TIME_INTERVAL,
-            pausesUpdatesAutomatically: true,
+            showsBackgroundLocationIndicator: true,
+            foregroundService: {
+                notificationTitle: 'Location Updates',
+                notificationBody: 'We are tracking your location',
+                notificationColor: '#3498db',
+            },
 
         });
     };
@@ -145,7 +159,12 @@ const HomeScreen = () => {
         }
     }
 
+    const onRefresh = useCallback(async () => {
 
+        setRefreshing(true);
+        await CallHomeApis()
+        wait(2000).then(() => setRefreshing(false));
+    }, []);
 
     const updateWorkStatus = () => {
         if (!isLinked && !driverStatus) {
@@ -226,136 +245,148 @@ const HomeScreen = () => {
 
     // @ts-ignore
     return (
-        <View style={styles.container}>
-            {isLoading && <LottieFile />}
-            {/*user profile  */}
-            <View style={{
-                flex: 1,
-                justifyContent: "flex-end",
-            }}>
-                <View style={{ bottom: -60 }}>
-                    <View style={{ flexDirection: "row", alignItems: "center", marginLeft: 20, marginBottom: 40 }}>
-                        <View style={{
-                            borderWidth: 1,
-                            borderColor: AppColors.primary,
-                            width: 100, height: 100, borderRadius: 50, justifyContent: "center", alignItems: "center"
-                        }}>
-                            <Image
-                                style={styles.img}
-                                source={{ uri: stateApp.user.photo }} />
-                        </View>
+        <ScrollView
+            refreshControl={
+                <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                />
+            }
 
-                        <View style={{ marginLeft: 20, }}>
-                            <Text style={{ fontSize: 20, color: "gray", marginBottom: 10, textTransform: "capitalize" }}>
-                                {stateApp.user.name}
+            contentContainerStyle={{ flexGrow: 1 }} style={{ flexGrow: 1 }}>
+
+
+            <View style={styles.container}>
+                {isLoading && <LottieFile />}
+                {/*user profile  */}
+                <View style={{
+                    flex: 1,
+                    justifyContent: "flex-end",
+                }}>
+                    <View style={{ bottom: -60 }}>
+                        <View style={{ flexDirection: "row", alignItems: "center", marginLeft: 20, marginBottom: 40 }}>
+                            <View style={{
+                                borderWidth: 1,
+                                borderColor: AppColors.primary,
+                                width: 100, height: 100, borderRadius: 50, justifyContent: "center", alignItems: "center"
+                            }}>
+                                <Image
+                                    style={styles.img}
+                                    source={{ uri: stateApp.user.photo }} />
+                            </View>
+
+                            <View style={{ marginLeft: 20, }}>
+                                <Text style={{ fontSize: 20, color: "gray", marginBottom: 10, textTransform: "capitalize" }}>
+                                    {stateApp.user.name}
+                                </Text>
+                                <Text style={{ fontSize: 20, color: "gray" }}>
+                                    {stateApp.user.phoneNum}
+                                </Text>
+
+                            </View>
+
+                        </View>
+                        <View style={{ alignItems: "center", justifyContent: "space-around", flexDirection: "row" }}>
+                            <Text style={{ fontSize: 20, color: "gray" }}>
+                                lat:{fixNumber(userCurrentLocation.lat)}
                             </Text>
                             <Text style={{ fontSize: 20, color: "gray" }}>
-                                {stateApp.user.phoneNum}
+                                lng:{fixNumber(userCurrentLocation.lng)}
                             </Text>
-
                         </View>
-
                     </View>
-                    <View style={{ alignItems: "center", justifyContent: "space-around", flexDirection: "row" }}>
-                        <Text style={{ fontSize: 20, color: "gray" }}>
-                            lat:{fixNumber(userCurrentLocation.lat)}
-                        </Text>
-                        <Text style={{ fontSize: 20, color: "gray" }}>
-                            lng:{fixNumber(userCurrentLocation.lng)}
-                        </Text>
+
+
+
+                    <View style={{ position: "absolute", top: 40, right: 20 }}>
+                        <Ionicons
+                            name="log-out-outline"
+                            size={30}
+                            color={AppColors.black}
+                            onPress={stateApp.logout}
+                        />
                     </View>
-                </View>
 
 
 
-                <View style={{ position: "absolute", top: 40, right: 20 }}>
-                    <Ionicons
-                        name="log-out-outline"
-                        size={30}
-                        color={AppColors.black}
-                        onPress={stateApp.logout}
-                    />
-                </View>
-
-
-
-                <View style={{
-                    height: 220,
-                    borderTopEndRadius: 50,
-                    borderTopStartRadius: 50,
-                    bottom: -80,
-                    alignItems: "center",
-                    backgroundColor: AppColors.primary
-                }}
-                >
-                    <FlatList
-                        data={[{ name: t("Orders"), qty: 0 }, { name: t("Completed"), qty: 0 }]}
-                        horizontal
-                        contentContainerStyle={{ width: "100%", flex: 1, justifyContent: "center" }}
-                        renderItem={({ item }) => {
-                            return (
-                                <View style={styles.itemFlatList}>
-                                    <Text style={{ color: "white", fontSize: 16, fontWeight: "600" }}>
-                                        {item.name}
-                                    </Text>
-                                    <Text style={{ color: "white", fontSize: 16, fontWeight: "600" }}>
-                                        {item.qty}
-                                    </Text>
-                                </View>
-                            );
-                        }}
-                    />
-                </View>
-                <View
-                    style={{
-                        justifyContent: "center",
-                        alignItems: "center",
-                        backgroundColor: "white",
-                        height: "45%",
+                    <View style={{
+                        height: 220,
                         borderTopEndRadius: 50,
                         borderTopStartRadius: 50,
+                        bottom: -80,
+                        alignItems: "center",
+                        backgroundColor: AppColors.primary
                     }}
-                >
-                    <Text
+                    >
+                        <FlatList
+                            data={[{ name: t("Orders"), qty: 0 }, { name: t("Completed"), qty: 0 }]}
+                            horizontal
+                            contentContainerStyle={{ width: "100%", flex: 1, justifyContent: "center" }}
+                            renderItem={({ item }) => {
+                                return (
+                                    <View style={styles.itemFlatList}>
+                                        <Text style={{ color: "white", fontSize: 16, fontWeight: "600" }}>
+                                            {item.name}
+                                        </Text>
+                                        <Text style={{ color: "white", fontSize: 16, fontWeight: "600" }}>
+                                            {item.qty}
+                                        </Text>
+                                    </View>
+                                );
+                            }}
+                        />
+                    </View>
+                    <View
                         style={{
-                            fontSize: 17,
-                            textAlign: "center",
-                            width: 350,
-                            textTransform: "capitalize",
-                            paddingVertical: 60,
+                            justifyContent: "center",
+                            alignItems: "center",
+                            backgroundColor: "white",
+                            height: "45%",
+                            borderTopEndRadius: 50,
+                            borderTopStartRadius: 50,
                         }}
                     >
-                        {t("ToggleButton")}
-                    </Text>
-                    <View style={{ flex: 1, justifyContent: "center" }}>
-                        <View style={styles.containerSwitch}>
-                            <AppActiveButton
-                                disabled={isLoading}
-                                isActive={driverStatus == "active"}
-                                onPress={updateWorkStatus}
-                            />
-                            <Text style={styles.switchText}>
-                                {t("MapStatus")}
-                            </Text>
+                        <Text
+                            style={{
+                                fontSize: 17,
+                                textAlign: "center",
+                                width: 350,
+                                textTransform: "capitalize",
+                                paddingVertical: 60,
+                            }}
+                        >
+                            {t("ToggleButton")}
+                        </Text>
+                        <View style={{ flex: 1, justifyContent: "center" }}>
+                            <View style={styles.containerSwitch}>
+                                <AppActiveButton
+                                    disabled={isLoading}
+                                    isActive={driverStatus == "active"}
+                                    onPress={updateWorkStatus}
+                                />
+                                <Text style={styles.switchText}>
+                                    {t("MapStatus")}
+                                </Text>
+
+                            </View>
+                            <View style={[styles.containerSwitch]}>
+                                <AppActiveButton
+                                    disabled={isLoading}
+                                    isActive={isLinked}
+                                    onPress={updateLink}
+                                />
+                                <Text style={styles.switchText}>
+                                    {t("VehicleLink")}
+                                </Text>
+                            </View>
 
                         </View>
-                        <View style={[styles.containerSwitch]}>
-                            <AppActiveButton
-                                disabled={isLoading}
-                                isActive={isLinked}
-                                onPress={updateLink}
-                            />
-                            <Text style={styles.switchText}>
-                                {t("VehicleLink")}
-                            </Text>
-                        </View>
-
                     </View>
                 </View>
+                <FlashMessage position="bottom" />
+                <AppSettingModal setIsVisble={setIsDeniedPermissions} isVisible={isDeniedPermissions} />
             </View>
-            <FlashMessage position="bottom" />
-            <AppSettingModal setIsVisble={setIsDeniedPermissions} isVisible={isDeniedPermissions} />
-        </View>
+        </ScrollView>
     );
 };
 
