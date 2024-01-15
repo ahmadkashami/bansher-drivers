@@ -1,9 +1,8 @@
 import { create } from 'zustand'
-import { devtools, persist } from "zustand/middleware";
 import { UserDto } from "../dtos/UserDto";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { VehicleDto } from "../dtos/VehicleDto";
-import { updateVehicleLink } from '../api/AuthApi';
+import { updateVehicleUnlink } from '../api/vehiclesApi';
 
 
 const userInitial = new UserDto({
@@ -60,7 +59,7 @@ const useAppStore = create<State>((set, get) => ({
     setUser: (user: UserDto) => set(() => ({ user: user })),
     setVehicle: (vehicle: VehicleDto) => set(() => ({ vehicle: vehicle })),
     logout: async () => {
-        await updateVehicleLink()
+        // await updateVehicleUnlink()
         await AsyncStorage.removeItem("token");
         await AsyncStorage.removeItem("user");
         await AsyncStorage.removeItem("vehicle");

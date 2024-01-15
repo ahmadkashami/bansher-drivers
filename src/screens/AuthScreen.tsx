@@ -134,7 +134,7 @@ const AuthScreen = () => {
                         <View style={{ paddingTop: 60, paddingBottom: 0 }}>
                             <Image
                                 style={{ width: 250, height: 200, resizeMode: "cover" }}
-                                source={require("../contants/images/logo.png")}
+                                source={require("../contants/images/logo1.png")}
                             />
                         </View>
 
