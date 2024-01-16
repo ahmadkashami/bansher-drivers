@@ -27,6 +27,11 @@
       "infoPlist": {
         "buildNumber": "5",
         "CFBundleDisplayName": "Yamak Driver",
+        "UIBackgroundModes": [
+          "location",
+          "fetch"
+        ],
+        "NSLocationAlwaysUsageDescription": "Yamak Driver use your location to update it on the main app map to get nerest more convenient and efficient service",
         "NSLocationAlwaysAndWhenInUseUsageDescription": "Yamak Driver use your location to update it on the main app map to get nerest more convenient and efficient service",
         "NSLocationWhenInUseUsageDescription": "Yamak Driver use your location to update it on the main app map to get nerest more convenient and efficient service"
       },
@@ -50,7 +55,11 @@
       [
         "expo-location",
         {
-          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your okk location."
+          "locationAlwaysAndWhenInUsePermission": "Yamak Driver use your location to update it on the main app map to get nerest more convenient and efficient service",
+          "locationAlwaysPermission": "Yamak Driver use your location to update it on the main app map to get nerest more convenient and efficient service",
+          "locationWhenInUsePermission": "Yamak Driver use your location to update it on the main app map to get nerest more convenient and efficient service",
+          "isIosBackgroundLocationEnabled": true,
+          "isAndroidBackgroundLocationEnabled": true
         }
       ]
     ],

@@ -75,6 +75,8 @@ const HomeScreen = () => {
                         console.log("fetching location forground");
                         let location = await Location.getCurrentPositionAsync({});
                         const { latitude, longitude } = location?.coords || {};
+                        console.log({ latitude, longitude });
+
                         setUserCurrentLocation({ lat: latitude, lng: longitude });
                         const updateRes = await updateVehiclesLocation({ latitude, longitude });
                         console.log("updateViecle in forgrounded", { updateRes });
