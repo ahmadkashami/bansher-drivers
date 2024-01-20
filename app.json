@@ -25,7 +25,7 @@
         "usesNonExemptEncryption": false
       },
       "infoPlist": {
-        "buildNumber": "5",
+        "buildNumber": "6",
         "CFBundleDisplayName": "Yamak Driver",
         "UIBackgroundModes": [
           "location",
@@ -35,7 +35,7 @@
         "NSLocationAlwaysAndWhenInUseUsageDescription": "Yamak Driver use your location to update it on the main app map to get nerest more convenient and efficient service",
         "NSLocationWhenInUseUsageDescription": "Yamak Driver use your location to update it on the main app map to get nerest more convenient and efficient service"
       },
-      "buildNumber": "5"
+      "buildNumber": "7"
     },
     "android": {
       "versionCode": 11,
