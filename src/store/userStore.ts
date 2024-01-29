@@ -1,8 +1,11 @@
 import { create } from 'zustand'
+import * as Location from 'expo-location';
+
 import { UserDto } from "../dtos/UserDto";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { VehicleDto } from "../dtos/VehicleDto";
 import { updateVehicleUnlink } from '../api/vehiclesApi';
+import { AppContants } from '../contants/AppConstants';
 
 
 const userInitial = new UserDto({
@@ -50,6 +53,7 @@ interface State {
 }
 
 
+
 const useAppStore = create<State>((set, get) => ({
     authToken: '',
     isAuthenticated: false,
@@ -63,6 +67,9 @@ const useAppStore = create<State>((set, get) => ({
         await AsyncStorage.removeItem("token");
         await AsyncStorage.removeItem("user");
         await AsyncStorage.removeItem("vehicle");
+        await Location.stopLocationUpdatesAsync(AppContants.locationBgTask)
+
+
         set(() => ({ authToken: '', isAuthenticated: false }))
     },
 }))

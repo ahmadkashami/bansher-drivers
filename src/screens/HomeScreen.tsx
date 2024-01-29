@@ -17,11 +17,10 @@ import * as TaskManager from 'expo-task-manager';
 import AppSettingModal from "../components/Home/AppSettingModal";
 import { updateVehicleLink, updateVehiclesLocation } from "../api/vehiclesApi";
 import { CallDriverVehicle } from "../actions/commonActions";
+import { AppContants } from "../contants/AppConstants";
 
-const YOUR_TASK_NAME = 'background-location-task';
-const YOUR_TIME_INTERVAL = 30000
-const YOUR_DISTANCE_INTERVAL = 300; // 10 meters (adjust as needed)
-TaskManager.defineTask(YOUR_TASK_NAME, async ({ data, error }) => {
+// 10 meters (adjust as needed)
+TaskManager.defineTask(AppContants.locationBgTask, async ({ data, error }) => {
     if (error) {
         console.error(error)
         return
@@ -88,7 +87,7 @@ const HomeScreen = () => {
                     } catch (error) {
                         console.log("error Location in forgorund ==>", JSON.stringify(error?.message));
                     }
-                }, 20000);
+                }, AppContants.locationTimeInterval);
 
             } catch (error) {
                 console.error("An error occurred:", error);
@@ -129,12 +128,12 @@ const HomeScreen = () => {
         return true
     };
     const startBackgroundLocationUpdates = async () => {
-        await Location.startLocationUpdatesAsync(YOUR_TASK_NAME, {
+        await Location.startLocationUpdatesAsync(AppContants.locationBgTask, {
             accuracy: Location.Accuracy.Highest,
-            timeInterval: YOUR_TIME_INTERVAL,
-            distanceInterval: YOUR_DISTANCE_INTERVAL,
-            deferredUpdatesDistance: YOUR_DISTANCE_INTERVAL,
-            deferredUpdatesInterval: YOUR_TIME_INTERVAL,
+            timeInterval: AppContants.locationTimeInterval,
+            distanceInterval: AppContants.locationDistanceInterval,
+            deferredUpdatesDistance: AppContants.locationDistanceInterval,
+            deferredUpdatesInterval: AppContants.locationTimeInterval,
             showsBackgroundLocationIndicator: true,
             foregroundService: {
                 notificationTitle: 'Location Updates',
@@ -143,6 +142,7 @@ const HomeScreen = () => {
             },
 
         });
+
     };
 
 

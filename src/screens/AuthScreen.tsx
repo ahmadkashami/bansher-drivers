@@ -26,10 +26,13 @@ import { emailValidator } from "../helpers/validation";
 import AppPressable from "../components/ui/AppPressable";
 import AppText from "../components/ui/AppText";
 import { getVehicle } from "../api/vehiclesApi";
+import { StatusBar } from "expo-status-bar";
+import { useTranslation } from "react-i18next";
 
 const AuthScreen = () => {
     const stateApp = useAppStore()
     const [inputs, setInputs] = useState({ email: "", password: "" });
+    const { t } = useTranslation()
     const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -118,116 +121,123 @@ const AuthScreen = () => {
 
 
     return (
-        <SafeAreaProvider style={{ flex: 1 }}>
-            {isLoading && <LottieFile />}
-            <View style={styles.container}>
-                <KeyboardAwareScrollView>
-                    <View
-                        style={{
-                            justifyContent: "center",
-                            alignItems: "center",
-                            width: "100%",
-                            padding: 16,
-                            alignSelf: "center",
-                        }}
-                    >
-                        <View style={{ paddingTop: 60, paddingBottom: 0 }}>
-                            <Image
-                                style={{ width: 250, height: 200, resizeMode: "cover" }}
-                                source={require("../contants/images/logo1.png")}
-                            />
-                        </View>
-
-                        <View style={{ marginVertical: 10 }}>
-                            <AppText
-                                textStyle={{
-                                    marginTop: 20,
-                                    fontSize: 25,
-                                    fontWeight: "600",
-                                    letterSpacing: 2,
-                                    textAlign: "center",
-                                }}
-                            >
-                                Hello Again !
-                            </AppText>
-                            <Text
-                                numberOfLines={2}
-                                style={{
-                                    width: 300,
-                                    textAlign: "center",
-                                    fontSize: 16,
-                                    letterSpacing: 4,
-                                    marginTop: 8,
-                                    textTransform: "capitalize",
-                                }}
-                            >
-                                Welcome Back you've been missed!
-                            </Text>
-                        </View>
-
-                        {/* <View style={styles.innerContainer}> */}
-                        <View style={styles.inputBox}>
-                            <TextInput
-                                value={inputs.email}
-                                placeholder="Enter Email"
-                                autoCapitalize="none"
-                                placeholderTextColor={"#a4a3a8"}
-                                style={styles.inputs}
-                                onChangeText={(text) => inputsChangeHandler(text, "email")}
-                            />
-                        </View>
-                        <View style={styles.inputBox}>
-                            <TextInput
-                                secureTextEntry
-                                value={inputs.password}
-                                placeholder="Enter Password"
-                                autoCapitalize="none"
-                                placeholderTextColor={"#a4a3a8"}
-                                style={styles.inputs}
-                                onChangeText={(text) => inputsChangeHandler(text, "password")}
-                            />
-                        </View>
-                        <Pressable
-                            style={({ pressed }) => [
-                                {
-                                    alignSelf: "flex-end",
-                                    flex: 1,
-                                },
-                                pressed && { opacity: 0.3 },
-                            ]}
+        <>
+            <StatusBar animated={true} style="auto" />
+            <SafeAreaProvider style={{ flex: 1 }}>
+                {isLoading && <LottieFile />}
+                <View style={styles.container}>
+                    <KeyboardAwareScrollView>
+                        <View
+                            style={{
+                                justifyContent: "center",
+                                alignItems: "center",
+                                width: "100%",
+                                padding: 16,
+                                alignSelf: "center",
+                            }}
                         >
-                            <AppText
-                                textStyle={{
-                                    marginRight: 20,
-                                    marginVertical: 15,
-                                }}
+                            <View style={{ paddingTop: 60, paddingBottom: 0 }}>
+                                <Image
+                                    style={{ width: 250, height: 200, resizeMode: "cover" }}
+                                    source={require("../contants/images/logo1.png")}
+                                />
+                            </View>
+
+                            <View style={{ marginVertical: 10 }}>
+                                <AppText
+                                    textStyle={{
+                                        marginTop: 20,
+                                        fontSize: 25,
+                                        fontWeight: "600",
+                                        letterSpacing: 2,
+                                        textAlign: "center",
+                                    }}
+                                >
+                                    {t("HelloAgain")}
+                                </AppText>
+                                <Text
+                                    numberOfLines={2}
+                                    style={{
+                                        width: 300,
+                                        textAlign: "center",
+                                        fontSize: 16,
+                                        letterSpacing: 4,
+                                        marginTop: 8,
+                                        textTransform: "capitalize",
+                                    }}
+                                >
+                                    {t("WelcomeBack")}
+                                </Text>
+                            </View>
+
+                            {/* <View style={styles.innerContainer}> */}
+                            <View style={styles.inputBox}>
+                                <TextInput
+                                    value={inputs.email}
+                                    placeholder={t("EnterEmail")}
+
+                                    autoCapitalize="none"
+                                    placeholderTextColor={"#a4a3a8"}
+                                    style={styles.inputs}
+                                    onChangeText={(text) => inputsChangeHandler(text, "email")}
+                                />
+                            </View>
+                            <View style={styles.inputBox}>
+                                <TextInput
+                                    // secureTextEntry
+                                    value={inputs.password}
+                                    placeholder={t("EnterPassword")}
+                                    autoCapitalize="none"
+                                    placeholderTextColor={"#a4a3a8"}
+                                    style={styles.inputs}
+                                    onChangeText={(text) => inputsChangeHandler(text, "password")}
+                                />
+                            </View>
+                            <Pressable
+                                style={({ pressed }) => [
+                                    {
+                                        alignSelf: "flex-start",
+                                        flex: 1,
+                                        marginHorizontal: 20
+
+                                    },
+                                    pressed && { opacity: 0.3 },
+                                ]}
                             >
-                                Recovery Password
-                            </AppText>
-                        </Pressable>
-                        <View style={{ paddingVertical: 20 }}>
-                            <FilledButton onPress={submitHandler}>Submit</FilledButton>
+                                <AppText
+                                    textStyle={{
+                                        marginRight: 20,
+                                        marginVertical: 15,
+
+                                    }}
+                                >
+                                    {t("ForgotPassword")}
+                                </AppText>
+                            </Pressable>
+                            <View style={{ paddingVertical: 20 }}>
+                                <FilledButton onPress={submitHandler}>Submit</FilledButton>
+                            </View>
                         </View>
-                    </View>
 
-                    <View style={{ justifyContent: "center", alignItems: "center" }}>
-                        <AppText textStyle={{ fontSize: 16 }}>
-                            if you need Help please
-                        </AppText>
-                        <AppPressable onPress={() => { Linking.openURL("https://yamak-kw.com") }}>
-                            <AppText
-                                onPress={() => Alert.alert("help")}
-                                textStyle={{ color: "dodgerblue", marginTop: 10 }}
-                            >
-                                Contact Help
+                        <View style={{ justifyContent: "center", alignItems: "center" }}>
+                            <AppText textStyle={{ fontSize: 16 }}>
+                                if you need Help please
                             </AppText>
-                        </AppPressable>
+                            <AppPressable onPress={() => { Linking.openURL("https://yamak-kw.com") }}>
+                                <AppText
+                                    onPress={() => Alert.alert("help")}
+                                    textStyle={{ color: "dodgerblue", marginTop: 10 }}
+                                >
+                                    Contact Help
+                                </AppText>
+                            </AppPressable>
 
-                    </View>
-                </KeyboardAwareScrollView>
-            </View>
-            <FlashMessage position="top" />
-        </SafeAreaProvider>
+                        </View>
+                    </KeyboardAwareScrollView>
+                </View>
+                <FlashMessage position="top" />
+            </SafeAreaProvider>
+        </>
     );
 };
 

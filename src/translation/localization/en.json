@@ -37,5 +37,10 @@
   "MapStatus": "Map Status",
   "VehicleLink": "Vehicle Link",
   "PermissionsRequired": "Permissions required",
-  "LocationPermissionShouldGranted": "Location Permissions Should be Granted in order to use Yamak Driver"
+  "LocationPermissionShouldGranted": "Location Permissions Should be Granted in order to use Yamak Driver",
+  "HelloAgain": "Hello Again !",
+  "WelcomeBack": "Welcome Back you've been missed!",
+  "EnterPassword": "Enter Password",
+  "EnterEmail": "Enter Email",
+  "ForgotPassword": "Forgot password ?"
 }

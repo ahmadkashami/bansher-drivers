@@ -17,6 +17,7 @@ import { AppColors } from "../contants/Colors";
 import AppModel from "./AppModal";
 import AppAlertEmpty from "./ui/AppAlertEmpty";
 import AppText from "./ui/AppText";
+import { AsyncStorageConstants } from "../contants/AppConstants";
 
 const laguages = [
   {
@@ -48,7 +49,7 @@ const LanguagePicker: FC<LanguagePickerProps> = ({
         I18nManager.forceRTL(false);
         I18nManager.allowRTL(false);
       }
-      AsyncStorage.setItem("lang", lang);
+      AsyncStorage.setItem(AsyncStorageConstants.languageKey, lang);
     });
 
     await Updates.reloadAsync();
