@@ -1,4 +1,5 @@
 import { Alert } from "react-native";
+import Toast from "react-native-toast-message";
 
 export function ErrorHandlerApi(e: any) {
 
@@ -19,6 +20,25 @@ export function ErrorHandlerApi(e: any) {
     });
   }
   return errors.join(" ");
+}
+
+export function errorMessageToast(title: string, message: string = "",) {
+  console.log(message);
+
+  Toast.show({
+    text1: title,
+    text2: message,
+    text2Style: { textAlign: "right" },
+    type: "error"
+  })
+}
+export function successMessageToast(title: string, message: string = "",) {
+  Toast.show({
+    text1: title,
+    text2: message,
+    autoHide: true,
+    type: "success"
+  })
 }
 
 export function TrimPhoneExt(phone: string) {

@@ -18,6 +18,7 @@ import LanguageSection from "../components/Profile/Language.section";
 import useAppStore from "../store/userStore";
 import AppText from "../components/ui/AppText";
 import { AppColors } from "../contants/Colors";
+import AppHeader from "../components/ui/AppHeader";
 
 const ProfileScreen = () => {
   const stateApp = useAppStore()
@@ -25,24 +26,17 @@ const ProfileScreen = () => {
   const user = stateApp.user;
 
   return (
-    <ScreenView>
+    <View style={{ flex: 1 }}>
 
+      <AppHeader />
       <ScrollView style={styles.container}>
-        <View style={{ position: "absolute", right: 20 }}>
-          <Ionicons
-            name="log-out-outline"
-            size={30}
-            color={AppColors.black}
-            onPress={stateApp.logout}
-          />
-        </View>
+
         <View
           style={{
             flex: 1,
             justifyContent: "center",
             alignItems: "center",
             borderRadius: 20,
-            marginTop: "20%"
           }}
         >
 
@@ -184,7 +178,8 @@ const ProfileScreen = () => {
           </View>
         </View>
       </ScrollView>
-    </ScreenView>
+    </View>
+
   );
 };
 

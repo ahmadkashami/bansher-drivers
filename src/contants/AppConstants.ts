@@ -15,7 +15,8 @@ export const AsyncStorageConstants = {
     languageKey: "lang",
     userLocation: "userLocation",
     appleLoginKeys: "appleLoginKeys",
-    fcmToken: "fcmToken"
+    fcmToken: "fcmToken",
+    isSkipedPermissions: "isSkipedPermissions"
 
 }
 

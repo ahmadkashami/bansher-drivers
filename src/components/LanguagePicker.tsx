@@ -14,7 +14,6 @@ import * as Updates from "expo-updates";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { AppColors } from "../contants/Colors";
-import AppModel from "./AppModal";
 import AppAlertEmpty from "./ui/AppAlertEmpty";
 import AppText from "./ui/AppText";
 import { AsyncStorageConstants } from "../contants/AppConstants";
@@ -37,7 +36,6 @@ const LanguagePicker: FC<LanguagePickerProps> = ({
 }) => {
   const { i18n, t } = useTranslation(); //i18n instance
   const currnetLang = i18n.language;
-  console.log(currnetLang);
 
   async function selectLanguageHandler(lang: string) {
     i18n.changeLanguage(lang).then((res) => {

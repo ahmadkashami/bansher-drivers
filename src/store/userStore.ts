@@ -6,6 +6,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { VehicleDto } from "../dtos/VehicleDto";
 import { updateVehicleUnlink } from '../api/vehiclesApi';
 import { AppContants } from '../contants/AppConstants';
+import { removeAllKeys } from '../helpers/AppAsyncStoreage';
 
 
 const userInitial = new UserDto({
@@ -63,13 +64,8 @@ const useAppStore = create<State>((set, get) => ({
     setUser: (user: UserDto) => set(() => ({ user: user })),
     setVehicle: (vehicle: VehicleDto) => set(() => ({ vehicle: vehicle })),
     logout: async () => {
-        // await updateVehicleUnlink()
-        await AsyncStorage.removeItem("token");
-        await AsyncStorage.removeItem("user");
-        await AsyncStorage.removeItem("vehicle");
-        await Location.stopLocationUpdatesAsync(AppContants.locationBgTask)
-
-
+        await removeAllKeys()
+        Location.stopLocationUpdatesAsync(AppContants.locationBgTask)
         set(() => ({ authToken: '', isAuthenticated: false }))
     },
 }))

@@ -42,5 +42,12 @@
   "WelcomeBack": "Welcome Back you've been missed!",
   "EnterPassword": "Enter Password",
   "EnterEmail": "Enter Email",
-  "ForgotPassword": "Forgot password ?"
+  "ForgotPassword": "Forgot password ?",
+  "Submit": "Submit",
+  "IfYouNeedHelp": "if you need help ",
+  "ContactHelp": "Contact Help",
+  "ErrorHappen": "Error Happen",
+  "InvalidInputs": "Invalid Inputs",
+  "GoToSetting": "Go To Setting",
+  "Skip": "Skip"
 }

@@ -2,6 +2,7 @@ import {
     ActivityIndicator,
     Alert,
     Button,
+    I18nManager,
     Image,
     Linking,
     Pressable,
@@ -13,41 +14,44 @@ import {
 import { useState } from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import FilledButton from "../components/FilledButton";
+import * as Updates from "expo-updates";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { StatusBar } from "expo-status-bar";
+
+import FilledButton from "../components/FilledButton";
 import { login } from "../api/AuthApi";
 import { UserDto } from "../dtos/UserDto";
-import { ErrorHandlerApi } from "../helpers/AppHelpers";
+import { ErrorHandlerApi, errorMessageToast } from "../helpers/AppHelpers";
 import LottieFile from "../components/ui/LottieFile";
 import { showMessage, } from "react-native-flash-message";
-import FlashMessage from "react-native-flash-message";
 import useAppStore from "../store/userStore";
 import { emailValidator } from "../helpers/validation";
 import AppPressable from "../components/ui/AppPressable";
 import AppText from "../components/ui/AppText";
 import { getVehicle } from "../api/vehiclesApi";
-import { StatusBar } from "expo-status-bar";
 import { useTranslation } from "react-i18next";
+import { AppContants, AppLanguages, AsyncStorageConstants } from "../contants/AppConstants";
+import { getStorageValues, setStorageValues } from "../helpers/AppAsyncStoreage";
+import { useLanguage } from "../hooks/useLanguage.hook";
+import { AppColorsTheme2 } from "../contants/Colors";
 
 const AuthScreen = () => {
-    const stateApp = useAppStore()
     const [inputs, setInputs] = useState({ email: "", password: "" });
-    const { t } = useTranslation()
-    const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+
+    const stateApp = useAppStore()
+    const { t, i18n } = useTranslation()
+    const { currentLanguage } = useLanguage()
+    const languageLabel = currentLanguage == "en" ? "عربي" : "English"
+
 
     async function submitHandler() {
         if (!inputs.password || !inputs.email) {
-            showMessage({
-                message: "Error Message",
-                description: "invalid inputs",
-                type: "danger",
-            });
-
+            errorMessageToast(t("ErrorHappen"), t("InvalidInputs"))
             return;
         }
         if (!emailValidator(inputs.email)) {
-            Alert.alert("The Email field must be a valid email");
+            errorMessageToast(t("ErrorHappen"), t("InvalidInputs"))
             return;
         }
 
@@ -72,19 +76,10 @@ const AuthScreen = () => {
                 console.log(error.response.data);
 
                 const errorMessage = ErrorHandlerApi(error);
+                errorMessageToast(t("ErrorHappen"), errorMessage)
 
-                showMessage({
-                    message: "Error Message",
-                    description: errorMessage,
-                    type: "danger",
-                });
             } else {
-                showMessage({
-                    message: "Error Message",
-                    // @ts-ignore
-                    description: error.message,
-                    type: "danger",
-                });
+                errorMessageToast(t("ErrorHappen"), error.message)
             }
         } finally {
             setIsLoading(false);
@@ -104,19 +99,33 @@ const AuthScreen = () => {
         }).catch(error => {
             if (error?.response?.data) {
                 const errorMessage = ErrorHandlerApi(error);
-                showMessage({
-                    message: "Error Message",
-                    description: errorMessage,
-                    type: "danger",
-                });
+                errorMessageToast(t("ErrorHappen"), errorMessage)
+
             } else {
-                showMessage({
-                    message: "Error Message",
-                    description: error.message,
-                    type: "danger",
-                });
+                errorMessageToast(t("ErrorHappen"), error.message)
             }
         })
+    }
+
+    async function handleLanguagePress() {
+
+        const appLanguage = await getStorageValues(AsyncStorageConstants.languageKey)
+        const changeLang = appLanguage === AppLanguages.english ? AppLanguages.arabic : AppLanguages.english
+
+        i18n.changeLanguage(changeLang).then(async (res) => {
+            if (changeLang === "ar") {
+                I18nManager.forceRTL(true);
+                I18nManager.allowRTL(true);
+                I18nManager.swapLeftAndRightInRTL(true);
+            } else {
+                I18nManager.forceRTL(false);
+                I18nManager.allowRTL(false);
+            }
+            await setStorageValues(AsyncStorageConstants.languageKey, changeLang);
+            await Updates.reloadAsync();
+
+        });
+
     }
 
 
@@ -127,6 +136,13 @@ const AuthScreen = () => {
                 {isLoading && <LottieFile />}
                 <View style={styles.container}>
                     <KeyboardAwareScrollView>
+                        <AppPressable
+                            onPress={() => handleLanguagePress()}
+                            style={styles.languageStyle}>
+                            <AppText size={currentLanguage == "en" ? 18 : 16}>
+                                {languageLabel}
+                            </AppText>
+                        </AppPressable>
                         <View
                             style={{
                                 justifyContent: "center",
@@ -136,14 +152,14 @@ const AuthScreen = () => {
                                 alignSelf: "center",
                             }}
                         >
-                            <View style={{ paddingTop: 60, paddingBottom: 0 }}>
+                            <View style={{ paddingTop: 40, paddingBottom: 0 }}>
                                 <Image
-                                    style={{ width: 250, height: 200, resizeMode: "cover" }}
+                                    style={{ width: 200, height: 200, resizeMode: "cover" }}
                                     source={require("../contants/images/logo1.png")}
                                 />
                             </View>
 
-                            <View style={{ marginVertical: 10 }}>
+                            <View style={{ marginVertical: 5 }}>
                                 <AppText
                                     textStyle={{
                                         marginTop: 20,
@@ -208,34 +224,32 @@ const AuthScreen = () => {
                                     textStyle={{
                                         marginRight: 20,
                                         marginVertical: 15,
-
                                     }}
                                 >
                                     {t("ForgotPassword")}
                                 </AppText>
                             </Pressable>
                             <View style={{ paddingVertical: 20 }}>
-                                <FilledButton onPress={submitHandler}>Submit</FilledButton>
+                                <FilledButton onPress={submitHandler}>{t("Submit")}</FilledButton>
                             </View>
                         </View>
 
                         <View style={{ justifyContent: "center", alignItems: "center" }}>
                             <AppText textStyle={{ fontSize: 16 }}>
-                                if you need Help please
+                                {t("IfYouNeedHelp")}
                             </AppText>
                             <AppPressable onPress={() => { Linking.openURL("https://yamak-kw.com") }}>
                                 <AppText
-                                    onPress={() => Alert.alert("help")}
                                     textStyle={{ color: "dodgerblue", marginTop: 10 }}
                                 >
-                                    Contact Help
+                                    {t("ContactHelp")}
                                 </AppText>
                             </AppPressable>
 
                         </View>
                     </KeyboardAwareScrollView>
                 </View>
-                <FlashMessage position="top" />
+                {/* <FlashMessage position="top" /> */}
             </SafeAreaProvider>
         </>
     );
@@ -253,11 +267,28 @@ const styles = StyleSheet.create({
     },
     inputBox: {
         backgroundColor: "white",
-        width: "90%",
+        width: AppContants.deviceWidth * 0.8,
         height: 60,
         padding: 16,
         marginVertical: 10,
         borderRadius: 10,
     },
-    inputs: { flex: 1, fontSize: 16, fontWeight: "600" },
+    inputs: {
+        textAlign: "right",
+        flex: 1,
+        fontSize: 16,
+        fontWeight: "600"
+    },
+    languageStyle: {
+        borderTopRightRadius: 10,
+        borderBottomRightRadius: 10,
+        left: 0,
+        position: "absolute", top: "10%", width: 70,
+        justifyContent: "center",
+        alignItems: "center",
+        paddingHorizontal: 4,
+        backgroundColor: AppColorsTheme2.secondary,
+        height: 40,
+
+    }
 });
