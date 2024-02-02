@@ -105,12 +105,8 @@ const HomeScreen = () => {
                 console.error("An error occurred:", error);
             }
         }
-
         fetchData()
-
         return () => clearInterval(interval);
-
-
     }, [driverStatus, isLinked])
 
 
@@ -181,11 +177,13 @@ const HomeScreen = () => {
 
         setRefreshing(true);
         await CallHomeApis()
-        wait(2000).then(() => setRefreshing(false));
+        wait(4000).then(() => setRefreshing(false));
     }, []);
 
     const updateWorkStatus = () => {
-        if (!isLinked && !driverStatus) {
+        console.log({ driverStatus });
+
+        if (!isLinked && driverStatus == "inactive") {
             showMessage({
                 message: "Error Message",
                 description: "driver should be linked to vehicle first",
@@ -281,12 +279,13 @@ const HomeScreen = () => {
                     flex: 1,
                     justifyContent: "flex-end",
                 }}>
-                    <View style={{ bottom: -60 }}>
-                        <View style={{ flexDirection: "row", alignItems: "center", marginLeft: 20, marginBottom: 40 }}>
+                    <View style={{ bottom: -50 }}>
+                        <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center", marginLeft: 20, marginBottom: 40 }}>
                             <View style={{
                                 borderWidth: 1,
                                 borderColor: AppColors.primary,
-                                width: 100, height: 100, borderRadius: 50, justifyContent: "center", alignItems: "center"
+                                width: 100, height: 100, borderRadius: 50,
+                                justifyContent: "center", alignItems: "center"
                             }}>
                                 <Image
                                     style={styles.img}
@@ -312,6 +311,7 @@ const HomeScreen = () => {
                                 lng:{fixNumber(userCurrentLocation.lng)}
                             </Text>
                         </View>
+
                     </View>
 
                     <View style={{

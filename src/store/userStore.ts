@@ -65,7 +65,9 @@ const useAppStore = create<State>((set, get) => ({
     setVehicle: (vehicle: VehicleDto) => set(() => ({ vehicle: vehicle })),
     logout: async () => {
         await removeAllKeys()
-        Location.stopLocationUpdatesAsync(AppContants.locationBgTask)
+        const res = await Location.hasStartedLocationUpdatesAsync(AppContants.locationBgTask)
+        if (res) Location.stopLocationUpdatesAsync(AppContants.locationBgTask)
+
         set(() => ({ authToken: '', isAuthenticated: false }))
     },
 }))

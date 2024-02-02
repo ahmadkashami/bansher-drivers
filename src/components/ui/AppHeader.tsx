@@ -2,15 +2,19 @@ import { Image, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { AppColorsTheme2 } from '../../contants/Colors'
 import { Ionicons } from "@expo/vector-icons";
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
 import useAppStore from '../../store/userStore';
 import AppText from './AppText';
 
 
 const AppHeader = ({ logout = true, title = "", logo = true }) => {
     const stateApp = useAppStore()
+    const insets = useSafeAreaInsets();
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, { paddingTop: insets.top }]}>
+
             {logout &&
                 <View style={{ flex: 1, alignItems: "flex-start" }}>
                     <Ionicons
@@ -49,8 +53,6 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: "row",
         paddingHorizontal: 16,
-        paddingTop: 25,
-        height: 75,
         backgroundColor: AppColorsTheme2.primary,
         justifyContent: "center",
         alignItems: "center",

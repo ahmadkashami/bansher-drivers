@@ -42,7 +42,7 @@ export function successMessageToast(title: string, message: string = "",) {
 }
 
 export function TrimPhoneExt(phone: string) {
-  return phone.slice(3);
+  return phone.slice(4);
 }
 export function fixNumber(number: number, numOfFix: number = 3) {
   return number.toFixed(numOfFix)
