@@ -33,5 +33,17 @@
   "MapStatus": "حالة الخريطة",
   "VehicleLink": "ربط المركبة",
   "PermissionsRequired": "صلاحيات الموقع مطلوبه",
-  "LocationPermissionShouldGranted": "صلاحيات الموقع يجب ان تكون مفعله للاستفاده من التطبيق "
+  "LocationPermissionShouldGranted": " صلاحيات الموقع يجب ان تكون مفعله للاستفاده من التطبيق في وضع تشغيل في الخلفيه",
+  "HelloAgain": "مرحبا بك",
+  "WelcomeBack": "ابدأ مشوارك مع تطبيق سائق يمك ",
+  "EnterPassword": " ادخل كلمة السر",
+  "EnterEmail": "ادخل البريد الالكتروني",
+  "ForgotPassword": "نسيت كلمة المرور ؟",
+  "Submit": "تسجيل دخول",
+  "IfYouNeedHelp": "اذا كنت بحاجة الى المساعدة",
+  "ContactHelp": "تواصل معنا",
+  "ErrorHappen": "حدث خطئ",
+  "InvalidInputs": "مدخلات غير صالحة",
+  "GoToSetting": "اذهب الى الاعدادات",
+  "Skip": "تخطي"
 }

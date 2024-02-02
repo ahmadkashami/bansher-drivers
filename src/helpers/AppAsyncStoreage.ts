@@ -8,6 +8,10 @@ export async function deleteStorageValue(name: string) {
   await AsyncStorage.removeItem(name);
 }
 
-export async function getStorageValues(name: string, value: string) {
-  return AsyncStorage.setItem(name, value);
+export async function getStorageValues(name: string) {
+  return AsyncStorage.getItem(name);
+}
+
+export async function removeAllKeys() {
+  return AsyncStorage.clear();
 }

@@ -2,7 +2,7 @@
   "expo": {
     "name": "Yamak Driver | سائق يمك",
     "slug": "driver",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -35,13 +35,13 @@
         "NSLocationAlwaysAndWhenInUseUsageDescription": "Yamak Driver use your location to update it on the main app map to get nerest more convenient and efficient service",
         "NSLocationWhenInUseUsageDescription": "Yamak Driver use your location to update it on the main app map to get nerest more convenient and efficient service"
       },
-      "buildNumber": "7"
+      "buildNumber": "4"
     },
     "android": {
-      "versionCode": 11,
+      "versionCode": 16,
       "softwareKeyboardLayoutMode": "pan",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/icon1.png",
         "backgroundColor": "#FFFFFF"
       },
       "permissions": [

@@ -18,6 +18,8 @@ import LanguageSection from "../components/Profile/Language.section";
 import useAppStore from "../store/userStore";
 import AppText from "../components/ui/AppText";
 import { AppColors } from "../contants/Colors";
+import AppHeader from "../components/ui/AppHeader";
+import AppIcon from "../components/ui/AppIcon";
 
 const ProfileScreen = () => {
   const stateApp = useAppStore()
@@ -25,33 +27,21 @@ const ProfileScreen = () => {
   const user = stateApp.user;
 
   return (
-    <ScreenView>
+    <View style={{ flex: 1 }}>
+      <AppHeader />
+      <ScrollView contentContainerStyle={{ flexGrow: 1, padding: 16 }} style={styles.container}>
 
-      <ScrollView style={styles.container}>
-        <View style={{ position: "absolute", right: 20 }}>
-          <Ionicons
-            name="log-out-outline"
-            size={30}
-            color={AppColors.black}
-            onPress={stateApp.logout}
-          />
-        </View>
         <View
           style={{
             flex: 1,
             justifyContent: "center",
             alignItems: "center",
             borderRadius: 20,
-            marginTop: "20%"
           }}
         >
 
 
-          <View style={{
-            borderWidth: 1,
-            borderColor: AppColors.primary,
-            width: 100, height: 100, borderRadius: 50, justifyContent: "center", alignItems: "center"
-          }}>
+          <View style={styles.imgContainer}>
             <Image
               style={styles.img}
               source={{ uri: stateApp.user.photo }} />
@@ -80,11 +70,7 @@ const ProfileScreen = () => {
               onPress={() => Linking.openURL("https://yamak-kw.com/terms")}
 
             >
-              <Ionicons
-                name="ios-lock-closed-outline"
-                size={24}
-                color="black"
-              />
+              <AppIcon name="ios-lock-closed-outline" size={24} />
               <AppText style={{ marginLeft: 10, height: 40 }}>
                 {t("TermOfService")}
               </AppText>
@@ -103,36 +89,7 @@ const ProfileScreen = () => {
                 />
               </View>
             </Pressable>
-            {/* <View
-              style={{
-                height: 50,
-                padding: 8,
-                flexDirection: "row",
-              }}
-            >
-              <Ionicons
-                name="ios-lock-closed-outline"
-                size={24}
-                color="black"
-              />
-              <AppText style={{ marginLeft: 10, height: 40, fontSize: 20 }}>
-                {t("ChangePassword")}
-              </AppText>
-              <View
-                style={{
-                  flex: 1,
-                  justifyContent: "flex-end",
-                  flexDirection: "row",
-                  alignItems: "center",
-                }}
-              >
-                <Ionicons
-                  name={I18nManager.isRTL ? "chevron-back" : "chevron-forward"}
-                  size={25}
-                  color="black"
-                />
-              </View>
-            </View> */}
+
             <Pressable
               onPress={() => Linking.openURL("https://yamak-kw.com/privacy")}
               style={({ pressed }) => [styles.operations, pressed && { opacity: 0.7 }]}>
@@ -184,7 +141,8 @@ const ProfileScreen = () => {
           </View>
         </View>
       </ScrollView>
-    </ScreenView>
+    </View>
+
   );
 };
 
@@ -193,8 +151,7 @@ export default ProfileScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
-    backgroundColor: "#f4f1f6",
+
   },
   operations: {
     height: 50,
@@ -208,6 +165,14 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    borderColor: AppColors.secondary
+    borderColor: AppColors.secondary,
   },
+  imgContainer: {
+    borderWidth: 1,
+    borderColor: AppColors.primary,
+    width: 100, height: 100,
+    borderRadius: 50,
+    justifyContent: "center", alignItems: "center",
+    marginBottom: 8
+  }
 });
