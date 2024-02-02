@@ -16,9 +16,10 @@ i18n
   .use(initReactI18next)
   .use(languageDetectorPlugin)
   .init({
-      compatibilityJSON: 'v3',
+    compatibilityJSON: 'v3',
     resources,
     fallbackLng: "en",
+    preload: ['ar'],
     interpolation: {
       escapeValue: false,
     },

@@ -2,6 +2,7 @@ import {
     ActivityIndicator,
     Alert,
     Button,
+    I18nManager,
     Image,
     Linking,
     Pressable,
@@ -13,38 +14,44 @@ import {
 import { useState } from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import FilledButton from "../components/FilledButton";
+import * as Updates from "expo-updates";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { StatusBar } from "expo-status-bar";
+
+import FilledButton from "../components/FilledButton";
 import { login } from "../api/AuthApi";
 import { UserDto } from "../dtos/UserDto";
-import { ErrorHandlerApi } from "../helpers/AppHelpers";
+import { ErrorHandlerApi, errorMessageToast } from "../helpers/AppHelpers";
 import LottieFile from "../components/ui/LottieFile";
 import { showMessage, } from "react-native-flash-message";
-import FlashMessage from "react-native-flash-message";
 import useAppStore from "../store/userStore";
 import { emailValidator } from "../helpers/validation";
 import AppPressable from "../components/ui/AppPressable";
 import AppText from "../components/ui/AppText";
 import { getVehicle } from "../api/vehiclesApi";
+import { useTranslation } from "react-i18next";
+import { AppContants, AppLanguages, AsyncStorageConstants } from "../contants/AppConstants";
+import { getStorageValues, setStorageValues } from "../helpers/AppAsyncStoreage";
+import { useLanguage } from "../hooks/useLanguage.hook";
+import { AppColorsTheme2 } from "../contants/Colors";
 
 const AuthScreen = () => {
-    const stateApp = useAppStore()
     const [inputs, setInputs] = useState({ email: "", password: "" });
-    const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+
+    const stateApp = useAppStore()
+    const { t, i18n } = useTranslation()
+    const { currentLanguage } = useLanguage()
+    const languageLabel = currentLanguage == "en" ? "عربي" : "English"
+
 
     async function submitHandler() {
         if (!inputs.password || !inputs.email) {
-            showMessage({
-                message: "Error Message",
-                description: "invalid inputs",
-                type: "danger",
-            });
-
+            errorMessageToast(t("ErrorHappen"), t("InvalidInputs"))
             return;
         }
         if (!emailValidator(inputs.email)) {
-            Alert.alert("The Email field must be a valid email");
+            errorMessageToast(t("ErrorHappen"), t("InvalidInputs"))
             return;
         }
 
@@ -69,19 +76,10 @@ const AuthScreen = () => {
                 console.log(error.response.data);
 
                 const errorMessage = ErrorHandlerApi(error);
+                errorMessageToast(t("ErrorHappen"), errorMessage)
 
-                showMessage({
-                    message: "Error Message",
-                    description: errorMessage,
-                    type: "danger",
-                });
             } else {
-                showMessage({
-                    message: "Error Message",
-                    // @ts-ignore
-                    description: error.message,
-                    type: "danger",
-                });
+                errorMessageToast(t("ErrorHappen"), error.message)
             }
         } finally {
             setIsLoading(false);
@@ -101,133 +99,159 @@ const AuthScreen = () => {
         }).catch(error => {
             if (error?.response?.data) {
                 const errorMessage = ErrorHandlerApi(error);
-                showMessage({
-                    message: "Error Message",
-                    description: errorMessage,
-                    type: "danger",
-                });
+                errorMessageToast(t("ErrorHappen"), errorMessage)
+
             } else {
-                showMessage({
-                    message: "Error Message",
-                    description: error.message,
-                    type: "danger",
-                });
+                errorMessageToast(t("ErrorHappen"), error.message)
             }
         })
     }
 
+    async function handleLanguagePress() {
+
+        const appLanguage = await getStorageValues(AsyncStorageConstants.languageKey)
+        const changeLang = appLanguage === AppLanguages.english ? AppLanguages.arabic : AppLanguages.english
+
+        i18n.changeLanguage(changeLang).then(async (res) => {
+            if (changeLang === "ar") {
+                I18nManager.forceRTL(true);
+                I18nManager.allowRTL(true);
+                I18nManager.swapLeftAndRightInRTL(true);
+            } else {
+                I18nManager.forceRTL(false);
+                I18nManager.allowRTL(false);
+            }
+            await setStorageValues(AsyncStorageConstants.languageKey, changeLang);
+            await Updates.reloadAsync();
+
+        });
+
+    }
+
 
     return (
-        <SafeAreaProvider style={{ flex: 1 }}>
-            {isLoading && <LottieFile />}
-            <View style={styles.container}>
-                <KeyboardAwareScrollView>
-                    <View
-                        style={{
-                            justifyContent: "center",
-                            alignItems: "center",
-                            width: "100%",
-                            padding: 16,
-                            alignSelf: "center",
-                        }}
-                    >
-                        <View style={{ paddingTop: 60, paddingBottom: 0 }}>
-                            <Image
-                                style={{ width: 250, height: 200, resizeMode: "cover" }}
-                                source={require("../contants/images/logo1.png")}
-                            />
-                        </View>
-
-                        <View style={{ marginVertical: 10 }}>
-                            <AppText
-                                textStyle={{
-                                    marginTop: 20,
-                                    fontSize: 25,
-                                    fontWeight: "600",
-                                    letterSpacing: 2,
-                                    textAlign: "center",
-                                }}
-                            >
-                                Hello Again !
-                            </AppText>
-                            <Text
-                                numberOfLines={2}
-                                style={{
-                                    width: 300,
-                                    textAlign: "center",
-                                    fontSize: 16,
-                                    letterSpacing: 4,
-                                    marginTop: 8,
-                                    textTransform: "capitalize",
-                                }}
-                            >
-                                Welcome Back you've been missed!
-                            </Text>
-                        </View>
-
-                        {/* <View style={styles.innerContainer}> */}
-                        <View style={styles.inputBox}>
-                            <TextInput
-                                value={inputs.email}
-                                placeholder="Enter Email"
-                                autoCapitalize="none"
-                                placeholderTextColor={"#a4a3a8"}
-                                style={styles.inputs}
-                                onChangeText={(text) => inputsChangeHandler(text, "email")}
-                            />
-                        </View>
-                        <View style={styles.inputBox}>
-                            <TextInput
-                                secureTextEntry
-                                value={inputs.password}
-                                placeholder="Enter Password"
-                                autoCapitalize="none"
-                                placeholderTextColor={"#a4a3a8"}
-                                style={styles.inputs}
-                                onChangeText={(text) => inputsChangeHandler(text, "password")}
-                            />
-                        </View>
-                        <Pressable
-                            style={({ pressed }) => [
-                                {
-                                    alignSelf: "flex-end",
-                                    flex: 1,
-                                },
-                                pressed && { opacity: 0.3 },
-                            ]}
-                        >
-                            <AppText
-                                textStyle={{
-                                    marginRight: 20,
-                                    marginVertical: 15,
-                                }}
-                            >
-                                Recovery Password
-                            </AppText>
-                        </Pressable>
-                        <View style={{ paddingVertical: 20 }}>
-                            <FilledButton onPress={submitHandler}>Submit</FilledButton>
-                        </View>
-                    </View>
-
-                    <View style={{ justifyContent: "center", alignItems: "center" }}>
-                        <AppText textStyle={{ fontSize: 16 }}>
-                            if you need Help please
-                        </AppText>
-                        <AppPressable onPress={() => { Linking.openURL("https://yamak-kw.com") }}>
-                            <AppText
-                                onPress={() => Alert.alert("help")}
-                                textStyle={{ color: "dodgerblue", marginTop: 10 }}
-                            >
-                                Contact Help
+        <>
+            <StatusBar animated={true} style="auto" />
+            <SafeAreaProvider style={{ flex: 1 }}>
+                {isLoading && <LottieFile />}
+                <View style={styles.container}>
+                    <KeyboardAwareScrollView>
+                        <AppPressable
+                            onPress={() => handleLanguagePress()}
+                            style={styles.languageStyle}>
+                            <AppText size={currentLanguage == "en" ? 18 : 16}>
+                                {languageLabel}
                             </AppText>
                         </AppPressable>
+                        <View
+                            style={{
+                                justifyContent: "center",
+                                alignItems: "center",
+                                width: "100%",
+                                padding: 16,
+                                alignSelf: "center",
+                            }}
+                        >
+                            <View style={{ paddingTop: 40, paddingBottom: 0 }}>
+                                <Image
+                                    style={{ width: 200, height: 200, resizeMode: "cover" }}
+                                    source={require("../contants/images/logo1.png")}
+                                />
+                            </View>
 
-                    </View>
-                </KeyboardAwareScrollView>
-            </View>
-            <FlashMessage position="top" />
-        </SafeAreaProvider>
+                            <View style={{ marginVertical: 5 }}>
+                                <AppText
+                                    textStyle={{
+                                        marginTop: 20,
+                                        fontSize: 25,
+                                        fontWeight: "600",
+                                        letterSpacing: 2,
+                                        textAlign: "center",
+                                    }}
+                                >
+                                    {t("HelloAgain")}
+                                </AppText>
+                                <Text
+                                    numberOfLines={2}
+                                    style={{
+                                        width: 300,
+                                        textAlign: "center",
+                                        fontSize: 16,
+                                        letterSpacing: 4,
+                                        marginTop: 8,
+                                        textTransform: "capitalize",
+                                    }}
+                                >
+                                    {t("WelcomeBack")}
+                                </Text>
+                            </View>
+
+                            {/* <View style={styles.innerContainer}> */}
+                            <View style={styles.inputBox}>
+                                <TextInput
+                                    value={inputs.email}
+                                    placeholder={t("EnterEmail")}
+
+                                    autoCapitalize="none"
+                                    placeholderTextColor={"#a4a3a8"}
+                                    style={styles.inputs}
+                                    onChangeText={(text) => inputsChangeHandler(text, "email")}
+                                />
+                            </View>
+                            <View style={styles.inputBox}>
+                                <TextInput
+                                    // secureTextEntry
+                                    value={inputs.password}
+                                    placeholder={t("EnterPassword")}
+                                    autoCapitalize="none"
+                                    placeholderTextColor={"#a4a3a8"}
+                                    style={styles.inputs}
+                                    onChangeText={(text) => inputsChangeHandler(text, "password")}
+                                />
+                            </View>
+                            <Pressable
+                                style={({ pressed }) => [
+                                    {
+                                        alignSelf: "flex-start",
+                                        flex: 1,
+                                        marginHorizontal: 20
+
+                                    },
+                                    pressed && { opacity: 0.3 },
+                                ]}
+                            >
+                                <AppText
+                                    textStyle={{
+                                        marginRight: 20,
+                                        marginVertical: 15,
+                                    }}
+                                >
+                                    {t("ForgotPassword")}
+                                </AppText>
+                            </Pressable>
+                            <View style={{ paddingVertical: 20 }}>
+                                <FilledButton onPress={submitHandler}>{t("Submit")}</FilledButton>
+                            </View>
+                        </View>
+
+                        <View style={{ justifyContent: "center", alignItems: "center" }}>
+                            <AppText textStyle={{ fontSize: 16 }}>
+                                {t("IfYouNeedHelp")}
+                            </AppText>
+                            <AppPressable onPress={() => { Linking.openURL("https://yamak-kw.com") }}>
+                                <AppText
+                                    textStyle={{ color: "dodgerblue", marginTop: 10 }}
+                                >
+                                    {t("ContactHelp")}
+                                </AppText>
+                            </AppPressable>
+
+                        </View>
+                    </KeyboardAwareScrollView>
+                </View>
+                {/* <FlashMessage position="top" /> */}
+            </SafeAreaProvider>
+        </>
     );
 };
 
@@ -243,11 +267,28 @@ const styles = StyleSheet.create({
     },
     inputBox: {
         backgroundColor: "white",
-        width: "90%",
+        width: AppContants.deviceWidth * 0.8,
         height: 60,
         padding: 16,
         marginVertical: 10,
         borderRadius: 10,
     },
-    inputs: { flex: 1, fontSize: 16, fontWeight: "600" },
+    inputs: {
+        textAlign: "right",
+        flex: 1,
+        fontSize: 16,
+        fontWeight: "600"
+    },
+    languageStyle: {
+        borderTopRightRadius: 10,
+        borderBottomRightRadius: 10,
+        left: 0,
+        position: "absolute", top: "10%", width: 70,
+        justifyContent: "center",
+        alignItems: "center",
+        paddingHorizontal: 4,
+        backgroundColor: AppColorsTheme2.secondary,
+        height: 40,
+
+    }
 });

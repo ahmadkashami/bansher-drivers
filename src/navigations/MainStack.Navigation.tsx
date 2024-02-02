@@ -7,6 +7,8 @@ import { StyleSheet } from "react-native";
 import HomeScreen from "../screens/HomeScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import { AppColorsTheme2 } from "../contants/Colors";
+import { StatusBar } from "expo-status-bar";
+
 const Stack = createStackNavigator();
 
 const HomeStackNavigator = () => {
@@ -59,9 +61,13 @@ function BottomTabsNavigator() {
 }
 const MainStackNavigation = () => {
   return (
-    <NavigationContainer>
-      <BottomTabsNavigator />
-    </NavigationContainer>
+    <>
+      <StatusBar animated={true} style="light" />
+      <NavigationContainer>
+        <BottomTabsNavigator />
+      </NavigationContainer>
+    </>
+
   );
 };
 

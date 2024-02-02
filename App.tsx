@@ -8,6 +8,9 @@ import MainStackNavigation from "./src/navigations/MainStack.Navigation";
 import AuthScreen from "./src/screens/AuthScreen";
 import "./src/translation/Translation.config";
 import useAppStore from "./src/store/userStore";
+import FlashMessage from "react-native-flash-message";
+
+import Toast from "react-native-toast-message";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -53,7 +56,11 @@ const Root = () => {
     return null;
   }
 
-  return stateApp.isAuthenticated ? <MainStackNavigation /> : <AuthScreen />;
+  return <>
+    {stateApp.isAuthenticated ? <MainStackNavigation /> : <AuthScreen />}
+    <FlashMessage />
+    <Toast />
+  </>
 };
 
 

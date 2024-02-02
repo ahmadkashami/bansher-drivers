@@ -31,6 +31,7 @@ export const InfoItem = ({
   value: string;
   style?: ViewStyle;
 }) => {
+
   return (
     <View style={[styles.itemContainer, style]}>
       <AppText>{myKey}</AppText>
@@ -42,7 +43,7 @@ export const InfoItem = ({
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "white",
-    padding: 10,
+    // padding: 10,
     marginVertical: 20,
     borderRadius: 20,
   },
@@ -50,9 +51,8 @@ const styles = StyleSheet.create({
     height: 50,
     borderBottomWidth: 1,
     borderBottomColor: AppColors.Thirdnary,
-    padding: 10,
+    padding: 12,
     flexDirection: "row",
-    alignItems: 'center',
     justifyContent: "space-between",
   },
 });

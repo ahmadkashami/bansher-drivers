@@ -17,11 +17,12 @@ import * as TaskManager from 'expo-task-manager';
 import AppSettingModal from "../components/Home/AppSettingModal";
 import { updateVehicleLink, updateVehiclesLocation } from "../api/vehiclesApi";
 import { CallDriverVehicle } from "../actions/commonActions";
+import { AppContants, AsyncStorageConstants } from "../contants/AppConstants";
+import AppHeader from "../components/ui/AppHeader";
+import { getStorageValues } from "../helpers/AppAsyncStoreage";
 
-const YOUR_TASK_NAME = 'background-location-task';
-const YOUR_TIME_INTERVAL = 30000
-const YOUR_DISTANCE_INTERVAL = 300; // 10 meters (adjust as needed)
-TaskManager.defineTask(YOUR_TASK_NAME, async ({ data, error }) => {
+// 10 meters (adjust as needed)
+TaskManager.defineTask(AppContants.locationBgTask, async ({ data, error }) => {
     if (error) {
         console.error(error)
         return
@@ -44,6 +45,9 @@ TaskManager.defineTask(YOUR_TASK_NAME, async ({ data, error }) => {
 const HomeScreen = () => {
     const [refreshing, setRefreshing] = useState(false);
     const [isDeniedPermissions, setIsDeniedPermissions] = useState(false)
+    const [loctionPermission, setLoctionPermission] = useState({ bg: false, fg: false })
+    const [storedValue, setstoredValue] = useState(false)
+
     const stateApp = useAppStore()
     const [userCurrentLocation, setUserCurrentLocation] = useState({ lat: 0, lng: 0 });
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -52,11 +56,18 @@ const HomeScreen = () => {
 
     useEffect(() => {
         setIsLinked(stateApp.vehicle.workStatus == 'online')
-        console.log("redner");
-
     }, [stateApp.vehicle])
 
     useEffect(() => {
+        async function getStoredData() {
+            const isSkipedValue = await getStorageValues(AsyncStorageConstants.isSkipedPermissions)
+            if (!isSkipedValue) {
+                setstoredValue(false)
+                return
+            }
+            setstoredValue(true)
+        }
+        getStoredData()
         CallHomeApis()
     }, [])
 
@@ -88,18 +99,14 @@ const HomeScreen = () => {
                     } catch (error) {
                         console.log("error Location in forgorund ==>", JSON.stringify(error?.message));
                     }
-                }, 20000);
+                }, AppContants.locationTimeInterval);
 
             } catch (error) {
                 console.error("An error occurred:", error);
             }
         }
-
         fetchData()
-
         return () => clearInterval(interval);
-
-
     }, [driverStatus, isLinked])
 
 
@@ -109,32 +116,36 @@ const HomeScreen = () => {
     const requestForegroundPermission = async () => {
         let { status } = await Location.requestForegroundPermissionsAsync();
         if (status !== "granted") {
+            setLoctionPermission(prev => ({ ...prev, fg: true }))
             setIsDeniedPermissions(true)
-            console.log("Permission to access location was denied");
+            console.log("Permission forground to access location was denied");
             return false
         }
+        setLoctionPermission(prev => ({ ...prev, fg: false }))
         setIsDeniedPermissions(false)
         return true
-
 
     }
     const requestBackgroundLocationPermission = async () => {
         const { status } = await Location.requestBackgroundPermissionsAsync();
         if (status !== "granted") {
-            setIsDeniedPermissions(true)
-            console.log("Permission to access location was denied");
+            setLoctionPermission(prev => ({ ...prev, bg: true }))
+            if (!storedValue)
+                setIsDeniedPermissions(true)
+            console.log("Permission background location was denied");
             return false
         }
+        setLoctionPermission(prev => ({ ...prev, bg: false }))
         setIsDeniedPermissions(false)
         return true
     };
     const startBackgroundLocationUpdates = async () => {
-        await Location.startLocationUpdatesAsync(YOUR_TASK_NAME, {
+        await Location.startLocationUpdatesAsync(AppContants.locationBgTask, {
             accuracy: Location.Accuracy.Highest,
-            timeInterval: YOUR_TIME_INTERVAL,
-            distanceInterval: YOUR_DISTANCE_INTERVAL,
-            deferredUpdatesDistance: YOUR_DISTANCE_INTERVAL,
-            deferredUpdatesInterval: YOUR_TIME_INTERVAL,
+            timeInterval: AppContants.locationTimeInterval,
+            distanceInterval: AppContants.locationDistanceInterval,
+            deferredUpdatesDistance: AppContants.locationDistanceInterval,
+            deferredUpdatesInterval: AppContants.locationTimeInterval,
             showsBackgroundLocationIndicator: true,
             foregroundService: {
                 notificationTitle: 'Location Updates',
@@ -143,6 +154,7 @@ const HomeScreen = () => {
             },
 
         });
+
     };
 
 
@@ -152,8 +164,8 @@ const HomeScreen = () => {
             const fgRes = await requestForegroundPermission()
             if (!fgRes) return false
             const bgRes = await requestBackgroundLocationPermission();
-            if (!bgRes) return false
-            await startBackgroundLocationUpdates();
+            if (bgRes)
+                await startBackgroundLocationUpdates();
             return true
         } catch (error) {
             console.log("app location permissions errors ==>", error);
@@ -165,11 +177,13 @@ const HomeScreen = () => {
 
         setRefreshing(true);
         await CallHomeApis()
-        wait(2000).then(() => setRefreshing(false));
+        wait(4000).then(() => setRefreshing(false));
     }, []);
 
     const updateWorkStatus = () => {
-        if (!isLinked && !driverStatus) {
+        console.log({ driverStatus });
+
+        if (!isLinked && driverStatus == "inactive") {
             showMessage({
                 message: "Error Message",
                 description: "driver should be linked to vehicle first",
@@ -257,7 +271,7 @@ const HomeScreen = () => {
 
             contentContainerStyle={{ flexGrow: 1 }} style={{ flexGrow: 1 }}>
 
-
+            <AppHeader />
             <View style={styles.container}>
                 {isLoading && <LottieFile />}
                 {/*user profile  */}
@@ -265,12 +279,13 @@ const HomeScreen = () => {
                     flex: 1,
                     justifyContent: "flex-end",
                 }}>
-                    <View style={{ bottom: -60 }}>
-                        <View style={{ flexDirection: "row", alignItems: "center", marginLeft: 20, marginBottom: 40 }}>
+                    <View style={{ bottom: -50 }}>
+                        <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center", marginLeft: 20, marginBottom: 40 }}>
                             <View style={{
                                 borderWidth: 1,
                                 borderColor: AppColors.primary,
-                                width: 100, height: 100, borderRadius: 50, justifyContent: "center", alignItems: "center"
+                                width: 100, height: 100, borderRadius: 50,
+                                justifyContent: "center", alignItems: "center"
                             }}>
                                 <Image
                                     style={styles.img}
@@ -296,20 +311,8 @@ const HomeScreen = () => {
                                 lng:{fixNumber(userCurrentLocation.lng)}
                             </Text>
                         </View>
+
                     </View>
-
-
-
-                    <View style={{ position: "absolute", top: 40, right: 20 }}>
-                        <Ionicons
-                            name="log-out-outline"
-                            size={30}
-                            color={AppColors.black}
-                            onPress={stateApp.logout}
-                        />
-                    </View>
-
-
 
                     <View style={{
                         height: 220,
@@ -385,8 +388,7 @@ const HomeScreen = () => {
                         </View>
                     </View>
                 </View>
-                <FlashMessage position="bottom" />
-                <AppSettingModal setIsVisble={setIsDeniedPermissions} isVisible={isDeniedPermissions} />
+                <AppSettingModal loctionPermission={loctionPermission} setIsVisble={setIsDeniedPermissions} isVisible={isDeniedPermissions} />
             </View>
         </ScrollView>
     );
