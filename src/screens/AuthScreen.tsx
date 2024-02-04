@@ -5,6 +5,7 @@ import {
     I18nManager,
     Image,
     Linking,
+    Platform,
     Pressable,
     StyleSheet,
     Text,
@@ -34,11 +35,13 @@ import { AppContants, AppLanguages, AsyncStorageConstants } from "../contants/Ap
 import { getStorageValues, setStorageValues } from "../helpers/AppAsyncStoreage";
 import { useLanguage } from "../hooks/useLanguage.hook";
 import { AppColorsTheme2 } from "../contants/Colors";
+import AppPermissionsModal from "../components/models/AppPermissionsModal";
 
 const AuthScreen = () => {
     const [inputs, setInputs] = useState({ email: "", password: "" });
     const [isLoading, setIsLoading] = useState<boolean>(false);
-
+    const [showPermissionAlertModal, setShowPermissionAlertModal] = useState(false)
+    const [authedResponseData, setAuthedResponseData] = useState(null)
     const stateApp = useAppStore()
     const { t, i18n } = useTranslation()
     const { currentLanguage } = useLanguage()
@@ -57,20 +60,30 @@ const AuthScreen = () => {
 
         try {
             setIsLoading(true);
-            const response = await login(
+            const { data } = await login(
                 inputs.email,
                 inputs.password
             );
+            console.log({ data });
 
-            const driver = response.data.driver;
-            const accessToken = response.data.accessToken;
+            const isLucnchedBefore = await getStorageValues(AsyncStorageConstants.isLucnchedBefore)
+            console.log({ isLucnchedBefore });
+
+            if (!isLucnchedBefore && Platform.OS == "android") {
+                setAuthedResponseData(data)
+                setShowPermissionAlertModal(true)
+                return
+            }
+
+            const driver = data.driver;
+            const accessToken = data.accessToken;
             if (!driver) throw new Error("Authenticated error");
             getVehicleData()
             const user = new UserDto(driver);
-            AsyncStorage.setItem("token", accessToken);
-            AsyncStorage.setItem("user", JSON.stringify(user));
+            await setStorageValues(AsyncStorageConstants.token, accessToken);
+            await setStorageValues(AsyncStorageConstants.user, JSON.stringify(user));
             stateApp.setUser(user);
-            stateApp.setAuthToken("token");
+            stateApp.setAuthToken(accessToken);
         } catch (error: any) {
             if (error?.response?.data) {
                 console.log(error.response.data);
@@ -79,6 +92,8 @@ const AuthScreen = () => {
                 errorMessageToast(t("ErrorHappen"), errorMessage)
 
             } else {
+                console.log({ error });
+
                 errorMessageToast(t("ErrorHappen"), error.message)
             }
         } finally {
@@ -95,8 +110,10 @@ const AuthScreen = () => {
         getVehicle().then((response: any) => {
             let vehicle = response.data.data
             stateApp.setVehicle(vehicle)
-            AsyncStorage.setItem("vehicle", JSON.stringify(vehicle));
+            AsyncStorage.setItem(AsyncStorageConstants.vehicle, JSON.stringify(vehicle));
         }).catch(error => {
+            console.log({ error: error?.response?.data });
+
             if (error?.response?.data) {
                 const errorMessage = ErrorHandlerApi(error);
                 errorMessageToast(t("ErrorHappen"), errorMessage)
@@ -105,6 +122,36 @@ const AuthScreen = () => {
                 errorMessageToast(t("ErrorHappen"), error.message)
             }
         })
+    }
+
+    async function onConfirmPermissionsHandler(data: any) {
+        try {
+
+            const res = await AsyncStorage.getAllKeys()
+            console.log({ res });
+
+            const driver = data.driver;
+            const accessToken = data.accessToken;
+            if (!driver) throw new Error("Authenticated error");
+            await setStorageValues(AsyncStorageConstants.token, accessToken);
+            await setStorageValues(AsyncStorageConstants.isLucnchedBefore, "true")
+            const user = new UserDto(driver);
+            await setStorageValues(AsyncStorageConstants.user, JSON.stringify(user));
+            getVehicleData()
+            stateApp.setUser(user);
+            stateApp.setAuthToken(accessToken);
+            // console.log("end confirm");
+        } catch (error) {
+            console.log({ error: JSON.stringify(error) });
+
+            if (error?.response?.data) {
+                const errorMessage = ErrorHandlerApi(error);
+                errorMessageToast(t("ErrorHappen"), errorMessage)
+            } else {
+                errorMessageToast(t("ErrorHappen"), error.message)
+            }
+        }
+
     }
 
     async function handleLanguagePress() {
@@ -136,13 +183,7 @@ const AuthScreen = () => {
                 {isLoading && <LottieFile />}
                 <View style={styles.container}>
                     <KeyboardAwareScrollView>
-                        <AppPressable
-                            onPress={() => handleLanguagePress()}
-                            style={styles.languageStyle}>
-                            <AppText size={currentLanguage == "en" ? 18 : 16}>
-                                {languageLabel}
-                            </AppText>
-                        </AppPressable>
+
                         <View
                             style={{
                                 justifyContent: "center",
@@ -152,6 +193,13 @@ const AuthScreen = () => {
                                 alignSelf: "center",
                             }}
                         >
+                            <AppPressable
+                                onPress={() => handleLanguagePress()}
+                                style={styles.languageStyle}>
+                                <AppText size={currentLanguage == "en" ? 18 : 16}>
+                                    {languageLabel}
+                                </AppText>
+                            </AppPressable>
                             <View style={{ paddingTop: 40, paddingBottom: 0 }}>
                                 <Image
                                     style={{ width: 200, height: 200, resizeMode: "cover" }}
@@ -251,6 +299,8 @@ const AuthScreen = () => {
                 </View>
                 {/* <FlashMessage position="top" /> */}
             </SafeAreaProvider>
+            <AppPermissionsModal data={authedResponseData} onSuccess={onConfirmPermissionsHandler} setIsVisble={setShowPermissionAlertModal} isVisible={showPermissionAlertModal} />
+
         </>
     );
 };

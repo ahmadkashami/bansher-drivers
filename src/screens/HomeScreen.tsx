@@ -20,6 +20,7 @@ import { CallDriverVehicle } from "../actions/commonActions";
 import { AppContants, AsyncStorageConstants } from "../contants/AppConstants";
 import AppHeader from "../components/ui/AppHeader";
 import { getStorageValues } from "../helpers/AppAsyncStoreage";
+import AppPermissionsModal from "../components/models/AppPermissionsModal";
 
 // 10 meters (adjust as needed)
 TaskManager.defineTask(AppContants.locationBgTask, async ({ data, error }) => {
@@ -86,8 +87,6 @@ const HomeScreen = () => {
                         console.log("fetching location forground");
                         let location = await Location.getCurrentPositionAsync({});
                         const { latitude, longitude } = location?.coords || {};
-                        console.log({ latitude, longitude });
-
                         setUserCurrentLocation({ lat: latitude, lng: longitude });
                         const updateRes = await updateVehiclesLocation({ latitude, longitude });
                         console.log("updateViecle in forgrounded", { updateRes });
