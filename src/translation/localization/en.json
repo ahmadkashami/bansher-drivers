@@ -49,5 +49,8 @@
   "ErrorHappen": "Error Happen",
   "InvalidInputs": "Invalid Inputs",
   "GoToSetting": "Go To Setting",
-  "Skip": "Skip"
+  "Skip": "Skip",
+  "Accept": "accept",
+  "Deny": "Deny",
+  "YamakAppCollectLocation": "Yamak App Collects Location data to enable your location on Yamak map for users even when the app is closed or not in use"
 }

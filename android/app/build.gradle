@@ -86,7 +86,7 @@ android {
         applicationId 'com.yamak.driver'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 16
+        versionCode 17
         versionName "1.0.3"
 
         buildConfigField("boolean", "REACT_NATIVE_UNSTABLE_USE_RUNTIME_SCHEDULER_ALWAYS", (findProperty("reactNative.unstable_useRuntimeSchedulerAlways") ?: true).toString())
@@ -137,7 +137,9 @@ android {
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
-
+ implementation 'com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.11'
+        implementation 'com.squareup.okhttp3:okhttp:5.0.0-alpha.11'
+        implementation 'com.squareup.okhttp3:okhttp-urlconnection:5.0.0-alpha.11'
     def isGifEnabled = (findProperty('expo.gif.enabled') ?: "") == "true";
     def isWebpEnabled = (findProperty('expo.webp.enabled') ?: "") == "true";
     def isWebpAnimatedEnabled = (findProperty('expo.webp.animated') ?: "") == "true";

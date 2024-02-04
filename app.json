@@ -35,10 +35,10 @@
         "NSLocationAlwaysAndWhenInUseUsageDescription": "Yamak Driver use your location to update it on the main app map to get nerest more convenient and efficient service",
         "NSLocationWhenInUseUsageDescription": "Yamak Driver use your location to update it on the main app map to get nerest more convenient and efficient service"
       },
-      "buildNumber": "4"
+      "buildNumber": "5"
     },
     "android": {
-      "versionCode": 16,
+      "versionCode": 17,
       "softwareKeyboardLayoutMode": "pan",
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon1.png",

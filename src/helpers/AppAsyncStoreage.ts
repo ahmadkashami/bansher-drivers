@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AsyncStorageConstants } from "../contants/AppConstants";
 
 export async function setStorageValues(name: string, value: string) {
   await AsyncStorage.setItem(name, value);
@@ -13,5 +14,5 @@ export async function getStorageValues(name: string) {
 }
 
 export async function removeAllKeys() {
-  return AsyncStorage.clear();
+  return AsyncStorage.multiRemove([AsyncStorageConstants.token, AsyncStorageConstants.user, AsyncStorageConstants.vehicle]);
 }
